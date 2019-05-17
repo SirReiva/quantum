@@ -43,7 +43,7 @@ function diffChildren(newNode, oldNode) {
     return patches
 }
 
-function diff(newNode, oldNode) {
+export function diff(newNode, oldNode) {
     if (!oldNode) {
         return { type: CREATE, newNode }
     }
@@ -62,7 +62,7 @@ function diff(newNode, oldNode) {
     }
 }
 
-function createElement(node) {
+export function createElement(node) {
     if (typeof node === 'string') {
         return document.createTextNode(node)
     }
@@ -107,7 +107,7 @@ function patchProps(parent, patches) {
     }
 }
 
-function patch(parent, patches, index = 0) {
+export function patch(parent, patches, index = 0) {
     if (!patches) { return }
     const el = parent.childNodes[index]
     switch (patches.type) {
@@ -142,7 +142,7 @@ function flatten(arr) {
     return [].concat.apply([], arr)
 }
 
-function h(type, props, ...children) {
+export function h(type, props, ...children) {
     props = props || {}
     return { type, props, children: flatten(children) }
 }

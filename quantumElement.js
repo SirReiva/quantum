@@ -1,4 +1,6 @@
-class QuantumElement extends HTMLElement {
+import { createElement, diff, patch } from './quantumCore.js';
+
+export default class QuantumElement extends HTMLElement {
     template() {}
 
     _get(target, key) {
@@ -15,10 +17,24 @@ class QuantumElement extends HTMLElement {
         return true;
     }
 
+    attributeChangedCallback(attrName, oldVal, newVal) {
+        console.log('attr changed 0');
+        if (oldVal !== newVal) {
+            console.log('attr changed');
+            this.render();
+        }
+    }
+
     _validator = {
         set: this._set.bind(this),
         get: this._get.bind(this),
     };
+
+    _vDom = null;
+    _mount() {
+        this._vDom = this.template();
+        this.shadowRoot.appendChild(createElement(this._vDom));
+    }
 
     shadowRoot = null;
     props = new Proxy({}, this._validator);
@@ -27,10 +43,16 @@ class QuantumElement extends HTMLElement {
         this.shadowRoot = this.attachShadow({ mode: 'open' });
         if (prps)
             this.props = new Proxy(prps, this._validator);
-        this.shadowRoot.appendChild(createElement(this.template()));
+        this._mount();
     }
 
-    render() {}
+    render() {
+        const oldVDom = this._vDom;
+        const newVDom = this.template();
+        const patches = diff(newVDom, oldVDom);
+        patch(this.shadowRoot, patches);
+        this._vDom = newVDom;
+    }
 
     connectedCallback() {
         console.log('conneced');

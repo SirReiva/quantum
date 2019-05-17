@@ -1,10 +1,17 @@
+import QuantumElement from './quantumElement.js';
+import { h } from './quantumCore.js';
+
 class mytag extends QuantumElement {
     template() {
         return h(
             'h1',
             null,
             ' item ',
-            this.props.num.toString(),
+            h(
+                'span',
+                null,
+                this.props.num.toString()
+            ),
             ' '
         );
     }

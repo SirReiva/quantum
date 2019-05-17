@@ -6,13 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <script src="quantumCore.js"></script>
-    <script src="quantumElement.js"></script>
-    <script src="mytag.js"></script>
+    <script type="module" src="mytag.js"></script>
 </head>
 
 <body>
-    <my-tag></my-tag>
+    <my-tag id="mtag" det="1"></my-tag>
+    <script>
+        let m = document.getElementById('mtag');
+        let k = 1;
+        setInterval(() => {
+            k++;
+            m.setAttribute('det', k);
+        }, 5000);
+    </script>
 </body>
 
 </html>
