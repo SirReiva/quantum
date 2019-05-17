@@ -3,6 +3,7 @@ import { h } from './quantumCore.js';
 
 class mytag extends QuantumElement {
     static template(attrs, props) {
+        console.log(attrs, props);
         return h(
             'h1',
             null,
@@ -11,6 +12,12 @@ class mytag extends QuantumElement {
                 'span',
                 null,
                 attrs.det.toString()
+            ),
+            ' ',
+            h(
+                'span',
+                null,
+                props.num.toString()
             ),
             ' '
         );
@@ -22,6 +29,9 @@ class mytag extends QuantumElement {
 
     constructor() {
         super({ num: 5 });
+        setInterval(() => {
+            this.props.num++;
+        }, 2500);
     }
 }
 

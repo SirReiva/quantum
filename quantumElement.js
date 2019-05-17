@@ -19,7 +19,6 @@ export default class QuantumElement extends HTMLElement {
 
     attributeChangedCallback(attrName, oldVal, newVal) {
         if (oldVal !== newVal) {
-            console.log('attr changed');
             this.render();
         }
     }
@@ -28,6 +27,7 @@ export default class QuantumElement extends HTMLElement {
         set: this._set.bind(this),
         get: this._get.bind(this),
     };
+
     _getAttributesInObject() {
         let attrs = {};
         for (let i = 0; i < this.attributes.length; i++) {
@@ -43,12 +43,13 @@ export default class QuantumElement extends HTMLElement {
     }
 
     shadowRoot = null;
+    _props = {};
     props = new Proxy({}, this._validator);
     constructor(prps = {}) {
         super();
         this.shadowRoot = this.attachShadow({ mode: 'open' });
-        if (prps)
-            this.props = new Proxy(prps, this._validator);
+        this._props = prps;
+        this.props = new Proxy(prps, this._validator);
         this._mount();
     }
 
@@ -60,7 +61,4 @@ export default class QuantumElement extends HTMLElement {
         this._vDom = newVDom;
     }
 
-    connectedCallback() {
-        console.log('conneced');
-    }
 }
