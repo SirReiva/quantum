@@ -2,7 +2,7 @@ import QuantumElement from './quantumElement.js';
 import { h } from './quantumCore.js';
 
 class mytag extends QuantumElement {
-    template() {
+    static template(attrs, props) {
         return h(
             'h1',
             null,
@@ -10,11 +10,16 @@ class mytag extends QuantumElement {
             h(
                 'span',
                 null,
-                this.props.num.toString()
+                attrs.det.toString()
             ),
             ' '
         );
     }
+
+    static get observedAttributes() {
+        return ['det'];
+    }
+
     constructor() {
         super({ num: 5 });
     }

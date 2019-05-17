@@ -1,7 +1,7 @@
 import { createElement, diff, patch } from './quantumCore.js';
 
 export default class QuantumElement extends HTMLElement {
-    template() {}
+    static template() {}
 
     _get(target, key) {
         if (typeof target[key] === 'object' && target[key] !== null) {
@@ -18,7 +18,6 @@ export default class QuantumElement extends HTMLElement {
     }
 
     attributeChangedCallback(attrName, oldVal, newVal) {
-        console.log('attr changed 0');
         if (oldVal !== newVal) {
             console.log('attr changed');
             this.render();
@@ -29,16 +28,23 @@ export default class QuantumElement extends HTMLElement {
         set: this._set.bind(this),
         get: this._get.bind(this),
     };
+    _getAttributesInObject() {
+        let attrs = {};
+        for (let i = 0; i < this.attributes.length; i++) {
+            attrs[this.attributes[i].name] = this.attributes[i].value;
+        }
+        return attrs;
+    }
 
     _vDom = null;
     _mount() {
-        this._vDom = this.template();
+        this._vDom = this.constructor.template(this._getAttributesInObject(), this.props);
         this.shadowRoot.appendChild(createElement(this._vDom));
     }
 
     shadowRoot = null;
     props = new Proxy({}, this._validator);
-    constructor(prps) {
+    constructor(prps = {}) {
         super();
         this.shadowRoot = this.attachShadow({ mode: 'open' });
         if (prps)
@@ -48,7 +54,7 @@ export default class QuantumElement extends HTMLElement {
 
     render() {
         const oldVDom = this._vDom;
-        const newVDom = this.template();
+        const newVDom = this.constructor.template(this._getAttributesInObject(), this.props);
         const patches = diff(newVDom, oldVDom);
         patch(this.shadowRoot, patches);
         this._vDom = newVDom;
