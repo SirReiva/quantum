@@ -1,24 +1,57 @@
 import QuantumElement from './quantumElement.js';
 import { h, defineQuantumElement } from './quantumCore.js';
 
-class mytag extends QuantumElement {
+class myitem extends QuantumElement {
     template() {
-        return <h1> Input: <input onChange={(ev) => { this.changeVal(ev); }} type="number" min="10" max="100" value={this.props.data}/> <h2>{this.props.data}</h2> </h1>;
-    }
-
-    styles() { return `span{ color: red; }`; }
-
-    changeVal(ev) {
-        this.props.data = ev.target.value;
+        return <li>
+                    {
+                        this.attrs.data &&
+                        <div><img src={this.attrs.data.thumbnailUrl}/><label>{this.attrs.data.title}</label></div>
+                    }
+                </li>;
     }
 
     static get observedAttributes() {
-        return ['det'];
+        return ['data'];
+    }
+
+    connectedCallback() {
+        
     }
 
     constructor() {
-        super({ data: 20 });
+        super({});
+    }
+
+}
+
+defineQuantumElement('my-item', myitem);
+
+class mylist extends QuantumElement {
+    template() {
+        return <ul>
+                {
+                    this.props.items.map(item => <my-item data={item}></my-item>)
+                }
+                </ul>;
+    }
+
+    styles() { return ``; }
+
+
+    static get observedAttributes() {
+        return [];
+    }
+
+    constructor() {
+        super({ items: [] });
+        fetch('https://jsonplaceholder.typicode.com/photos').then(resp => resp.json()).then((data) => {
+            this.props.items = data.slice(4950);
+            /*setInterval(() => {
+                this.props.items[0].title = 'dsafdsfdas';
+            }, 2500);*/
+        });
     }
 }
 
-defineQuantumElement('my-tag', mytag);
+defineQuantumElement('my-list', mylist);

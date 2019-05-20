@@ -6,8 +6,14 @@ export default class QuantumElement extends HTMLElement {
 
     static automaticDetection = true;
 
+    connectedCallback() {
+
+    }
+
     _get(target, key) {
-        if (isFunction(target[key])) {
+        if (Array.isArray[target[key]]) {
+            return new Proxy(target[key].map(item => new Proxy(item, this._validator)), this._validator);
+        } else if (isFunction(target[key])) {
             return target[key].bind(target);
         } else if (typeof target[key] === 'object' && target[key] !== null) {
             return new Proxy(target[key], this._validator)
@@ -40,9 +46,18 @@ export default class QuantumElement extends HTMLElement {
     _getAttributesInObject() {
         let attrs = {};
         for (let i = 0; i < this.attributes.length; i++) {
-            attrs[this.attributes[i].name] = this.attributes[i].value;
+            if (this.attributes[i].value.startsWith('q-json-obj://')) {
+                attrs[this.attributes[i].name] = JSON.parse(this.attributes[i].value.substr(13));
+            } else {
+                attrs[this.attributes[i].name] = this.attributes[i].value;
+            }
+
         }
         return attrs;
+    }
+
+    get attrs() {
+        return this._getAttributesInObject();
     }
 
     _vDom = null;
@@ -62,7 +77,8 @@ export default class QuantumElement extends HTMLElement {
         this._shadowRoot = this.attachShadow({ mode: 'open' });
         this._props = prps;
         this.props = new Proxy(prps, this._validator);
-        this._mount();
+        // this._mount();
+        setTimeout(() => this._mount(), 1);
     }
 
     _render() {

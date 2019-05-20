@@ -83,9 +83,9 @@ export function diff(newNode, oldNode) {
 
 export function createElement(node) {
     if (typeof node === 'string' || typeof node === 'number') {
-        return document.createTextNode(node.toString())
+        return document.createTextNode(node.toString());
     }
-    const el = document.createElement(node.type)
+    const el = document.createElement(node.type);
     setProps(el, node.props);
     addEventListeners(el, node.props);
     if (node.children)
@@ -149,7 +149,10 @@ function setProp(target, name, value) {
         return target.setAttribute('class', value);
     }
     if (typeof value === 'boolean') {
-        setBooleanProp(target, name, value);
+        return setBooleanProp(target, name, value);
+    }
+    if (typeof value === 'object') {
+        return target.setAttribute(name, 'q-json-obj://' + JSON.stringify(value));
     }
     target.setAttribute(name, value);
 }
@@ -203,10 +206,12 @@ export function queuPatches(parent, patches, index = 0) {
 function doPatchs() {
     let ptch = null;
     if (domUpdates.length === 0) {} else {
-        // console.log('do cahnges', domUpdates.length);
+        let i = 0;
         while (ptch = domUpdates.shift()) {
             let { parent, patches, index } = ptch;
             patch(parent, patches, index);
+            i++;
+            if (i > 20) break;
         }
     }
     requestAnimationFrame(doPatchs);
