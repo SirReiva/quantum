@@ -1,9 +1,15 @@
 import QuantumElement from './quantumElement.js';
-import { h } from './quantumCore.js';
+import { h, defineQuantumElement } from './quantumCore.js';
 
 class mytag extends QuantumElement {
-    static template(attrs, props) {
-        return <h1> item <span>{ attrs.det.toString() }</span> <span>{ props.num.toString() }</span> </h1>;
+    template() {
+        return <h1> Input: <input onChange={(ev) => { this.changeVal(ev); }} type="number" min="10" max="100" value={this.props.data}/> <h2>{this.props.data}</h2> </h1>;
+    }
+
+    styles() { return `span{ color: red; }`; }
+
+    changeVal(ev) {
+        this.props.data = ev.target.value;
     }
 
     static get observedAttributes() {
@@ -11,11 +17,8 @@ class mytag extends QuantumElement {
     }
 
     constructor() {
-        super({ num: 5 });
-        setInterval(() => {
-            this.props.num++;
-        }, 2500);
+        super({ data: 20 });
     }
 }
 
-customElements.define('my-tag', mytag);
+defineQuantumElement('my-tag', mytag);

@@ -12,12 +12,19 @@
 <body>
     <my-tag id="mtag" det="1"></my-tag>
     <script>
-        let m = document.getElementById('mtag');
-        let k = 1;
-        setInterval(() => {
-            k++;
-            m.setAttribute('det', k);
-        }, 5000);
+        /*(function() {
+                    var script = document.createElement('script');
+                    script.onload = function() {
+                        var stats = new Stats();
+                        document.body.appendChild(stats.dom);
+                        requestAnimationFrame(function loop() {
+                            stats.update();
+                            requestAnimationFrame(loop)
+                        });
+                    };
+                    script.src = '//mrdoob.github.io/stats.js/build/stats.min.js';
+                    document.head.appendChild(script);
+                })();*/
     </script>
 </body>
 

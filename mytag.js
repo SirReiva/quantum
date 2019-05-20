@@ -1,26 +1,31 @@
 import QuantumElement from './quantumElement.js';
-import { h } from './quantumCore.js';
+import { h, defineQuantumElement } from './quantumCore.js';
 
 class mytag extends QuantumElement {
-    static template(attrs, props) {
-        console.log(attrs, props);
+    template() {
         return h(
             'h1',
             null,
-            ' item ',
-            h(
-                'span',
-                null,
-                attrs.det.toString()
-            ),
+            ' Input: ',
+            h('input', { onChange: ev => {
+                    this.changeVal(ev);
+                }, type: 'number', min: '10', max: '100', value: this.props.data }),
             ' ',
             h(
-                'span',
+                'h2',
                 null,
-                props.num.toString()
+                this.props.data
             ),
             ' '
         );
+    }
+
+    styles() {
+        return `span{ color: red; }`;
+    }
+
+    changeVal(ev) {
+        this.props.data = ev.target.value;
     }
 
     static get observedAttributes() {
@@ -28,11 +33,8 @@ class mytag extends QuantumElement {
     }
 
     constructor() {
-        super({ num: 5 });
-        setInterval(() => {
-            this.props.num++;
-        }, 2500);
+        super({ data: 20 });
     }
 }
 
-customElements.define('my-tag', mytag);
+defineQuantumElement('my-tag', mytag);

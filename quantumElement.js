@@ -1,32 +1,41 @@
-import { createElement, diff, patch } from './quantumCore.js';
+import { createElement, diff, queuPatches, isFunction } from './quantumCore.js';
 
 export default class QuantumElement extends HTMLElement {
-    static template() {}
+    template() { return ''; }
+    styles() { return ''; }
+
+    static automaticDetection = true;
 
     _get(target, key) {
-        if (typeof target[key] === 'object' && target[key] !== null) {
-            return new Proxy(target[key], self.validator)
+        if (isFunction(target[key])) {
+            return target[key].bind(target);
+        } else if (typeof target[key] === 'object' && target[key] !== null) {
+            return new Proxy(target[key], this._validator)
         } else {
             return target[key];
         }
     }
 
     _set(target, key, value) {
-        target[key] = value;
-        this.render();
-        return true;
-    }
-
-    attributeChangedCallback(attrName, oldVal, newVal) {
-        if (oldVal !== newVal) {
-            this.render();
+        if (target[key] !== value) {
+            target[key] = value;
+            if (this.constructor.automaticDetection)
+                this._render();
         }
+        return true;
     }
 
     _validator = {
         set: this._set.bind(this),
         get: this._get.bind(this),
     };
+
+    attributeChangedCallback(attrName, oldVal, newVal) {
+        if (oldVal !== newVal && this.constructor.automaticDetection) {
+            this._render();
+        }
+    }
+
 
     _getAttributesInObject() {
         let attrs = {};
@@ -38,27 +47,33 @@ export default class QuantumElement extends HTMLElement {
 
     _vDom = null;
     _mount() {
-        this._vDom = this.constructor.template(this._getAttributesInObject(), this.props);
-        this.shadowRoot.appendChild(createElement(this._vDom));
+        this._vDom = this.template(this._getAttributesInObject(), this.props);
+        const stl = document.createElement('style');
+        stl.innerHTML = this.styles();
+        this._shadowRoot.appendChild(createElement(this._vDom));
+        this._shadowRoot.appendChild(stl);
     }
 
-    shadowRoot = null;
+    _shadowRoot = null;
     _props = {};
     props = new Proxy({}, this._validator);
     constructor(prps = {}) {
         super();
-        this.shadowRoot = this.attachShadow({ mode: 'open' });
+        this._shadowRoot = this.attachShadow({ mode: 'open' });
         this._props = prps;
         this.props = new Proxy(prps, this._validator);
         this._mount();
     }
 
-    render() {
+    _render() {
         const oldVDom = this._vDom;
-        const newVDom = this.constructor.template(this._getAttributesInObject(), this.props);
+        const newVDom = this.template(this._getAttributesInObject(), this.props);
         const patches = diff(newVDom, oldVDom);
-        patch(this.shadowRoot, patches);
+        queuPatches(this._shadowRoot, patches);
         this._vDom = newVDom;
     }
 
+    refresh() {
+        this._render();
+    }
 }

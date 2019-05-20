@@ -4,13 +4,14 @@
     "description": "",
     "main": "cuanticElement.js",
     "scripts": {
-        "compile": "babel mytag.jsx --out-file mytag.js"
+        "dev": "babel --watch mytag.jsx --out-file mytag.js"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "devDependencies": {
         "babel-cli": "^6.23.0",
-        "babel-plugin-transform-react-jsx": "^6.23.0"
+        "babel-plugin-transform-react-jsx": "^6.23.0",
+        "babel-watch": "^7.0.0"
     }
 }
