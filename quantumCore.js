@@ -130,8 +130,8 @@ function setProp(target, name, value) {
     if (isEventProp(name)) {
         return;
     }
-    if (isTwoWayDataBindingProp(name)) {
-        /*let correctName = name.replace('q-', '');
+    /*if (isTwoWayDataBindingProp(name)) {
+        let correctName = name.replace('q-', '');
         var mutationObserver = new MutationObserver(function(mutations) {
             mutations.forEach(function(mutation) {
                 if (mutation.type === 'attributes' && mutation.attributeName === correctName) {
@@ -143,8 +143,8 @@ function setProp(target, name, value) {
             attributes: true
         });
         target.mutation = mutationObserver;
-        return setProp(target, correctName, value);*/
-    }
+        return setProp(target, correctName, value);
+    }*/
     if (name === 'className') {
         return target.setAttribute('class', value);
     }
@@ -255,7 +255,7 @@ function flatten(arr) {
 }
 
 export function h(type, props, ...children) {
-    props = props || {};
+    props = JSON.parse(JSON.stringify(props || {}));
     return { type, props, children: flatten(children) };
 }
 

@@ -25,8 +25,9 @@ export default class QuantumElement extends HTMLElement {
     _set(target, key, value) {
         if (target[key] !== value) {
             target[key] = value;
-            if (this.constructor.automaticDetection)
+            if (this.constructor.automaticDetection) {
                 this._render();
+            }
         }
         return true;
     }
@@ -37,7 +38,7 @@ export default class QuantumElement extends HTMLElement {
     };
 
     attributeChangedCallback(attrName, oldVal, newVal) {
-        if (oldVal !== newVal && this.constructor.automaticDetection) {
+        if ((oldVal !== newVal) && this.constructor.automaticDetection) {
             this._render();
         }
     }
@@ -61,12 +62,14 @@ export default class QuantumElement extends HTMLElement {
     }
 
     _vDom = null;
+    _initialized = false;
     _mount() {
-        this._vDom = this.template(this._getAttributesInObject(), this.props);
+        this._vDom = this.template();
         const stl = document.createElement('style');
         stl.innerHTML = this.styles();
         this._shadowRoot.appendChild(createElement(this._vDom));
         this._shadowRoot.appendChild(stl);
+        this._initialized = true;
     }
 
     _shadowRoot = null;
@@ -77,13 +80,13 @@ export default class QuantumElement extends HTMLElement {
         this._shadowRoot = this.attachShadow({ mode: 'open' });
         this._props = prps;
         this.props = new Proxy(prps, this._validator);
-        // this._mount();
         setTimeout(() => this._mount(), 1);
     }
 
     _render() {
+        if (!this._initialized) return;
         const oldVDom = this._vDom;
-        const newVDom = this.template(this._getAttributesInObject(), this.props);
+        const newVDom = this.template();
         const patches = diff(newVDom, oldVDom);
         queuPatches(this._shadowRoot, patches);
         this._vDom = newVDom;

@@ -6,7 +6,10 @@ class myitem extends QuantumElement {
         return <li>
                     {
                         this.attrs.data &&
-                        <div><img src={this.attrs.data.thumbnailUrl}/><label>{this.attrs.data.title}</label></div>
+                        <div>
+                            <img src={"https://picsum.photos/200/300?random" + Math.floor(Math.random() * 10)}/>
+                            <label>{this.attrs.data.title}</label>
+                        </div>
                     }
                 </li>;
     }
@@ -44,13 +47,39 @@ class mylist extends QuantumElement {
     }
 
     constructor() {
-        super({ items: [] });
-        fetch('https://jsonplaceholder.typicode.com/photos').then(resp => resp.json()).then((data) => {
-            this.props.items = data.slice(4950);
-            /*setInterval(() => {
-                this.props.items[0].title = 'dsafdsfdas';
-            }, 2500);*/
-        });
+        super({ items: [{
+            title: '0'
+        },{
+            title: '1'
+        },{
+            title: '2'
+        },{
+            title: '3'
+        },{
+            title: '2'
+        },{
+            title: '1'
+        },{
+            title: '2'
+        },{
+            title: '3'
+        },{
+            title: '2'
+        },{
+            title: '1'
+        },{
+            title: '2'
+        },{
+            title: '3'
+        },{
+            title: '2'
+        },{
+            title: '5'
+        }]});
+        setInterval(() => {
+            for(let i = 0; i < this.props.items.length; i++)
+                this.props.items[i].title = Math.floor(Math.random() * 100).toString();
+        }, 2500);
     }
 }
 
