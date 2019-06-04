@@ -11,6 +11,12 @@ const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestA
     window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 window.requestAnimationFrame = requestAnimationFrame;
 
+document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'hidden') {
+        doPatchsHidden();
+    }
+});
+
 export function isFunction(functionToCheck) {
     return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
 }
@@ -63,16 +69,16 @@ function diffChildren(newNode, oldNode) {
 }
 
 export function diff(newNode, oldNode) {
-    if (!oldNode) {
+    if (!oldNode && newNode) {
         return { type: CREATE, newNode };
     }
-    if (!newNode) {
+    if (!newNode && oldNode) {
         return { type: REMOVE };
     }
-    if (changed(newNode, oldNode)) {
+    if (oldNode && newNode && changed(newNode, oldNode)) {
         return { type: REPLACE, newNode };
     }
-    if (newNode.type) {
+    if (newNode && newNode.type) {
         return {
             type: UPDATE,
             props: diffProps(newNode, oldNode),
@@ -215,6 +221,23 @@ function doPatchs() {
         }
     }
     requestAnimationFrame(doPatchs);
+}
+
+function doPatchsHidden() {
+    let ptch = null;
+    if (domUpdates.length === 0) {} else {
+        let i = 0;
+        while (ptch = domUpdates.shift()) {
+            let { parent, patches, index } = ptch;
+            patch(parent, patches, index);
+            i++;
+            if (i > 20) break;
+        }
+    }
+    if (document.visibilityState === 'hidden') {
+        setTimeout(doPatchsHidden, 1000);
+    }
+
 }
 
 requestAnimationFrame(doPatchs);

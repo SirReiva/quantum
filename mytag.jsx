@@ -7,8 +7,8 @@ class myitem extends QuantumElement {
                     {
                         this.attrs.data &&
                         <div>
-                            <img src={"https://picsum.photos/200/300?random" + Math.floor(Math.random() * 10)}/>
-                            <label>{this.attrs.data.title}</label>
+                            <img src={"https://picsum.photos/200/300?random" + this.props.img}/>
+                            <label>{this.attrs.data.title}</label> - <b><slot></slot></b>
                         </div>
                     }
                 </li>;
@@ -23,7 +23,7 @@ class myitem extends QuantumElement {
     }
 
     constructor() {
-        super({});
+        super({img: Math.floor(Math.random() * 10)});
     }
 
 }
@@ -34,7 +34,7 @@ class mylist extends QuantumElement {
     template() {
         return <ul>
                 {
-                    this.props.items.map(item => <my-item data={item}></my-item>)
+                    this.props.items.map(item => <my-item data={item}>{item.title}</my-item>)
                 }
                 </ul>;
     }

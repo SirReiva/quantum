@@ -3,11 +3,17 @@ import { createElement, diff, queuPatches, isFunction } from './quantumCore.js';
 export default class QuantumElement extends HTMLElement {
     template() { return ''; }
     styles() { return ''; }
+    componentMounted() {}
+    componentLoaded() {}
+    componentUnmounted() {}
 
     static automaticDetection = true;
 
     connectedCallback() {
-
+        this.componentMounted();
+    }
+    disconnectedCallback() {
+        this.componentUnmounted();
     }
 
     _get(target, key) {
@@ -70,6 +76,7 @@ export default class QuantumElement extends HTMLElement {
         this._shadowRoot.appendChild(createElement(this._vDom));
         this._shadowRoot.appendChild(stl);
         this._initialized = true;
+        this.componentLoaded();
     }
 
     _shadowRoot = null;

@@ -9,11 +9,17 @@ class myitem extends QuantumElement {
             this.attrs.data && h(
                 'div',
                 null,
-                h('img', { src: "https://picsum.photos/200/300?random" + Math.floor(Math.random() * 10) }),
+                h('img', { src: "https://picsum.photos/200/300?random" + this.props.img }),
                 h(
                     'label',
                     null,
                     this.attrs.data.title
+                ),
+                ' - ',
+                h(
+                    'b',
+                    null,
+                    h('slot', null)
                 )
             )
         );
@@ -26,7 +32,7 @@ class myitem extends QuantumElement {
     connectedCallback() {}
 
     constructor() {
-        super({});
+        super({ img: Math.floor(Math.random() * 10) });
     }
 
 }
@@ -38,7 +44,11 @@ class mylist extends QuantumElement {
         return h(
             'ul',
             null,
-            this.props.items.map(item => h('my-item', { data: item }))
+            this.props.items.map(item => h(
+                'my-item',
+                { data: item },
+                item.title
+            ))
         );
     }
 

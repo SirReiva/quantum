@@ -13,5 +13,8 @@
         "babel-cli": "^6.23.0",
         "babel-plugin-transform-react-jsx": "^6.23.0",
         "babel-watch": "^7.0.0"
+    },
+    "dependencies": {
+        "@vaadin/vaadin": "^13.0.8"
     }
 }
