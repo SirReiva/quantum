@@ -1,20 +1,25 @@
 {
-    "name": "cuantic",
-    "version": "1.0.0",
-    "description": "",
-    "main": "cuanticElement.js",
+    "name": "quantum",
+    "version": "0.0.2",
+    "description": "vdom Webcomponents",
+    "main": "mytag.js",
     "scripts": {
         "dev": "babel --watch mytag.jsx --out-file mytag.js"
     },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "devDependencies": {
-        "babel-cli": "^6.23.0",
-        "babel-plugin-transform-react-jsx": "^6.23.0",
-        "babel-watch": "^7.0.0"
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/SirReiva/quantum.git"
     },
-    "dependencies": {
-        "@vaadin/vaadin": "^13.0.8"
+    "author": "Reiva",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/SirReiva/quantum/issues"
+    },
+    "homepage": "https://github.com/SirReiva/quantum#readme",
+    "dependencies": {},
+    "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-plugin-transform-react-jsx": "^6.24.1",
+        "babel-watch": "^7.0.0"
     }
 }
