@@ -36,15 +36,15 @@ function diffProps(newNode, oldNode) {
         if (isEventProp(name)) {
             if (!newVal) {
                 patches.push({ type: REMOVE_EVENT, name, value: oldVal });
-            } else if (!oldVal && newVal !== oldVal) {
+            } else if (!oldVal && newVal.toString() !== oldVal.toString()) {
                 patches.push({ type: SET_EVENT, name, value: newVal });
-            } else if (oldVal && newVal !== oldVal) {
+            } else if (oldVal && newVal.toString() !== oldVal.toString()) {
                 patches.push({ type: REPLACE_EVENT, name, value: newVal, prevVal: oldVal });
             }
         } else {
             if (!newVal) {
                 patches.push({ type: REMOVE_PROP, name, value: oldVal });
-            } else if (!oldVal || newVal !== oldVal) {
+            } else /*if (!oldVal  || newVal !== oldVal )*/ { //comparar valor??
                 patches.push({ type: SET_PROP, name, value: newVal });
             }
         }
@@ -60,10 +60,11 @@ function diffChildren(newNode, oldNode) {
         oldNode.children.length
     );
     for (let i = 0; i < patchesLength; i++) {
-        patches[i] = diff(
+        let df = diff(
             newNode.children[i],
             oldNode.children[i]
-        );
+        )
+        if (df) patches[i] = df;
     }
     return patches;
 }
@@ -85,18 +86,22 @@ export function diff(newNode, oldNode) {
             children: diffChildren(newNode, oldNode),
         };
     }
+    return null;
 }
 
-export function createElement(node) {
+export function createElement(node, refs) {
     if (typeof node === 'string' || typeof node === 'number') {
         return document.createTextNode(node.toString());
     }
     const el = document.createElement(node.type);
+    if (node.props && node.props.ref) {
+        refs[node.props.ref] = el;
+    }
     setProps(el, node.props);
     addEventListeners(el, node.props);
-    if (node.children)
+    if (node.children && node.children.length > 0)
         node.children
-        .map(createElement)
+        .map(childEl => createElement(childEl, refs))
         .forEach(el.appendChild.bind(el));
     return el;
 }
@@ -186,6 +191,7 @@ function removeEvent(target, event, eventName) {
 }
 
 function patchProps(parent, patches) {
+    if (!patches) return;
     for (let i = 0; i < patches.length; i++) {
         const propPatch = patches[i];
         const { type, name, value, prevVal } = propPatch;
@@ -205,8 +211,8 @@ function patchProps(parent, patches) {
 }
 
 let domUpdates = [];
-export function queuPatches(parent, patches, index = 0) {
-    domUpdates.push({ parent, patches, index });
+export function queuPatches(parent, patches, refs, index = 0) {
+    domUpdates.push({ parent, patches, index, refs });
 }
 
 function doPatchs() {
@@ -214,8 +220,8 @@ function doPatchs() {
     if (domUpdates.length === 0) {} else {
         let i = 0;
         while (ptch = domUpdates.shift()) {
-            let { parent, patches, index } = ptch;
-            patch(parent, patches, index);
+            let { parent, patches, refs, index } = ptch;
+            patch(parent, patches, refs, index);
             i++;
             if (i > 20) break;
         }
@@ -228,8 +234,8 @@ function doPatchsHidden() {
     if (domUpdates.length === 0) {} else {
         let i = 0;
         while (ptch = domUpdates.shift()) {
-            let { parent, patches, index } = ptch;
-            patch(parent, patches, index);
+            let { parent, patches, refs, index } = ptch;
+            patch(parent, patches, refs, index);
             i++;
             if (i > 20) break;
         }
@@ -242,33 +248,49 @@ function doPatchsHidden() {
 
 requestAnimationFrame(doPatchs);
 
-function patch(parent, patches, index = 0) {
-    if (!patches) { return; }
+function patch(parent, patches, refs, index = 0) {
+    if (!patches || patches.length == 0) { return 0; }
     const el = parent.childNodes[index];
     switch (patches.type) {
         case CREATE:
             {
                 const { newNode } = patches;
-                const newEl = createElement(newNode);
-                return parent.appendChild(newEl);
+                const newEl = createElement(newNode, refs);
+                parent.appendChild(newEl);
+                return 0;
             }
         case REMOVE:
             {
-                return parent.removeChild(el);
+                if (el) {
+                    parent.removeChild(el);
+                    if (el.hasAttribute('ref')) {
+                        delete refs[el.getAttribute('ref')];
+                    }
+                    return -1;
+                }
+                return 0;
             }
         case REPLACE:
             {
                 const { newNode } = patches;
-                const newEl = createElement(newNode);
-                return parent.replaceChild(newEl, el);
+                if (newNode) {
+                    const newEl = createElement(newNode, refs);
+                    if (el) parent.replaceChild(newEl, el);
+                }
+                return 0;
             }
         case UPDATE:
             {
                 const { props, children } = patches;
+                if (!children) return;
                 patchProps(el, props);
                 for (let i = 0; i < children.length; i++) {
-                    patch(el, children[i], i);
+                    if (children[i]) {
+                        let df = patch(el, children[i], refs, i);
+                        i += df;
+                    }
                 }
+                return 0;
             }
     }
 }
@@ -277,9 +299,20 @@ function flatten(arr) {
     return [].concat.apply([], arr);
 }
 
+function copyObject(src) {
+    return Object.assign({}, src);
+}
+
 export function h(type, props, ...children) {
-    props = JSON.parse(JSON.stringify(props || {}));
-    return { type, props, children: flatten(children) };
+    const vElem = Object.create(null);
+    // props = JSON.parse(JSON.stringify(props || {}));
+    props = copyObject(props);
+    Object.assign(vElem, {
+        type,
+        props,
+        children: flatten(children)
+    });
+    return vElem;
 }
 
 export function defineQuantumElement(tag, calssEl) {

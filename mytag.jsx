@@ -2,13 +2,21 @@ import QuantumElement from './quantumElement.js';
 import { h, defineQuantumElement } from './quantumCore.js';
 
 class myitem extends QuantumElement {
+    styles() {
+        return `
+            img {
+                height: 64px;
+            }
+        `;
+    }
+
+    //<img src={ 'https://picsum.photos/200/300?random=' + this.attrs.data.title }/>
     template() {
         return <li>
                     {
                         this.attrs.data &&
                         <div>
-                            <img src={"https://picsum.photos/200/300?random" + this.props.img}/>
-                            <label>{this.attrs.data.title}</label> - <b><slot></slot></b>
+                            <b><slot></slot></b> - <label ref="label">{this.attrs.data.title}</label>
                         </div>
                     }
                 </li>;
@@ -16,10 +24,6 @@ class myitem extends QuantumElement {
 
     static get observedAttributes() {
         return ['data'];
-    }
-
-    connectedCallback() {
-        
     }
 
     constructor() {
@@ -32,14 +36,37 @@ defineQuantumElement('my-item', myitem);
 
 class mylist extends QuantumElement {
     template() {
-        return <ul>
+        return <div>
+                <button ref="btnRender" onclick={(e) => this.btnClick(e)}>Render</button>
+                <button ref="btnRender" onclick={(e) => this.updateOne(e)}>Render One </button>
+                <ul>
                 {
-                    this.props.items.map(item => <my-item data={item}>{item.title}</my-item>)
+                    this.props.items.map((item, index) => <my-item data={ item }>{ index + 1 }</my-item>)
                 }
-                </ul>;
+                </ul>
+        </div>;
     }
 
     styles() { return ``; }
+
+    updateOne() {
+        let n = Math.floor((Math.random() * 10) + 1) + '';
+        console.log(n);
+        this.props.items[0].title = n;
+    }
+
+    btnClick() {
+        let tempList = [];
+        let max = Math.floor((Math.random() * 10) + 1);
+        for(let i = 0; i < max; i++) {
+            tempList.push({
+                title: Math.floor((Math.random() * 10) + 1) + ''
+            });
+        }
+        //console.log(max, tempList.map(i => i.title).join(', '));
+        this.props.items = tempList;
+        // this.props.items
+    }
 
 
     static get observedAttributes() {
@@ -47,39 +74,8 @@ class mylist extends QuantumElement {
     }
 
     constructor() {
-        super({ items: [{
-            title: '0'
-        },{
-            title: '1'
-        },{
-            title: '2'
-        },{
-            title: '3'
-        },{
-            title: '2'
-        },{
-            title: '1'
-        },{
-            title: '2'
-        },{
-            title: '3'
-        },{
-            title: '2'
-        },{
-            title: '1'
-        },{
-            title: '2'
-        },{
-            title: '3'
-        },{
-            title: '2'
-        },{
-            title: '5'
-        }]});
-        setInterval(() => {
-            for(let i = 0; i < this.props.items.length; i++)
-                this.props.items[i].title = Math.floor(Math.random() * 100).toString();
-        }, 2500);
+        super({ items: []});
+        //setInterval(this.btnClick.bind(this), 2000);
     }
 }
 
