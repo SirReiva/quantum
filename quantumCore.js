@@ -21,6 +21,10 @@ export function isFunction(functionToCheck) {
     return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
 }
 
+export function isObject(objectToCheck) {
+    return typeof objectToCheck === 'object'
+}
+
 function changed(node1, node2) {
     return typeof node1 !== typeof node2 ||
         typeof node1 === 'string' && node1 !== node2 ||
@@ -42,9 +46,9 @@ function diffProps(newNode, oldNode) {
                 patches.push({ type: REPLACE_EVENT, name, value: newVal, prevVal: oldVal });
             }
         } else {
-            if (!newVal) {
+            if (!newVal && newVal !== '') {
                 patches.push({ type: REMOVE_PROP, name, value: oldVal });
-            } else /*if (!oldVal  || newVal !== oldVal )*/ { //comparar valor??
+            } else if (!oldVal || JSON.stringify(newVal) !== JSON.stringify(oldVal)) { //comparar valor??
                 patches.push({ type: SET_PROP, name, value: newVal });
             }
         }
@@ -130,10 +134,9 @@ function addEventListeners(target, props) {
 
 function setBooleanProp(target, name, value) {
     if (value) {
-        target.setAttribute(name, value);
-        target[name] = true;
+        target.setAttribute(name, '');
     } else {
-        target[name] = false;
+        target.removeAttribute(name);
     }
 }
 
@@ -179,7 +182,8 @@ function removeProp(target, name, value) {
     if (name === 'className') {
         return target.removeAttribute('class');
     }
-    target.removeAttribute(name);
+    target[name] = null;
+    return target.removeAttribute(name);
 }
 
 function addEvent(target, event, eventName) {
@@ -303,10 +307,15 @@ function copyObject(src) {
     return Object.assign({}, src);
 }
 
+function purgeProps(obj) {
+    Object.keys(obj).forEach(key => obj[key] === undefined ? delete obj[key] : '');
+}
+
 export function h(type, props, ...children) {
     const vElem = Object.create(null);
     // props = JSON.parse(JSON.stringify(props || {}));
     props = copyObject(props);
+    purgeProps(props); //??
     Object.assign(vElem, {
         type,
         props,
@@ -317,4 +326,66 @@ export function h(type, props, ...children) {
 
 export function defineQuantumElement(tag, calssEl) {
     customElements.define(tag, calssEl);
+}
+
+function xmlToJson(xml) {
+
+    var obj = { type: xml.tagName, children: [], attributes: null };
+
+    if (xml.nodeType == 1) {
+        if (xml.attributes.length > 0) {
+            obj.attributes = {};
+            for (var j = 0; j < xml.attributes.length; j++) {
+                var attribute = xml.attributes.item(j);
+                obj.attributes[attribute.nodeName] = attribute.nodeValue;
+            }
+        }
+    } else if (xml.nodeType == 3) {
+        obj.children.push(xml.nodeValue);
+    }
+
+    if (xml.hasChildNodes()) {
+        for (var i = 0; i < xml.childNodes.length; i++) {
+            var item = xml.childNodes.item(i);
+            if (item.nodeType == 3) {
+                obj.children.push(item.nodeValue);
+            } else if (item.nodeType == 1) {
+                obj.children.push(xmlToJson(item));
+            }
+        }
+    }
+    if (xml.nodeType == 9) {
+        obj = obj.children[0];
+    }
+    return obj;
+}
+
+function stringToXml(value) {
+    return new window.DOMParser().parseFromString(value, "text/xml");
+}
+
+function jsonToHyperscript(jsObject) {
+    return h(jsObject.type, jsObject.attributes, ...jsObject.children.map(o => {
+        if (isObject(o)) return jsonToHyperscript(o);
+        return o;
+    }));
+
+}
+
+export function compileTemplateString(temlpate) {
+    try {
+        return jsonToHyperscript(xmlToJson(stringToXml(temlpate)));
+    } catch (exp) {
+        console.error(exp);
+        return h('div', null, ' ')
+    }
+}
+
+export function debounce(callback, wait) {
+    let timeout;
+    return (...args) => {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => callback.apply(context, args), wait);
+    };
 }

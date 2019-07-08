@@ -3,15 +3,73 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css" integrity="sha256-PHcOkPmOshsMBC+vtJdVr5Mwb7r0LkSVJPlPrp/IMpU=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="app.css" />
+    <script>
+        /*function loadScript(src) {
+                            return new Promise(function(resolve, reject) {
+                                const script = document.createElement('script');
+                                script.src = src;
+                                script.onload = resolve;
+                                script.onerror = reject;
+                                document.head.appendChild(script);
+                            });
+                        }
+                        if (!supportsCustomElementsV1) {
 
+                        }*/
+    </script>
     <script type="module" src="mytag.js"></script>
+    <script type="module" src="qComponents.js"></script>
 </head>
 
 <body>
-    <my-list></my-list>
+    <q-scafold>
+        <q-appbar class="shadow">
+            <q-tolbar-button slot="start"><i class="fa fa-bars xlarge"></i></q-tolbar-button>
+            <span>Kevin Owens explica cómo comenzó a gustarle el wrestling</span>
+            <q-tolbar-button slot="end"><i class="fa fa-ellipsis-v xlarge"></i></q-tolbar-button>
+        </q-appbar>
+        <q-content>
+            <p>Prueba</p>
+            <q-button>Click</q-button>
+            <q-button mode="outline">Click</q-button>
+            <br/>
+            <br/>
+            <q-checkbox>Label</q-checkbox>
+            <br/>
+            <q-checkbox>Label</q-checkbox>
+            <br/>
+            <br/>
+            <q-radiobutton value="v1" checked group="grp1">Label</q-radiobutton>
+            <br/>
+            <q-radiobutton value="v2" group="grp1">Label</q-radiobutton>
+            <br/>
+            <br/>
+            <q-switch>Label</q-switch>
+            <br/>
+            <q-switch>Label</q-switch>
+            <br/>
+            <br/>
+            <q-slider>Label</q-slider>
+            <br/>
+            <br/>
+            <q-text-input>Label</q-text-input>
+            <br/>
+            <q-text-input value="test" mode="outline">Label</q-text-input>
+            <br/>
+            <br/>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi placerat tempus porta. Mauris faucibus, ipsum vel venenatis mattis, velit mauris placerat nisi, quis varius massa nisi et velit. Sed nec nulla vestibulum, pretium magna eu, tincidunt
+                velit. Vivamus tincidunt nec lectus maximus dictum. Morbi nec ultrices urna, nec feugiat eros. Nunc laoreet tincidunt neque, non rutrum lectus placerat id. Quisque vel lacus quis lacus facilisis maximus a sed dui. Nullam sed sapien a nulla
+                dictum porttitor. Sed non neque nulla. Sed tincidunt, augue ut ultrices finibus, orci mi maximus justo, eu facilisis felis eros in arcu. Vestibulum ac nisi odio. Nam eget nulla tellus. Nunc efficitur vitae purus sit amet gravida. Quisque
+                vel lorem a tellus rhoncus efficitur quis at orci. Quisque et libero vitae turpis pellentesque posuere. Sed ultrices id mi in dapibus. Quisque semper nulla nisi, vel commodo magna ultrices maximus. Sed a quam ut nisi bibendum molestie
+                in bibendum ligula. Mauris dui odio, ornare vel lobortis vel, feugiat ut orci. Cras lacinia sagittis iaculis.</p>
+        </q-content>
+    </q-scafold>
 </body>
 
 </html>

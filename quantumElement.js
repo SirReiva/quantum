@@ -5,7 +5,13 @@ export default class QuantumElement extends HTMLElement {
     styles() { return ''; }
     componentMounted() {}
     componentLoaded() {}
+    componentBeforeUpdate() {}
+    componentAfterUpdate() {}
     componentUnmounted() {}
+
+    static get encapsulation() {
+        return true;
+    }
 
     automaticDetection = true;
     refs = [];
@@ -16,12 +22,16 @@ export default class QuantumElement extends HTMLElement {
     _vDom = null;
     _initialized = false;
     _shadowRoot = null;
+    _styleEl = null;
     _props = {};
     props = new Proxy({}, this._validator);
 
     constructor(prps = {}) {
         super();
-        this._shadowRoot = this.attachShadow({ mode: 'open' });
+        if (this.constructor.encapsulation)
+            this._shadowRoot = this.attachShadow({ mode: 'open' }); //, delegatesFocus: true
+        else
+            this._shadowRoot = this;
         this._props = prps;
         this.props = new Proxy(prps, this._validator);
         setTimeout(() => this._mount(), 1);
@@ -80,24 +90,41 @@ export default class QuantumElement extends HTMLElement {
     }
 
     _mount() {
+        //this.style.visible = 'hidden';
         this._vDom = this.template();
-        const stl = document.createElement('style');
-        stl.innerHTML = this.styles();
+        this._styleEl = document.createElement('style');
+        this._styleEl.innerHTML = this.styles(); //+ ':host{ visible: "visible"; }';??
         this._shadowRoot.appendChild(createElement(this._vDom, this.refs));
-        this._shadowRoot.appendChild(stl);
+        this._shadowRoot.appendChild(this._styleEl);
         this._initialized = true;
         this.componentLoaded();
     }
 
     _render() {
         if (!this._initialized) return;
+        this.componentBeforeUpdate();
         const oldVDom = this._vDom;
         const newVDom = this.template();
         queuPatches(this._shadowRoot, diff(newVDom, oldVDom), this.refs);
         this._vDom = newVDom;
+        this.componentAfterUpdate();
+    }
+
+    reloadStyles() {
+        if (!this._initialized) return;
+        this._styleEl.innerHTML = this.styles();
     }
 
     refresh() {
         this._render();
+    }
+
+    rebuild() { //testear...
+        this._shadowRoot.innerHTML = '';
+        this._vDom = this.template();
+        this._styleEl = document.createElement('style');
+        this._styleEl.innerHTML = this.styles();
+        this._shadowRoot.appendChild(createElement(this._vDom, this.refs));
+        this._shadowRoot.appendChild(this._styleEl);
     }
 }

@@ -4,7 +4,8 @@
     "description": "vdom Webcomponents",
     "main": "mytag.js",
     "scripts": {
-        "dev": "babel --watch mytag.jsx --out-file mytag.js"
+        "dev": "babel --watch mytag.jsx --out-file mytag.js",
+        "comp": "babel --watch qComponents.jsx --out-file qComponents.js"
     },
     "repository": {
         "type": "git",
@@ -18,6 +19,7 @@
     "homepage": "https://github.com/SirReiva/quantum#readme",
     "dependencies": {},
     "devDependencies": {
+        "@babel/core": "^7.4.5",
         "babel-cli": "^6.26.0",
         "babel-plugin-transform-react-jsx": "^6.24.1",
         "babel-watch": "^7.0.0"
