@@ -47,7 +47,7 @@ class qContent extends QuantumElement {
             position: absolute;
             width: 100%;
             height: 100%;
-            overflow-y: auto;
+            overflow-y: hidden;
         }
         .scrollContent {
             padding: 16px;
@@ -55,6 +55,7 @@ class qContent extends QuantumElement {
             height: 100%;
             box-sizing: border-box;
             position: relative;
+            overflow-y: auto;
         }
     `; }
 
@@ -81,7 +82,7 @@ class qAppBar extends QuantumElement {
             color: var(--app-font-color);
             position: relative;
         }
-        :host(.shadow):after {
+        :host([shadow]):after {
             left: 0;
             bottom: -8px;
             background-position: left 0 top 0;
@@ -125,7 +126,7 @@ class qAppBar extends QuantumElement {
     `; }
 
     constructor() {
-        super({ items: []});
+        super({});
     }
 }
 defineQuantumElement('q-appbar', qAppBar);
@@ -157,6 +158,7 @@ class qButton extends QuantumElement {
         return `
             :host {
                 display: inline-block;
+                margin: 2px;
             }
             .q-material-button-text {
                 position: relative;
@@ -468,7 +470,7 @@ class qToolBarButton extends QuantumElement {
             }
             button {
                 position: relative;
-                display: inline-block;
+                display: inline-flex;
                 box-sizing: border-box;
                 border: none;
                 border-radius: 50%;
@@ -1693,7 +1695,7 @@ class qTextInput extends QuantumElement {
 }
 defineQuantumElement('q-text-input', qTextInput);
 
-/*SCAFOLD*/
+/*STACK*/
 class qStack extends QuantumElement {
     template() {
         return <slot></slot>;
@@ -1714,3 +1716,299 @@ class qStack extends QuantumElement {
     }
 }
 defineQuantumElement('q-stack', qStack);
+
+/*ICON*/
+class qIcon extends QuantumElement {
+    template() {
+        return <div>
+                    <link rel="stylesheet" href="font-awesome.min.css"></link>
+                    <i class={`fa fa-${this.attrs.icon} large`}></i>
+                </div>;
+    }
+
+    static get observedAttributes() {
+        return ['icon'];
+    }
+
+    styles() { return `
+        :host {
+            height: 32px;
+            width: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .xsmall {
+            font-size: 70%;
+        }
+        
+        .small {
+            font-size: 85%;
+        }
+        
+        .large {
+            font-size: 140%;
+        }
+        
+        .xlarge {
+            font-size: 170%;
+        }
+    `; }
+
+    constructor() {
+        super({});
+    }
+}
+defineQuantumElement('q-icon', qIcon);
+
+/*DRAWER*/
+class qDrawer extends QuantumElement {
+    template() {
+        return <div className="base">
+                    <div onMouseDown={() => this.close()} className="backdrop"></div>
+                    <div ref="content" className="content">
+                        <slot></slot>
+                    </div>
+                </div>;
+    }
+
+    static get observedAttributes() {
+        return ['open'];
+    }
+
+    isOpen() {
+        return this.hasAttribute('open');
+    }
+
+    open() {
+        if(this.isOpen()) return;
+        this._removeInlineTransform();
+        this.setAttribute('open', '');
+        this.dispatchEvent(new CustomEvent('change', {'detail': this.hasAttribute('open')}));
+    }
+
+    close() {
+        if(!this.isOpen()) return;
+        this._removeInlineTransform();
+        this.removeAttribute('open');
+        this.dispatchEvent(new CustomEvent('change', {'detail': this.hasAttribute('open')}));
+    }
+
+    toggle() {
+        if (this.isOpen()) {
+            this.close();
+        } else {
+            this.open();
+        }
+    }
+
+    componentMounted() {
+        this.initDrawer();
+    }
+
+    componentUnmounted() {
+        document.body.removeEventListener('click', this._listenerBody);
+    }
+
+    checkMobile(a) {
+        return /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(a) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4));
+    }
+
+    _swiping;
+    _startX;
+    _endSwipe;
+    _move(e) {
+        if (this._swiping) {
+            let isMobile = this.checkMobile(navigator.userAgent || navigator.vendor || window.opera);
+            let currX = isMobile ? e.touches[0].clientX : e.clientX;
+            let x = this._startX - currX;
+            let moveX = (-this.refs.content.offsetWidth  + (-x));
+            if(moveX > 0) {
+                moveX = 0;
+            }
+            //console.log(moveX);
+            this._endSwipe = -x;
+            this.style.transform = "translateX(" + moveX +"px)";
+            e.preventDefault();
+        }
+    }
+    _removeInlineTransform() {
+        this.style.transform = "";
+        this.style.transition = "";
+    }
+
+    _directive(e) {
+        for(let tgts = 0; tgts < e.path.length; tgts++) {
+            if(!e.path[tgts].hasAttribute) {}
+            else if (e.path[tgts].hasAttribute('openmenu')) {
+                this.open();
+                return true;
+            } else if (e.path[tgts].hasAttribute('togglemenu')) {
+                this.toggle();
+                return true;
+            } else if (e.path[tgts].hasAttribute('closenmenu')) {
+                this.close();
+                return true;
+            }
+        }
+        return true;
+    }
+
+    _listener;
+    _listenerBody;
+    initDrawer() {
+        this._endSwipe = 0;
+        this._listener = this._move.bind(this);
+        this._swiping = false;
+        let isMobile = this.checkMobile(navigator.userAgent || navigator.vendor || window.opera),
+        isIE = window.navigator.msPointerEnabled,
+        typeStart = isIE ? "MSPointerDown" : (isMobile ? "touchstart" : "mousedown"),
+        typeMove = isIE ? "MSPointerMove" : (isMobile ? "touchmove" : "mousemove"),
+        typeEnd = isIE ? "MSPointerUp" : (isMobile ? "touchend" : "mouseup");
+        this._listenerBody = this._directive.bind(this);
+        document.body.addEventListener('click', this._listenerBody);
+        document.addEventListener(typeStart, (e) => {
+            this._startX = isMobile ? e.touches[0].clientX : e.clientX;
+            if ((!this.isOpen() && this._startX < 54)) {
+                this._swiping = true;
+                this.style.transition = "none";
+                document.addEventListener(typeMove, this._listener);
+            }// else if(this.isOpen() )
+        });
+        document.addEventListener(typeEnd, (e) => {
+            if (this._swiping) {
+                if (this._endSwipe > 150) {
+                    this._endSwipe = 0;
+                    this._removeInlineTransform();
+                    this.open();
+                } else {
+                    this._endSwipe = 0;
+                    this._removeInlineTransform();
+                    this.close();
+                }
+                this._swiping = false;
+            }
+            document.removeEventListener(typeMove, this._listener);
+        });
+    }
+
+    styles() { return `
+        :host {
+            display: block;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            z-index: 999;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-out;
+        }
+        :host([open]) {
+            transform: translateX(0%);
+        }
+        :host([open]) .backdrop {
+            opacity: 0.8;
+        }
+        .base {
+            position: relative;
+            top: 0px;
+            box-sizing: border-box;
+        }
+        .base, .backdrop {
+            width: 100%;
+            height: 100%;
+        }
+        .backdrop {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            background-color: black;
+            opacity: 0;
+            z-index: 0;
+            transition: opacity 0.3s ease-out;
+        }
+        .content {
+            z-index: 1;
+            position: relative;
+            width: 70%;
+            height: 100%;
+            background-color: white;
+            box-sizing: border-box;
+            padding: 1px;
+        }
+    `; }
+
+    constructor() {
+        super({});
+    }
+}
+defineQuantumElement('q-drawer', qDrawer);
+
+
+/*ExampleApp*/
+class exampleApp extends QuantumElement {
+    template() {
+        return <q-scafold>
+                    <q-drawer>
+                        <ul>
+                            <li toggleMenu>Link</li>
+                        </ul>
+                    </q-drawer>
+                    <q-appbar shadow>
+                        <q-tolbar-button openMenu slot="start"><q-icon icon="bars"></q-icon></q-tolbar-button>
+                        <span>{ this.props.title }</span>
+                        <q-tolbar-button slot="end"><q-icon icon="music"></q-icon></q-tolbar-button>
+                    </q-appbar>
+                    <q-content>
+                        <p>Prueba</p>
+                        <q-button onClick={() => this.changeTitle()}><q-icon icon="music"></q-icon> Click</q-button>
+                        <q-button onClick={() => this.changeTitle()}>Click</q-button>
+                        <q-button mode="outline">Click</q-button>
+                        <br/>
+                        <br/>
+                        <q-checkbox>Label</q-checkbox>
+                        <br/>
+                        <q-checkbox>Label</q-checkbox>
+                        <br/>
+                        <br/>
+                        <q-radiobutton value="v1" checked group="grp1">Label</q-radiobutton>
+                        <br/>
+                        <q-radiobutton value="v2" group="grp1">Label</q-radiobutton>
+                        <br/>
+                        <br/>
+                        <q-switch>Label</q-switch>
+                        <br/>
+                        <q-switch>Label</q-switch>
+                        <br/>
+                        <br/>
+                        <q-slider>Label</q-slider>
+                        <br/>
+                        <br/>
+                        <q-text-input>Label</q-text-input>
+                        <br/>
+                        <q-text-input value="test" mode="outline">Label</q-text-input>
+                        <br/>
+                        <br/>
+                        <p>1Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi placerat tempus porta. Mauris faucibus, ipsum vel venenatis mattis, velit mauris placerat nisi, quis varius massa nisi et velit. Sed nec nulla vestibulum, pretium magna eu, tincidunt
+                            velit. Vivamus tincidunt nec lectus maximus dictum. Morbi nec ultrices urna, nec feugiat eros. Nunc laoreet tincidunt neque, non rutrum lectus placerat id. Quisque vel lacus quis lacus facilisis maximus a sed dui. Nullam sed sapien a nulla
+                            dictum porttitor. Sed non neque nulla. Sed tincidunt, augue ut ultrices finibus, orci mi maximus justo, eu facilisis felis eros in arcu. Vestibulum ac nisi odio. Nam eget nulla tellus. Nunc efficitur vitae purus sit amet gravida. Quisque
+                            vel lorem a tellus rhoncus efficitur quis at orci. Quisque et libero vitae turpis pellentesque posuere. Sed ultrices id mi in dapibus. Quisque semper nulla nisi, vel commodo magna ultrices maximus. Sed a quam ut nisi bibendum molestie
+                            in bibendum ligula. Mauris dui odio, ornare vel lobortis vel, feugiat ut orci. Cras lacinia sagittis iaculis.</p>
+                    </q-content>
+                </q-scafold>;
+    }
+
+    styles() { return `
+        
+    `; }
+
+    changeTitle() {
+        this.props.title = 'Inicio ' + Math.floor((Math.random() * 10) + 1);
+    }
+
+    constructor() {
+        super({title: 'Inicio'});        
+    }
+}
+defineQuantumElement('example-app', exampleApp);

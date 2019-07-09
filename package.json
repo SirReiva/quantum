@@ -4,8 +4,9 @@
     "description": "vdom Webcomponents",
     "main": "mytag.js",
     "scripts": {
-        "dev": "babel --watch mytag.jsx --out-file mytag.js",
-        "comp": "babel --watch qComponents.jsx --out-file qComponents.js"
+        "watch": "babel --watch qComponents.jsx --out-file qComponents.js",
+        "serve": "live-server --no-browser --wait=1500",
+        "dev": "npm-run-all --parallel watch serve"
     },
     "repository": {
         "type": "git",
@@ -22,6 +23,7 @@
         "@babel/core": "^7.4.5",
         "babel-cli": "^6.26.0",
         "babel-plugin-transform-react-jsx": "^6.24.1",
-        "babel-watch": "^7.0.0"
+        "babel-watch": "^7.0.0",
+        "npm-run-all": "^4.1.5"
     }
 }
