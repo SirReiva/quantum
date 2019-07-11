@@ -1,30 +1,30 @@
 {
-    "name": "quantum",
-    "version": "0.0.2",
-    "description": "vdom Webcomponents",
-    "main": "mytag.js",
+    "name": "quantumv2",
+    "version": "1.0.0",
+    "private": true,
     "scripts": {
-        "watch": "babel --watch qComponents.jsx --out-file qComponents.js",
-        "serve": "live-server --no-browser --wait=1500",
-        "dev": "npm-run-all --parallel watch serve"
+        "start": "npx webpack-dev-server",
+        "build": "webpack -p"
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/SirReiva/quantum.git"
-    },
-    "author": "Reiva",
+    "author": "",
     "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/SirReiva/quantum/issues"
-    },
-    "homepage": "https://github.com/SirReiva/quantum#readme",
-    "dependencies": {},
+    "description": "",
     "devDependencies": {
-        "@babel/core": "^7.4.5",
-        "babel-cli": "^6.26.0",
-        "babel-plugin-transform-react-jsx": "^6.24.1",
-        "babel-watch": "^7.0.0",
-        "live-server": "^1.2.1",
-        "npm-run-all": "^4.1.5"
+        "copy-webpack-plugin": "^5.0.3",
+        "css-loader": "^3.0.0",
+        "file-loader": "^4.0.0",
+        "html-webpack-plugin": "^3.2.0",
+        "mini-css-extract-plugin": "^0.7.0",
+        "node-sass": "^4.12.0",
+        "sass-loader": "^7.1.0",
+        "style-loader": "^0.23.1",
+        "ts-loader": "^6.0.4",
+        "typescript": "^3.5.3",
+        "webpack": "^4.35.3",
+        "webpack-cli": "^3.3.5",
+        "webpack-dev-server": "^3.7.2"
+    },
+    "dependencies": {
+        "flatted": "^2.0.1"
     }
 }

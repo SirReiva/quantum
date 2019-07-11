@@ -1,3 +1,10 @@
+declare global {
+    namespace JSX {
+        interface IntrinsicElements {
+            [elemName: string]: any;
+        }
+    }
+}
 const CREATE = 'CREATE';
 const REMOVE = 'REMOVE';
 const REPLACE = 'REPLACE';
@@ -7,6 +14,10 @@ const REMOVE_PROP = 'REMOVE PROP';
 const SET_EVENT = 'SET EVENT';
 const REPLACE_EVENT = 'REPLACE EVENT';
 const REMOVE_EVENT = 'REMOVE EVENT';
+
+const SPECIAL_PROPS = ['value', 'checked'];
+
+declare var window: any;
 const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
     window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 window.requestAnimationFrame = requestAnimationFrame;
@@ -17,22 +28,22 @@ document.addEventListener('visibilitychange', function() {
     }
 });
 
-export function isFunction(functionToCheck) {
+export function isFunction(functionToCheck: any) {
     return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
 }
 
-export function isObject(objectToCheck) {
+export function isObject(objectToCheck: any) {
     return typeof objectToCheck === 'object'
 }
 
-function changed(node1, node2) {
+function changed(node1: any, node2: any) {
     return typeof node1 !== typeof node2 ||
         typeof node1 === 'string' && node1 !== node2 ||
         node1.type !== node2.type;
 }
 
-function diffProps(newNode, oldNode) {
-    const patches = [];
+function diffProps(newNode: any, oldNode: any) {
+    const patches: any[] = [];
     const props = Object.assign({}, newNode.props, oldNode.props);
     Object.keys(props).forEach(name => {
         const newVal = newNode.props[name];
@@ -57,14 +68,14 @@ function diffProps(newNode, oldNode) {
     return patches;
 }
 
-function diffChildren(newNode, oldNode) {
+function diffChildren(newNode: any, oldNode: any) {
     const patches = [];
     const patchesLength = Math.max(
         newNode.children.length,
         oldNode.children.length
     );
     for (let i = 0; i < patchesLength; i++) {
-        let df = diff(
+        let df: any = diff(
             newNode.children[i],
             oldNode.children[i]
         )
@@ -73,7 +84,7 @@ function diffChildren(newNode, oldNode) {
     return patches;
 }
 
-export function diff(newNode, oldNode) {
+export function diff(newNode: any, oldNode: any) {
     if (!oldNode && newNode) {
         return { type: CREATE, newNode };
     }
@@ -93,7 +104,7 @@ export function diff(newNode, oldNode) {
     return null;
 }
 
-export function createElement(node, refs) {
+export function createElement(node: any, refs: any) {
     if (typeof node === 'string' || typeof node === 'number') {
         return document.createTextNode(node.toString());
     }
@@ -105,24 +116,39 @@ export function createElement(node, refs) {
     addEventListeners(el, node.props);
     if (node.children && node.children.length > 0)
         node.children
-        .map(childEl => createElement(childEl, refs))
+        .map((childEl: any) => createElement(childEl, refs))
         .forEach(el.appendChild.bind(el));
     return el;
 }
 
-function isEventProp(name) {
+function isEventProp(name: string) {
     return /^on/.test(name);
 }
 
-function extractEventName(name) {
+function extractEventName(name: string) {
     return name.slice(2).toLowerCase();
 }
 
-function isTwoWayDataBindingProp(name) {
+/*function isTwoWayDataBindingProp(name: string) {
     return /^q-/.test(name);
-}
+}*/
+/*if (isTwoWayDataBindingProp(name)) {
+    let correctName = name.replace('q-', '');
+    var mutationObserver = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === correctName) {
+                console.log('chii');
+            }
+        });
+    });
+    mutationObserver.observe(target, {
+        attributes: true
+    });
+    target.mutation = mutationObserver;
+    return setProp(target, correctName, value);
+}*/
 
-function addEventListeners(target, props) {
+function addEventListeners(target: any, props: any) {
     if (!props) return;
     Object.keys(props).forEach(name => {
         if (isEventProp(name)) {
@@ -132,33 +158,17 @@ function addEventListeners(target, props) {
     });
 }
 
-function setBooleanProp(target, name, value) {
+function setBooleanProp(target: any, name: string, value: boolean) {
     if (value) {
         target.setAttribute(name, '');
     } else {
         target.removeAttribute(name);
     }
+    if (SPECIAL_PROPS.indexOf(name) !== -1) target[name] = value;
 }
 
-function setProp(target, name, value) {
-    if (isEventProp(name)) {
-        return;
-    }
-    /*if (isTwoWayDataBindingProp(name)) {
-        let correctName = name.replace('q-', '');
-        var mutationObserver = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                if (mutation.type === 'attributes' && mutation.attributeName === correctName) {
-                    console.log('chii');
-                }
-            });
-        });
-        mutationObserver.observe(target, {
-            attributes: true
-        });
-        target.mutation = mutationObserver;
-        return setProp(target, correctName, value);
-    }*/
+function setProp(target: any, name: string, value: any) {
+    if (isEventProp(name)) return;
     if (name === 'className') {
         return target.setAttribute('class', value);
     }
@@ -168,33 +178,35 @@ function setProp(target, name, value) {
     if (typeof value === 'object') {
         return target.setAttribute(name, 'q-json-obj://' + JSON.stringify(value));
     }
+    //console.log(target, name, value);
     target.setAttribute(name, value);
+    if (SPECIAL_PROPS.indexOf(name) !== -1) target[name] = value;
 }
 
-function setProps(target, props) {
+function setProps(target: any, props: any) {
     if (!props) return;
     Object.keys(props).forEach(name => {
         setProp(target, name, props[name]);
     });
 }
 
-function removeProp(target, name, value) {
+function removeProp(target: any, name: string/*, value: any*/) {
     if (name === 'className') {
         return target.removeAttribute('class');
     }
-    target[name] = null;
+    if (SPECIAL_PROPS.indexOf(name) !== -1) target[name] = null;
     return target.removeAttribute(name);
 }
 
-function addEvent(target, event, eventName) {
+function addEvent(target: any, event: Function, eventName: string) {
     target.addEventListener(eventName, event);
 }
 
-function removeEvent(target, event, eventName) {
+function removeEvent(target: any, event: Function, eventName: string) {
     target.removeEventListener(eventName, event);
 }
 
-function patchProps(parent, patches) {
+function patchProps(parent: any, patches: any) {
     if (!patches) return;
     for (let i = 0; i < patches.length; i++) {
         const propPatch = patches[i];
@@ -202,7 +214,7 @@ function patchProps(parent, patches) {
         if (type === SET_PROP) {
             setProp(parent, name, value);
         } else if (type === REMOVE_PROP) {
-            removeProp(parent, name, value);
+            removeProp(parent, name/*, value*/);
         } else if (type === REMOVE_EVENT) {
             removeEvent(parent, value, name);
         } else if (SET_EVENT) {
@@ -214,8 +226,8 @@ function patchProps(parent, patches) {
     }
 }
 
-let domUpdates = [];
-export function queuPatches(parent, patches, refs, index = 0) {
+let domUpdates: any[] = [];
+export function queuPatches(parent: any, patches: any, refs: any, index = 0) {
     domUpdates.push({ parent, patches, index, refs });
 }
 
@@ -252,7 +264,7 @@ function doPatchsHidden() {
 
 requestAnimationFrame(doPatchs);
 
-function patch(parent, patches, refs, index = 0) {
+function patch(parent: any, patches: any, refs: any, index = 0) {
     if (!patches || patches.length == 0) { return 0; }
     const el = parent.childNodes[index];
     switch (patches.type) {
@@ -267,7 +279,7 @@ function patch(parent, patches, refs, index = 0) {
             {
                 if (el) {
                     parent.removeChild(el);
-                    if (el.hasAttribute('ref')) {
+                    if (el.hasAttribute && el.hasAttribute('ref')) {
                         delete refs[el.getAttribute('ref')];
                     }
                     return -1;
@@ -290,28 +302,29 @@ function patch(parent, patches, refs, index = 0) {
                 patchProps(el, props);
                 for (let i = 0; i < children.length; i++) {
                     if (children[i]) {
-                        let df = patch(el, children[i], refs, i);
+                        let df: any = patch(el, children[i], refs, i);
                         i += df;
                     }
                 }
                 return 0;
             }
     }
+    return 0;
 }
 
-function flatten(arr) {
+function flatten(arr: any[]) {
     return [].concat.apply([], arr);
 }
 
-function copyObject(src) {
+function copyObject(src: any) {
     return Object.assign({}, src);
 }
 
-function purgeProps(obj) {
+function purgeProps(obj: any) {
     Object.keys(obj).forEach(key => obj[key] === undefined ? delete obj[key] : '');
 }
 
-export function h(type, props, ...children) {
+export function h(type: string, props: any, ...children: any[]) {
     const vElem = Object.create(null);
     // props = JSON.parse(JSON.stringify(props || {}));
     props = copyObject(props);
@@ -324,13 +337,21 @@ export function h(type, props, ...children) {
     return vElem;
 }
 
-export function defineQuantumElement(tag, calssEl) {
-    customElements.define(tag, calssEl);
+function isRegistered(name: string) {
+    return document.createElement(name).constructor !== HTMLElement;
 }
 
-function xmlToJson(xml) {
+export function defineQuantumElement(tag: string, calssEl: any) {
+    try {
+        if(!isRegistered(tag)) {
+            customElements.define(tag, calssEl);
+        }
+    } catch( exc ) { console.warn(exc); }
+}
 
-    var obj = { type: xml.tagName, children: [], attributes: null };
+function xmlToJson(xml: any) {
+
+    var obj: any = { type: xml.tagName, children: [], attributes: null };
 
     if (xml.nodeType == 1) {
         if (xml.attributes.length > 0) {
@@ -360,19 +381,19 @@ function xmlToJson(xml) {
     return obj;
 }
 
-function stringToXml(value) {
+function stringToXml(value: string) {
     return new window.DOMParser().parseFromString(value, "text/xml");
 }
 
-function jsonToHyperscript(jsObject) {
-    return h(jsObject.type, jsObject.attributes, ...jsObject.children.map(o => {
+function jsonToHyperscript(jsObject: any) {
+    return h(jsObject.type, jsObject.attributes, ...jsObject.children.map((o: any) => {
         if (isObject(o)) return jsonToHyperscript(o);
         return o;
     }));
 
 }
 
-export function compileTemplateString(temlpate) {
+export function compileTemplateString(temlpate: string) {
     try {
         return jsonToHyperscript(xmlToJson(stringToXml(temlpate)));
     } catch (exp) {
@@ -381,11 +402,10 @@ export function compileTemplateString(temlpate) {
     }
 }
 
-export function debounce(callback, wait) {
-    let timeout;
-    return (...args) => {
-        const context = this;
-        clearTimeout(timeout);
-        timeout = setTimeout(() => callback.apply(context, args), wait);
+export function debounce(func: () => void, wait = 50) {
+    let h: any;
+    return (...args : any) => {
+        clearTimeout(h);
+        h = setTimeout(() => func.apply(args), wait);
     };
 }
