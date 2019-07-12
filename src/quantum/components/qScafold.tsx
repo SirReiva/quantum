@@ -3,6 +3,7 @@ import { h } from '../core/quantumCore';
 
 /*SCAFOLD*/
 export default class qScafold extends QuantumElement {
+    public static tagName = 'q-scafold';
     template() {
         return <slot></slot>;
     }

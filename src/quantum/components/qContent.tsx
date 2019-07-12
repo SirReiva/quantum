@@ -3,6 +3,7 @@ import { h } from '../core/quantumCore';
 
 /*CONTENT*/
 export default class qContent extends QuantumElement {
+    public static tagName = 'q-content';
     template() {
         return <div className="baseContent">
                     <div className="fix"><div className="scrollContent"><slot></slot></div></div>
@@ -12,6 +13,7 @@ export default class qContent extends QuantumElement {
     styles() { return `
         :host {
             flex: 1 1 auto;
+            background-color: white;
         }
         .baseContent {
             box-sizing: border-box;

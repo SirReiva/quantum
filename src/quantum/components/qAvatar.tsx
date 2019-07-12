@@ -3,6 +3,7 @@ import { h } from '../core/quantumCore';
 
 /*AVATAR*/
 export default class qAvatar extends QuantumElement {
+    public static tagName = 'q-avatar';
     template() {
         return <figure style={'background-image: url(' + this.attrs.src + ')'}></figure>;
     }

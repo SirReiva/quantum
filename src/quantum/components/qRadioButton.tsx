@@ -3,6 +3,7 @@ import { h } from '../core/quantumCore';
 
 /*RADIOBUTTON*/
 export default class qRadioButton extends QuantumElement {
+    public static tagName = 'q-radiobutton';
 
     template() {
         return <label className="q-material-radio">

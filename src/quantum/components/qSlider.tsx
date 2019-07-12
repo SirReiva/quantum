@@ -3,6 +3,7 @@ import { h } from '../core/quantumCore';
 
 /*SLIDER*/
 export default class qSlider extends QuantumElement {
+    public static tagName = 'q-slider';
     template() {
         return <label className="q-material-slider">
                     <input onInput={(e:any) => this.changeColor(e)} ref="slide" type="range" min="0" max="360" value="207"/>

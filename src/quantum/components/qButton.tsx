@@ -3,6 +3,7 @@ import { h } from '../core/quantumCore';
 
 /*BUTTON*/
 export default class qButton extends QuantumElement {
+    public static tagName = 'q-button';
     template() {
         let css = 'q-material-button-contained';
         switch(this.attrs.mode) {

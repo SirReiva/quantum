@@ -3,6 +3,7 @@ import { h } from '../core/quantumCore';
 
 /*SWITCH*/
 export default class qSwitch extends QuantumElement {
+    public static tagName = 'q-switch';
     template() {
         return <label className="q-material-switch">
                     <input type="checkbox"/>

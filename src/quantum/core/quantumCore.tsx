@@ -176,6 +176,7 @@ function setProp(target: any, name: string, value: any) {
         return setBooleanProp(target, name, value);
     }
     if (typeof value === 'object') {
+        target.objectAttrs[name] = value;
         return target.setAttribute(name, 'q-json-obj://' + JSON.stringify(value));
     }
     //console.log(target, name, value);
@@ -191,6 +192,10 @@ function setProps(target: any, props: any) {
 }
 
 function removeProp(target: any, name: string/*, value: any*/) {
+    let value: any = target.objectAttrs[name];
+    if (value && typeof value === 'object') {
+        delete target.objectAttrs[name];
+    }
     if (name === 'className') {
         return target.removeAttribute('class');
     }
@@ -337,15 +342,26 @@ export function h(type: string, props: any, ...children: any[]) {
     return vElem;
 }
 
-function isRegistered(name: string) {
+export function isRegisteredQuantumElement(name: string) {
     return document.createElement(name).constructor !== HTMLElement;
 }
 
-export function defineQuantumElement(tag: string, calssEl: any) {
+export function defineQuantumElement(calssEl: any, tag?: string) {
     try {
-        if(!isRegistered(tag)) {
-            customElements.define(tag, calssEl);
+        if(tag) {
+            if(!isRegisteredQuantumElement(tag)) {
+                customElements.define(tag, calssEl);
+            } else {
+                console.error(tag + ' Already defined');
+            }
+        } else {
+            if(!isRegisteredQuantumElement(calssEl.tagName)) {
+                customElements.define(calssEl.tagName, calssEl);
+            } else {
+                console.error(calssEl.tagName + ' Already defined');
+            }
         }
+        
     } catch( exc ) { console.warn(exc); }
 }
 
@@ -409,3 +425,18 @@ export function debounce(func: () => void, wait = 50) {
         h = setTimeout(() => func.apply(args), wait);
     };
 }
+function customStringify(obj: any, prop: string) {
+    var placeholder = '____PLACEHOLDER____';
+    var fns: any[] = [];
+    var json = JSON.stringify(obj, function(key, value) {
+      if (typeof value === 'function') {
+        fns.push(value);
+        return placeholder;
+      }
+      return value;
+    }, 2);
+    json = json.replace(new RegExp('"' + placeholder + '"', 'g'), function(_) {
+      return fns.shift();
+    });
+    return 'this["' + prop + '"] = ' + json + ';';
+};

@@ -3,13 +3,12 @@ import { h } from '../core/quantumCore';
 
 /*STACK*/
 export default class qCard extends QuantumElement {
+    public static tagName = 'q-card';
     template() {
         return  <div className="card" elevation="2">
-                    <header>
-                      <div className="header">
-                        <slot name="header"></slot>
-                      </div>
-                    </header>
+                    <div className="header">
+                      <slot name="header"></slot>
+                    </div>
                     <figure className="rich_media" id="image_1"></figure>
                     <div className="supporting_text">
                       <slot></slot>
@@ -42,6 +41,7 @@ export default class qCard extends QuantumElement {
           }
           .card .header {
             padding: 16px;
+            display: grid;
           }
           .card div.supporting_text {
             padding: 16px;

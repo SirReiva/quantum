@@ -4,6 +4,7 @@ import { h, defineQuantumElement } from '../core/quantumCore';
 declare var window: any;
 /*DRAWER*/
 export default class qDrawer extends QuantumElement {
+    public static tagName = 'q-drawer';
     template() {
         return <div className="base">
                     <div onMouseDown={() => this.close()} className="backdrop"></div>
@@ -51,7 +52,7 @@ export default class qDrawer extends QuantumElement {
         document.body.removeEventListener('click', this._listenerBody);
     }
 
-    _directive(e: any) {
+    async _directive(e: any) {
         if(e.path) {
             for(let tgts = 0; tgts < e.path.length; tgts++) {
                 if(!e.path[tgts].hasAttribute) {}
@@ -86,14 +87,17 @@ export default class qDrawer extends QuantumElement {
     }
 
     private findDirective(el: any) {
-        while (el){
-          if (el.hasAttribute && (el.hasAttribute('openmenu') || el.hasAttribute('togglemenu') || el.hasAttribute('closenmenu'))) {
-            return el;
-          }
-          if(el.parentNode) el = el.parentNode;
-          else if(el.host) el = el.host;
-          else el = null;
-        }
+        try {
+            while (el){
+                if (el.hasAttribute && (el.hasAttribute('openmenu') || el.hasAttribute('togglemenu') || el.hasAttribute('closenmenu'))) {
+                    return el;
+                }
+                if(el.parentNode) el = el.parentNode;
+                else if(el.host) el = el.host;
+                else el = null;
+            }
+        } catch(exc) { return null; }
+        
         return null;
     }
 
@@ -225,7 +229,7 @@ export default class qDrawer extends QuantumElement {
             height: 100%;
             background-color: white;
             box-sizing: border-box;
-            padding: 1px;
+            display: flex;
         }
     `; }
 

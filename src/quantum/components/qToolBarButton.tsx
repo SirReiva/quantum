@@ -3,6 +3,7 @@ import { h } from '../core/quantumCore';
 
 /*BUTTON TOOLBAR*/
 export default class qToolBarButton extends QuantumElement {
+    public static tagName = 'q-toolbarbutton';
     template() {
         return <button>
                     <slot></slot>

@@ -13,5 +13,27 @@ import qTextInput from './qTextInput';
 import qCard from './qCard';
 import qSlider from './qSlider';
 import qAvatar from './qAvatar';
+import qPage from './qPage';
+import qApp from './qApp';
+import qImage from './qImage';
 
-export{ qStack, qScafold, qDrawer, qAppBar, qButton, qToolBarButton, qSwitch, qCheckBox, qContent, qIcon, qRadioButton, qTextInput, qCard, qSlider, qAvatar};
+export{ 
+    qStack,
+    qScafold,
+    qDrawer,
+    qAppBar,
+    qButton,
+    qToolBarButton,
+    qSwitch,
+    qCheckBox,
+    qContent,
+    qIcon,
+    qRadioButton,
+    qTextInput,
+    qCard,
+    qSlider,
+    qAvatar,
+    qImage,
+    qPage,
+    qApp
+};

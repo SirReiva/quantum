@@ -3,18 +3,21 @@ import { createElement, diff, queuPatches, isFunction } from './quantumCore';
 export default class QuantumElement extends HTMLElement {
     template(): any { return ''; }
     styles(): string { return ''; }
-    componentBeforeLoaded() {}
-    componentMounted() {}
-    componentLoaded() {}
-    componentBeforeUpdate() {}
-    componentAfterUpdate() {}
-    componentUnmounted() {}
+    protected componentBeforeLoaded() {}
+    protected componentMounted() {}
+    protected componentLoaded() {}
+    protected componentBeforeUpdate() {}
+    protected componentAfterUpdate() {}
+    protected componentUnmounted() {}
+    protected componentAttributeChange(name: string, oldVal: any, newVal: any) {}
 
     public static encapsulation: boolean = true;
+    public static tagName: string = null;
 
     public automaticDetection = true;
     public refs: any = {};
     public props: any = null;
+    public objectAttrs: any = {};
     private _validator: any = {
         set: this._set.bind(this),
         get: this._get.bind(this),
@@ -27,7 +30,7 @@ export default class QuantumElement extends HTMLElement {
     constructor(prps = {}) {
         super();
         if (QuantumElement.encapsulation)
-            this._shadowRoot = this.attachShadow({ mode: 'open' }); //, delegatesFocus: true
+            this._shadowRoot = this.attachShadow({ mode: 'open' }); //, delegatesFocus: true??
         else
             this._shadowRoot = this;
         this.props = new Proxy(prps, this._validator);
@@ -65,6 +68,7 @@ export default class QuantumElement extends HTMLElement {
 
     attributeChangedCallback(_attrName: string, oldVal: any, newVal: any) {
         if ((oldVal !== newVal) && this.automaticDetection && this._initialized) {
+            this.componentAttributeChange(_attrName, oldVal, newVal);
             this._render();
         }
     }

@@ -2,7 +2,7 @@
     "compilerOptions": {
       "outDir": "./www/",
       "noImplicitAny": true,
-      "module": "es6",
+      "module": "esnext",
       "target": "es6",
       "jsx": "react",
       "jsxFactory": "h",

@@ -4,6 +4,7 @@ import { h, debounce } from '../core/quantumCore';
 const SUPPORT_TYPES = ['text', 'password', 'number', 'email'];
 /*TEXTINPUT*/
 export default class qTextInput extends QuantumElement {
+    public static tagName = 'q-textinput';
     template() {
         let css = 'q-material-textfield-standard';
         if (this.attrs.mode == 'outline') css = 'q-material-textfield-outlined';

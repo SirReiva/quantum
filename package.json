@@ -4,7 +4,7 @@
     "private": true,
     "scripts": {
         "start": "npx webpack-dev-server",
-        "build": "webpack -p"
+        "build": "npx webpack -p"
     },
     "author": "",
     "license": "ISC",

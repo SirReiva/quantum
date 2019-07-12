@@ -3,6 +3,7 @@ import { h } from '../core/quantumCore';
 
 /*CHECKBOX*/
 export default class qCheckBox extends QuantumElement {
+    public static tagName = 'q-checkbox';
     template() {
         return <label className="q-material-checkbox">
                     <input type="checkbox"/>

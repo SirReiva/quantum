@@ -3,6 +3,7 @@ import { h } from '../core/quantumCore';
 
 /*APPBAR*/
 export default class qAppBar extends QuantumElement {
+    public static tagName = 'q-appbar';
     template() {
         return <div className="toolbar-container">
                     <div className="start"><slot name="start"></slot></div>
@@ -53,7 +54,7 @@ export default class qAppBar extends QuantumElement {
         }
         .title {
             flex: 1 1 auto;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             font-family: "Roboto", "Segoe UI";
             white-space: nowrap; 
             overflow: hidden;

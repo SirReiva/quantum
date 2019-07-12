@@ -5,6 +5,7 @@ import { h } from '../core/quantumCore';
 atributes: icon: string
 */
 export default class qIcon extends QuantumElement {
+    public static tagName = 'q-icon';
     template() {
         return  <div>
                     <link rel="stylesheet" href="./static/font-awesome.css"></link>
