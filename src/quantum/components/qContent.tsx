@@ -30,12 +30,14 @@ export default class qContent extends QuantumElement {
             overflow-y: hidden;
         }
         .scrollContent {
-            padding: 16px;
             width: 100%;
             height: 100%;
             box-sizing: border-box;
             position: relative;
             overflow-y: auto;
+        }
+        :host([padding]) .scrollContent{
+            padding: 16px;
         }
     `; }
 

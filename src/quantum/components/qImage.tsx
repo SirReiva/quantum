@@ -44,6 +44,7 @@ export default class qImage extends QuantumElement {
         }
         .mainImg {
             position: relative;
+            max-width: 100%;
             top: 0;
             left: 0;
             transition: visibility 0s linear, opacity .5s linear;

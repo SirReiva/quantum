@@ -10,10 +10,10 @@ export default class Page1 extends qPage {
                         <span>{ this.props.title }</span>
                         <q-toolbarbutton slot="end"><q-icon icon="music"></q-icon></q-toolbarbutton>
                     </q-appbar>
-                    <q-content>
+                    <q-content padding>
                         <p>Prueba</p>
                         <q-button onClick={() => this.changeTitle()}><q-icon icon="music"></q-icon> Click</q-button>
-                        <q-button onClick={() => this.changeTitle()}>Click</q-button>
+                        <q-button onClick={() => this.changeAll()}>Click</q-button>
                         <q-button mode="outline" onClick={() => this.navigate()}>Click</q-button>
                         <br/>
                         <br/>
@@ -76,6 +76,13 @@ export default class Page1 extends qPage {
 
     setSubtitle(e: any) {
         this.props.subtitle = e.detail;
+    }
+
+    changeAll() {
+        this.transaction(() => {
+            this.props.title = 'dafdfsad ' + Math.floor((Math.random() * 100) + 1);
+            this.props.subtitle = 'dfadfds ' + Math.floor((Math.random() * 100) + 1);
+        });
     }
 
     navigate() {

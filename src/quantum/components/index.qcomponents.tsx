@@ -16,6 +16,7 @@ import qAvatar from './qAvatar';
 import qPage from './qPage';
 import qApp from './qApp';
 import qImage from './qImage';
+import qListItem from './qListItem';
 
 export{ 
     qStack,
@@ -33,6 +34,7 @@ export{
     qCard,
     qSlider,
     qAvatar,
+    qListItem,
     qImage,
     qPage,
     qApp

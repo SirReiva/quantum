@@ -1,5 +1,5 @@
 import QuantumElement from '../core/quantumElement';
-import { h } from '../core/quantumCore';
+import { h, checkMobile } from '../core/quantumCore';
 
 /*SLIDER*/
 export default class qSlider extends QuantumElement {
@@ -11,8 +11,23 @@ export default class qSlider extends QuantumElement {
                 </label>;
     }
 
+    private listener:any = null;
+    private isIE = window.navigator.msPointerEnabled;
+    private typeMove: string;
+
+    private prevents(e: any) {
+        e.stopPropagation();
+        return true;
+    }
+
     componentLoaded() {
-        
+        this.listener = this.prevents.bind(this);
+        this.typeMove = this.isIE ? "MSPointerMove" : (checkMobile ? "touchmove" : "mousemove");
+        this.refs.slide.addEventListener(this.typeMove, this.listener, {passive: true});
+    }
+
+    componentUnmounted() {
+        if (this.listener) this.refs.slide.removeEventListener(this.typeMove, this.listener);
     }
 
     changeColor(event: any) {

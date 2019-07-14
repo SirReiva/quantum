@@ -11,6 +11,7 @@ export interface Route{
 /*STACK*/
 export default class qStack extends QuantumElement {
     public static tagName = 'q-stack';
+    automaticDetection = false;
     template() {
         return  <div>
                     <link rel="stylesheet" href="./static/animate.min.css"/>
@@ -78,6 +79,7 @@ export default class qStack extends QuantumElement {
                 for (route of this.objectAttrs.routes) {
                     if (route.name  == name) {
                         if(route.component) {
+
                         } else if(route.resolve) {
                             route.resolve().then((m: any) => {
                                 if(!isRegisteredQuantumElement(m.default.tagName)) defineQuantumElement(m.default);
@@ -94,10 +96,11 @@ export default class qStack extends QuantumElement {
                                 this.dispatchEvent(new CustomEvent('navigate', {'detail': ''}));
                                 resolve(true);
                                 return;
-                            });  
+                            }).catch(() => resolve(false));  
+                        } else {
+                            resolve(false);
                         }
-                        resolve(false);
-                        return;
+                        break;
                     }
                 }
             }
@@ -108,14 +111,15 @@ export default class qStack extends QuantumElement {
     pop():Promise<boolean> {
         return new Promise(resolve => {
             if (this.refs.stackview && this.refs.stackview.childElementCount > 1) {
+                let removed = this.refs.stackview.lastChild;
                 let callbacAnim = () => {
-                    this.refs.stackview.lastChild.removeEventListener("animationend", callbacAnim);
-                    this.refs.stackview.removeChild(this.refs.stackview.lastChild);
+                    removed.removeEventListener("animationend", callbacAnim);
+                    this.refs.stackview.removeChild(removed);
                 };
-                (this.refs.stackview.lastChild.previousSibling as HTMLElement).style.display = '';
-                this.refs.stackview.lastChild.addEventListener("animationend", callbacAnim);
-                this.refs.stackview.lastChild.classList.add(...this.animationOut);
-                this.refs.stackview.lastChild.display = 'none';
+                (removed.previousSibling as HTMLElement).style.display = '';
+                removed.addEventListener("animationend", callbacAnim);
+                removed.classList.add(...this.animationOut);
+                removed.display = 'none';
                 this.dispatchEvent(new CustomEvent('navigate', {'detail': ''}));
                 resolve(true);
             } else {
@@ -145,10 +149,11 @@ export default class qStack extends QuantumElement {
                                 this.refs.stackview.appendChild(page);
                                 resolve(true);
                                 return;
-                            });  
+                            }).catch(() => resolve(false));  
+                        } else {
+                            resolve(false);
                         }
-                        resolve(false);
-                        return;
+                        break;
                     }
                 }
             }

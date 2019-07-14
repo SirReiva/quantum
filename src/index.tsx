@@ -3,7 +3,7 @@ import { h, defineQuantumElement } from './quantum/core/quantumCore';
 import './app.scss';
 import './font-awesome.scss';
 
-import { qStack, qScafold, qDrawer, qAppBar, qButton, qToolBarButton, qSwitch, qCheckBox, qContent, qIcon, qRadioButton, qTextInput, qCard, qSlider, qAvatar, qApp, qImage } from './quantum/components/index.qcomponents';
+import { qStack, qScafold, qDrawer, qAppBar, qButton, qToolBarButton, qSwitch, qCheckBox, qContent, qIcon, qRadioButton, qTextInput, qCard, qSlider, qAvatar, qApp, qImage, qListItem } from './quantum/components/index.qcomponents';
 import { Route } from './quantum/components/qStack';
 
 declare var Capacitor: any;
@@ -23,6 +23,7 @@ defineQuantumElement(qTextInput);
 defineQuantumElement(qCard);
 defineQuantumElement(qSlider);
 defineQuantumElement(qAvatar);
+defineQuantumElement(qListItem);
 defineQuantumElement(qImage);
 defineQuantumElement(qApp);
 
@@ -47,6 +48,7 @@ class exampleApp extends QuantumElement {
                         <ul>
                             <li onClick={() => this.navigate()} toggleMenu>Link</li>
                         </ul>
+                        <q-listitem>List Item</q-listitem>
                     </q-drawer>
                     <q-stack routes={routes} stackid="main" root="page1" ref="navigation"></q-stack>
                 </q-app>;

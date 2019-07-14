@@ -9,12 +9,13 @@ export default class QuantumElement extends HTMLElement {
     protected componentBeforeUpdate() {}
     protected componentAfterUpdate() {}
     protected componentUnmounted() {}
-    protected componentAttributeChange(name: string, oldVal: any, newVal: any) {}
+    protected componentAttributeChange(name: string, oldVal: any, newVal: any) { }
+    protected componentPropChange(name: string, oldVal: any, newVal: any) { }
 
     public static encapsulation: boolean = true;
     public static tagName: string = null;
 
-    public automaticDetection = true;
+    protected automaticDetection = true;
     public refs: any = {};
     public props: any = null;
     public objectAttrs: any = {};
@@ -58,8 +59,10 @@ export default class QuantumElement extends HTMLElement {
 
     private _set(target: any, key: string, value: any) {
         if (target[key] !== value) {
+            let oldVal = target[key];
             target[key] = value;
             if (this.automaticDetection) {
+                this.componentPropChange(key, oldVal, value);
                 this._render();
             }
         }
@@ -100,6 +103,14 @@ export default class QuantumElement extends HTMLElement {
         this._shadowRoot.appendChild(this._styleEl);
         this._initialized = true;
         this.componentLoaded();
+    }
+
+    protected transaction(cb: Function) {
+        let prevVal = this.automaticDetection;
+        this.automaticDetection = false;
+        cb();
+        this.automaticDetection = prevVal;
+        this._render();
     }
 
     private _render() {
