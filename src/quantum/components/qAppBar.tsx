@@ -18,6 +18,14 @@ export default class qAppBar extends QuantumElement {
             background: rgb(var(--q-material-primary-rgb));
             color: var(--app-font-color);
             position: relative;
+            width: 100%;
+            z-index: 1;
+        }
+        :host([over]) {
+            position: absolute;
+        }
+        :host([transparent]) {
+            background: transparent;
         }
         :host([shadow]):after {
             left: 0;
@@ -29,6 +37,7 @@ export default class qAppBar extends QuantumElement {
             background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAIBAMAAAACWGKkAAAAFVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAASAQCkAAAAB3RSTlMFTEIzJBcOYhQUIwAAAB9JREFUCNdjEIQCBiUoYDCGAgYXKGAIhQKGNChgwAAAorMLKSCkL40AAAAASUVORK5CYII=");
             background-repeat: repeat-x;
             content: "";
+            z-index: 1;
         }
         .toolbar-container {
             padding: 4px;
@@ -40,12 +49,10 @@ export default class qAppBar extends QuantumElement {
             -ms-flex-align: center;
             align-items: center;
             -ms-flex-pack: justify;
-            //justify-content: space-between;
             width: 100%;
             min-height: 56px;
             contain: content;
             overflow: hidden;
-            z-index: 10;
             -webkit-box-sizing: border-box;
             box-sizing: border-box;
         }

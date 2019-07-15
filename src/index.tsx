@@ -29,12 +29,12 @@ defineQuantumElement(qApp);
 
 const routes: Route[] = [
     {
-        name: 'page1',
-        resolve: () => import('./pages/page1'),
+        name: 'home',
+        resolve: () => import('./pages/homepage'),
     },
     {
-        name: 'page2',
-        resolve: () => import('./pages/page2'),
+        name: 'detail',
+        resolve: () => import('./pages/detailpage'),
     }
 ];
 
@@ -50,7 +50,7 @@ class exampleApp extends QuantumElement {
                         </ul>
                         <q-listitem>List Item</q-listitem>
                     </q-drawer>
-                    <q-stack routes={routes} stackid="main" root="page1" ref="navigation"></q-stack>
+                    <q-stack routes={routes} stackid="main" root="home" ref="navigation"></q-stack>
                 </q-app>;
     }
 

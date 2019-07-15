@@ -1,5 +1,5 @@
 import QuantumElement from '../core/quantumElement';
-import { h, defineQuantumElement, checkMobile } from '../core/quantumCore';
+import { h, checkMobile } from '../core/quantumCore';
 
 declare var window: any;
 /*DRAWER*/
@@ -101,10 +101,12 @@ export default class qDrawer extends QuantumElement {
         return null;
     }
 
+
     _swiping: any;
     _startX: any;
     _endSwipe: any;
     _swipeDirection: any;
+    _sensibillity = 10;
     _move(e: any) {
         if (this._swiping) {
             let isMobile = checkMobile(navigator.userAgent || navigator.vendor || window.opera);
@@ -117,8 +119,13 @@ export default class qDrawer extends QuantumElement {
             this._endSwipe = moveX;
             this.style.transform = "translateX(" + moveX +"px)";
             this.refs.backdrop.style.opacity = 1 - (0.8 * (-moveX / this.refs.content.offsetWidth)) - 0.2;
+            if(Math.abs(x) > this._sensibillity) {
+                this.style.transition = "none";
+                this.refs.backdrop.style.display = 'block';
+            }
             e.preventDefault();
         }
+        return true;
     }
     _removeInlineTransform() {
         this.style.transform = "";
@@ -147,8 +154,8 @@ export default class qDrawer extends QuantumElement {
                 this._swipeDirection = 1;
                 this._startX = evX;
                 this._swiping = true;
-                this.style.transition = "none";
-                this.refs.backdrop.style.display = 'block';
+                /*this.style.transition = "none";
+                this.refs.backdrop.style.display = 'block';*/
                 document.addEventListener(typeMove, this._listener);
             } else if(this.isOpen()) {
                 this._swipeDirection = -1;
@@ -157,8 +164,9 @@ export default class qDrawer extends QuantumElement {
                 this.style.transition = "none";
                 document.addEventListener(typeMove, this._listener);
             }
+            return true;
         });
-        document.addEventListener(typeEnd, (e) => {
+        document.addEventListener(typeEnd, (e: any) => {
             if (this._swiping && this._endSwipe !== null) {
                 if (this._swipeDirection == 1) {
                     this._removeInlineTransform();
@@ -180,9 +188,11 @@ export default class qDrawer extends QuantumElement {
                 this._swiping = false;
                 this._swipeDirection = 0;
             } else {
+                this._swiping = false;
                 this._removeInlineTransform();
-            } 
+            }
             document.removeEventListener(typeMove, this._listener);
+            return true;
         });
     }
 

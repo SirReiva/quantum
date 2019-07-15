@@ -25,6 +25,7 @@
         "webpack-dev-server": "^3.7.2"
     },
     "dependencies": {
+        "animejs": "^3.0.1",
         "flatted": "^2.0.1"
     }
 }

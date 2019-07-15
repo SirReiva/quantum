@@ -5,9 +5,14 @@ import { h } from '../core/quantumCore';
 export default class qContent extends QuantumElement {
     public static tagName = 'q-content';
     template() {
-        return <div className="baseContent">
-                    <div className="fix"><div className="scrollContent"><slot></slot></div></div>
-               </div>;
+        if (this.hasAttribute('scollevents'))
+            return  <div className="baseContent">
+                        <div className="fix"><div onScroll={(e: any) => this.scrollEvent(e)} className="scrollContent"><slot></slot></div></div>
+                    </div>;
+        else
+            return  <div className="baseContent">
+                        <div className="fix"><div className="scrollContent"><slot></slot></div></div>
+                    </div>;
     }
 
     styles() { return `
@@ -27,7 +32,7 @@ export default class qContent extends QuantumElement {
             position: absolute;
             width: 100%;
             height: 100%;
-            overflow-y: hidden;
+            overflow: hidden;
         }
         .scrollContent {
             width: 100%;
@@ -40,6 +45,10 @@ export default class qContent extends QuantumElement {
             padding: 16px;
         }
     `; }
+
+    scrollEvent(e: Event) {
+        this.dispatchEvent(new Event(e.type, e));//set scroll props
+    }
 
     constructor() {
         super({ items: []});

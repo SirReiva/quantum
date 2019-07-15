@@ -28,6 +28,8 @@ export default class qCard extends QuantumElement {
         :host {
             display: block;
             width: 100%;
+            margin-top: 10px;
+            margin-bottom: 10px;
         }
         * {
             font-family: 'Roboto', sans-serif;
@@ -64,7 +66,7 @@ export default class qCard extends QuantumElement {
             padding-top: 56.25%;
           }
           .card figure.rich_media#image_1 {
-            background-image: url(https://picsum.photos/200/300?random);
+            background-image: url(${this.attrs.imagemedia});
           }
           .card div.supplemental_actions {
             padding: 8px;

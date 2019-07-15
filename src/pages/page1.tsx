@@ -8,7 +8,7 @@ export default class Page1 extends qPage {
                     <q-appbar shadow>
                         <q-toolbarbutton openMenu slot="start"><q-icon icon="bars"></q-icon></q-toolbarbutton>
                         <span>{ this.props.title }</span>
-                        <q-toolbarbutton slot="end"><q-icon icon="music"></q-icon></q-toolbarbutton>
+                        <q-toolbarbutton onClick={() => this.setRo()} slot="end"><q-icon icon="music"></q-icon></q-toolbarbutton>
                     </q-appbar>
                     <q-content padding>
                         <p>Prueba</p>
@@ -83,6 +83,10 @@ export default class Page1 extends qPage {
             this.props.title = 'dafdfsad ' + Math.floor((Math.random() * 100) + 1);
             this.props.subtitle = 'dfadfds ' + Math.floor((Math.random() * 100) + 1);
         });
+    }
+
+    setRo() {
+        qStack.instances["main"].setRootName('page2');
     }
 
     navigate() {
