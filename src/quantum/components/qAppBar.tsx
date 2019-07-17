@@ -6,6 +6,7 @@ export default class qAppBar extends QuantumElement {
     public static tagName = 'q-appbar';
     template() {
         return <div className="toolbar-container">
+                    <div className="bgBar"></div>
                     <div className="start"><slot name="start"></slot></div>
                     <div className="title"><slot></slot></div>
                     <div className="end"><slot name="end"></slot></div>
@@ -15,7 +16,6 @@ export default class qAppBar extends QuantumElement {
     styles() { return `
         :host {
             flex: 0 1 auto;
-            background: rgb(var(--q-material-primary-rgb));
             color: var(--app-font-color);
             position: relative;
             width: 100%;
@@ -24,8 +24,18 @@ export default class qAppBar extends QuantumElement {
         :host([over]) {
             position: absolute;
         }
-        :host([transparent]) {
+        :host([transparent]) .bgBar {
             background: transparent;
+        }
+        .bgBar {
+            top: 0px;
+            left: 0px;
+            z-index: -1;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: var(--app-bar-opacity, 1);
+            background: rgb(var(--q-material-primary-rgb));
         }
         :host([shadow]):after {
             left: 0;

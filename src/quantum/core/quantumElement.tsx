@@ -47,7 +47,8 @@ export default class QuantumElement extends HTMLElement {
 
     private _get(target: any, key: string) {
         if (Array.isArray(target[key])) {
-            return new Proxy(target[key].map((item: any) => new Proxy(item, this._validator)), this._validator);
+            //return new Proxy(target[key].map((item: any) => new Proxy(item, this._validator)), this._validator);
+            return new Proxy(target[key], this._validator);
         } else if (isFunction(target[key])) {
             return target[key].bind(target);
         } else if (typeof target[key] === 'object' && target[key] !== null) {

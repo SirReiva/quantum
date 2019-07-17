@@ -17,17 +17,16 @@ export default class qImage extends QuantumElement {
 
     styles() { return `
         :host {
-            display: flex;
+            display: inline-block;
             overflow: hidden;
             position: relative;
-            min-height: 150px;
-            width: 100%;
         }
         .baseImg {
             background-color: darkgray;
             position: relative;
             display: flex;
             width: 100%;
+            height: 100%;
             justify-content: center;
         }
         .loader {
@@ -45,6 +44,7 @@ export default class qImage extends QuantumElement {
         .mainImg {
             position: relative;
             max-width: 100%;
+            max-height: 100%;
             top: 0;
             left: 0;
             transition: visibility 0s linear, opacity .5s linear;

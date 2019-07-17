@@ -40,7 +40,7 @@ export default class Page1 extends qPage {
                         <q-textinput onChange={(e:any) => this.setTitle(e)} value={ this.props.title } mode="outline">Label</q-textinput>
                         <br/>
                         <br/>
-                        <q-card>
+                        <q-card imagemedia='https://picsum.photos/200/300?random'>
                             <div slot="header">
                                 <q-avatar src='https://picsum.photos/200/300?random'></q-avatar>
                                 <div class="text small">

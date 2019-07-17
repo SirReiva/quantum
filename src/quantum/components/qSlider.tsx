@@ -1,6 +1,7 @@
 import QuantumElement from '../core/quantumElement';
 import { h, checkMobile } from '../core/quantumCore';
 
+declare var Capacitor: any;
 /*SLIDER*/
 export default class qSlider extends QuantumElement {
     public static tagName = 'q-slider';
@@ -35,7 +36,21 @@ export default class qSlider extends QuantumElement {
         let Y = 0.5166666666666666;
         const hsl2rgb = (H: number, S: number, L:number)=>[5,3,1].map(i=>A(L*2)*S*([1,Y,0,0,Y,1][(i-~H)%6]-.5)+L,Y=(A=n=>n>1?2-n:n)((H/=60)%2));
         const rgb = hsl2rgb(event.target.value, 0.897, 0.541);
-        document.body.style.setProperty('--q-material-primary-rgb', `${Math.round(rgb[0] * 255)}, ${Math.round(rgb[1] * 255)}, ${Math.round(rgb[2] * 255)}`);
+        function componentToHex(c: number) {
+            var hex = c.toString(16);
+            return hex.length == 1 ? "0" + hex : hex;
+        }
+        function rgbToHex(r: number, g: number, b: number) {
+            return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+        }
+        let r = Math.round(rgb[0] * 255),
+            g = Math.round(rgb[1] * 255),
+            b = Math.round(rgb[2] * 255);
+        document.body.style.setProperty('--q-material-primary-rgb', `${r}, ${g}, ${b}`);
+        try {
+            Capacitor.Plugins.StatusBar.setBackgroundColor({ color: rgbToHex(r, g, b)});
+            (window as any).plugins.headerColor.tint(rgbToHex(r, g, b));
+        } catch(ex) { }
     }
 
     styles() { 

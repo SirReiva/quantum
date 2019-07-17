@@ -3,7 +3,7 @@ import { h, defineQuantumElement } from './quantum/core/quantumCore';
 import './app.scss';
 import './font-awesome.scss';
 
-import { qStack, qScafold, qDrawer, qAppBar, qButton, qToolBarButton, qSwitch, qCheckBox, qContent, qIcon, qRadioButton, qTextInput, qCard, qSlider, qAvatar, qApp, qImage, qListItem } from './quantum/components/index.qcomponents';
+import { qStack, qScafold, qDrawer, qAppBar, qButton, qToolBarButton, qSwitch, qCheckBox, qContent, qIcon, qRadioButton, qTextInput, qCard, qSlider, qAvatar, qApp, qImage, qListItem, qSpinner, qRatingStar } from './quantum/components/index.qcomponents';
 import { Route } from './quantum/components/qStack';
 
 declare var Capacitor: any;
@@ -25,6 +25,8 @@ defineQuantumElement(qSlider);
 defineQuantumElement(qAvatar);
 defineQuantumElement(qListItem);
 defineQuantumElement(qImage);
+defineQuantumElement(qSpinner);
+defineQuantumElement(qRatingStar);
 defineQuantumElement(qApp);
 
 const routes: Route[] = [
@@ -35,6 +37,14 @@ const routes: Route[] = [
     {
         name: 'detail',
         resolve: () => import('./pages/detailpage'),
+    },
+    {
+        name: 'home2',
+        resolve: () => import('./pages/page1'),
+    },
+    {
+        name: 'page2',
+        resolve: () => import('./pages/page2'),
     }
 ];
 
@@ -46,9 +56,9 @@ class exampleApp extends QuantumElement {
         return  <q-app>
                     <q-drawer>
                         <ul>
-                            <li onClick={() => this.navigate()} toggleMenu>Link</li>
+                            <li onClick={() => this.navigate()} toggleMenu>Themoviedb</li>
+                            <li onClick={() => this.navigate2()} toggleMenu>Test</li>
                         </ul>
-                        <q-listitem>List Item</q-listitem>
                     </q-drawer>
                     <q-stack routes={routes} stackid="main" root="home" ref="navigation"></q-stack>
                 </q-app>;
@@ -61,12 +71,23 @@ class exampleApp extends QuantumElement {
     }
 
     navigate() {
-        qStack.instances["main"].pushName('page2');
+        qStack.instances['main'].setRootName('home');
+    }
+
+    navigate2() {
+        qStack.instances['main'].setRootName('home2');
     }
 
     componentLoaded() {
         try {
             Capacitor.Plugins.SplashScreen.hide();
+            Capacitor.Plugins.App.addListener("backButton", () => {
+                if(qStack.instances['main'] && qStack.instances['main'].canGoBack()) {
+                    qStack.instances['main'].pop();
+                } else {
+                    Capacitor.Plugins.App.exitApp();
+                }
+            });
         } catch(ex) { }
     }
 }

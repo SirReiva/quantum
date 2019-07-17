@@ -4,7 +4,7 @@ import anime from '../../../node_modules/animejs/lib/anime.es';
 
 export abstract class AnimationTransition {
     public abstract enter(pageIn: HTMLElement, lastPage: HTMLElement): Promise<any>
-    public abstract out(removedPage: HTMLElement, currentPage: HTMLElement):Promise<any>
+    public abstract out(removedPage: HTMLElement, currentPage: HTMLElement): Promise<any>
 }
 
 export class IOSAnimationTransition extends AnimationTransition{
@@ -65,7 +65,7 @@ export class AndroidAnimationTransition extends AnimationTransition{
             translateY: -40,
             opacity: 1,
             easing: 'cubicBezier(0.47,0,0.745,0.715)',
-            duration: 300,
+            duration: 225,
         }) as any).finished as Promise<any>).then(() => {
             lastPage.style.display = 'none';
         });
@@ -78,7 +78,7 @@ export class AndroidAnimationTransition extends AnimationTransition{
             translateY: 40,
             opacity: 0.01,
             easing: 'cubicBezier(0.47,0,0.745,0.715)',
-            duration: 300,
+            duration: 225,
         }) as any).finished as Promise<any>);
     }
 }
@@ -161,7 +161,7 @@ export default class qStack extends QuantumElement {
     push(elem: QuantumElement, args: any =  {}):Promise<boolean> {
         return new Promise(resolve => {
             if (this.refs.stackview) {
-                this._args = args;
+                this._args = Object.assign({}, args);
                 this._pushComponent(elem);
                 resolve(true);
             } else {
@@ -187,13 +187,13 @@ export default class qStack extends QuantumElement {
                 for (route of this.objectAttrs.routes) {
                     if (route.name  == name) {
                         if(route.component) {
-                            this._args = args;
+                            this._args = Object.assign({}, args);;
                             this._pushComponent(route.component);
                             resolve(true);
                             return;
                         } else if(route.resolve) {
                             route.resolve().then((m: any) => {
-                                this._args = args;
+                                this._args = Object.assign({}, args);;
                                 this._pushComponent(m.default);
                                 resolve(true);
                                 return;
@@ -275,6 +275,10 @@ export default class qStack extends QuantumElement {
 
     public getParams():any {
         return Object.assign({}, this._args);
+    }
+
+    public canGoBack() :Boolean {
+        return (this.refs.stackview && this.refs.stackview.childElementCount > 1);
     }
 
     constructor() {

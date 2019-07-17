@@ -17,6 +17,8 @@ import qPage from './qPage';
 import qApp from './qApp';
 import qImage from './qImage';
 import qListItem from './qListItem';
+import qSpinner from './qSpinner';
+import qRatingStar from './qRantingStar';
 
 export{ 
     qStack,
@@ -36,6 +38,8 @@ export{
     qAvatar,
     qListItem,
     qImage,
+    qSpinner,
+    qRatingStar,
     qPage,
     qApp
 };

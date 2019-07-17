@@ -10,7 +10,7 @@ export default class Page2 extends qPage {
                         <span>Detail</span>
                     </q-appbar>
                     <q-content>
-                        <q-image srcimg='https://picsum.photos/1000/1000?random'></q-image>
+                        <q-image srcimg='https://picsum.photos/2000/2000?random'></q-image>
                         <p style="text-align: justify; padding: 20px;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi placerat tempus porta. Mauris faucibus, ipsum vel venenatis mattis, velit mauris placerat nisi, quis varius massa nisi et velit. Sed nec nulla vestibulum, pretium magna eu, tincidunt
                             velit. Vivamus tincidunt nec lectus maximus dictum. Morbi nec ultrices urna, nec feugiat eros. Nunc laoreet tincidunt neque, non rutrum lectus placerat id. Quisque vel lacus quis lacus facilisis maximus a sed dui. Nullam sed sapien a nulla
                             dictum porttitor. Sed non neque nulla. Sed tincidunt, augue ut ultrices finibus, orci mi maximus justo, eu facilisis felis eros in arcu. Vestibulum ac nisi odio. Nam eget nulla tellus. Nunc efficitur vitae purus sit amet gravida. Quisque
