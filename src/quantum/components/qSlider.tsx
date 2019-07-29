@@ -55,6 +55,9 @@ export default class qSlider extends QuantumElement {
 
     styles() { 
         return `
+            :host {
+                width: fit-content;
+            }
             .q-material-slider {
                 --q-material-safari-helper1: rgba(var(--q-material-primary-rgb, 33, 150, 243), 0.04);
                 --q-material-safari-helper2: rgba(var(--q-material-primary-rgb, 33, 150, 243), 0.12);

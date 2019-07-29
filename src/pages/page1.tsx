@@ -1,45 +1,29 @@
 import { h } from '../quantum/core/quantumCore';
-import { qPage, qStack } from '../quantum/components/index.qcomponents';
+import { qPage, qStack, qDrawer } from '../quantum/components/index.qcomponents';
 
 export default class Page1 extends qPage {
     public static tagName = 'q-page1';
     template() {
         return  <q-scafold>
                     <q-appbar shadow>
-                        <q-toolbarbutton openMenu slot="start"><q-icon icon="bars"></q-icon></q-toolbarbutton>
+                        <q-toolbarbutton  onClick={() =>{ qDrawer.instances['main'].open() }} slot="start"><q-icon icon="bars"></q-icon></q-toolbarbutton>
                         <span>{ this.props.title }</span>
-                        <q-toolbarbutton onClick={() => this.setRo()} slot="end"><q-icon icon="music"></q-icon></q-toolbarbutton>
+                        <q-toolbarbutton slot="end"><q-icon icon="music"></q-icon></q-toolbarbutton>
                     </q-appbar>
                     <q-content padding>
                         <p>Prueba</p>
                         <q-button onClick={() => this.changeTitle()}><q-icon icon="music"></q-icon> Click</q-button>
                         <q-button onClick={() => this.changeAll()}>Click</q-button>
                         <q-button mode="outline" onClick={() => this.navigate()}>Click</q-button>
-                        <br/>
-                        <br/>
                         <q-checkbox>Label</q-checkbox>
-                        <br/>
                         <q-checkbox>Label</q-checkbox>
-                        <br/>
-                        <br/>
                         <q-radiobutton value="v1" checked group="grp1">Label</q-radiobutton>
-                        <br/>
                         <q-radiobutton value="v2" group="grp1">Label</q-radiobutton>
-                        <br/>
-                        <br/>
                         <q-switch>Label</q-switch>
-                        <br/>
                         <q-switch>Label</q-switch>
-                        <br/>
-                        <br/>
                         <q-slider>Label</q-slider>
-                        <br/>
-                        <br/>
                         <q-textinput type="password" onChange={(e:any) => this.setSubtitle(e)} value={ this.props.subtitle }>Label</q-textinput>
-                        <br/>
                         <q-textinput onChange={(e:any) => this.setTitle(e)} value={ this.props.title } mode="outline">Label</q-textinput>
-                        <br/>
-                        <br/>
                         <q-card imagemedia='https://picsum.photos/200/300?random'>
                             <div slot="header">
                                 <q-avatar src='https://picsum.photos/200/300?random'></q-avatar>

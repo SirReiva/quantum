@@ -1,5 +1,9 @@
 import { createElement, diff, queuPatches, isFunction } from './quantumCore';
 
+interface arrReferences {
+    [key: string]: any;
+}
+
 export default class QuantumElement extends HTMLElement {
     template(): any { return ''; }
     styles(): string { return ''; }
@@ -16,7 +20,7 @@ export default class QuantumElement extends HTMLElement {
     public static tagName: string = null;
 
     protected automaticDetection = true;
-    public refs: any = {};
+    public refs: arrReferences = {};
     public props: any = null;
     public objectAttrs: any = {};
     private _validator: any = {
@@ -30,7 +34,7 @@ export default class QuantumElement extends HTMLElement {
 
     constructor(prps = {}) {
         super();
-        if (QuantumElement.encapsulation)
+        if ((this.constructor as typeof QuantumElement).encapsulation)
             this._shadowRoot = this.attachShadow({ mode: 'open' }); //, delegatesFocus: true??
         else
             this._shadowRoot = this;
@@ -106,6 +110,10 @@ export default class QuantumElement extends HTMLElement {
         this.componentLoaded();
     }
 
+    public getRoot() {
+        return this._shadowRoot;
+    }
+
     protected transaction(cb: Function) {
         let prevVal = this.automaticDetection;
         this.automaticDetection = false;
@@ -130,10 +138,12 @@ export default class QuantumElement extends HTMLElement {
     }
 
     public refresh() {
+        if (!this._initialized) return;
         this._render();
     }
 
     public rebuild() { //testear...
+        if (!this._initialized) return;
         this._shadowRoot.innerHTML = '';
         this._vDom = this.template();
         this._styleEl = document.createElement('style');

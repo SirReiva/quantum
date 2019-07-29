@@ -1,5 +1,6 @@
 import QuantumElement from '../core/quantumElement';
-import { h, debounce } from '../core/quantumCore';
+import { h } from '../core/quantumCore';
+import * as _ from 'lodash';
 
 const SUPPORT_TYPES = ['text', 'password', 'number', 'email'];
 /*TEXTINPUT*/
@@ -10,7 +11,7 @@ export default class qTextInput extends QuantumElement {
         if (this.attrs.mode == 'outline') css = 'q-material-textfield-outlined';
         let tp = (SUPPORT_TYPES.indexOf(this.attrs.type) !== -1)?this.attrs.type:'text';
         return <label className={css}>
-                    <input type={tp} ref="inpt" onKeyDown={(e:any) => this._change(e)} value={this.attrs.value} placeholder=" "/>
+                    <input type={tp} ref="inpt" onKeyDown={this.cchange} value={this.attrs.value} placeholder=" "/>
                     <span><slot></slot></span>
                 </label>;
     }
@@ -19,9 +20,10 @@ export default class qTextInput extends QuantumElement {
         return ['mode', 'value', 'type'];
     }
 
-    _change(event: any) {
-        debounce(this._debounce.bind(this), 500)();
-    }
+    /*_change(event: any) {
+        console.log('change');
+        _.debounce(this._debounce.bind(this), 500);
+    }*/
 
     _debounce() {
         if (this.refs.inpt.value != this.getAttribute('value')) {
@@ -30,12 +32,19 @@ export default class qTextInput extends QuantumElement {
         } 
     }
 
+    private cchange = _.debounce(e => {
+        this._debounce();
+    }, 500);
+
     getValue() {
         return this.refs.inpt.value;
     }
 
     styles() { 
         return `
+            :host {
+                width: fit-content;
+            }
             .q-material-textfield-outlined {
                 --q-material-safari-helper1: rgb(var(--q-material-primary-rgb, 33, 150, 243));
                 position: relative;

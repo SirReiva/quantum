@@ -30,6 +30,7 @@ export default class qButton extends QuantumElement {
             :host {
                 display: inline-block;
                 margin: 2px;
+                width: fit-content;
             }
             .q-material-button-text {
                 position: relative;
@@ -67,7 +68,7 @@ export default class qButton extends QuantumElement {
                 right: 0;
                 top: 0;
                 bottom: 0;
-                background-color: currentColor;
+                background-color: rgb(var(--q-material-onprimary-rgb, 255, 255, 255));
                 opacity: 0;
                 transition: opacity 0.2s;
             }
@@ -82,7 +83,7 @@ export default class qButton extends QuantumElement {
                 padding: 50%;
                 width: 32px;
                 height: 32px;
-                background-color: currentColor;
+                background-color: rgb(var(--q-material-onprimary-rgb, 255, 255, 255));
                 opacity: 0;
                 transform: translate(-50%, -50%) scale(1) ;
                 transition: opacity 1s, transform 0.5s;
@@ -159,7 +160,7 @@ export default class qButton extends QuantumElement {
                 right: 0;
                 top: 0;
                 bottom: 0;
-                background-color: currentColor;
+                background-color: rgb(var(--q-material-onprimary-rgb, 255, 255, 255));
                 opacity: 0;
                 transition: opacity 0.2s;
             }
@@ -174,7 +175,7 @@ export default class qButton extends QuantumElement {
                 padding: 50%;
                 width: 32px;
                 height: 32px;
-                background-color: currentColor;
+                background-color: rgb(var(--q-material-onprimary-rgb, 255, 255, 255));
                 opacity: 0;
                 transform: translate(-50%, -50%) scale(1) ;
                 transition: opacity 1s, transform 0.5s;
@@ -316,6 +317,12 @@ export default class qButton extends QuantumElement {
             
             .q-material-button-contained:disabled::after {
                 opacity: 0;
+            }
+            .q-material-button-contained:active, .q-material-button-contained:focus {
+                background-color: rgb(var(--q-material-primary-rgb, 33, 150, 243));
+            }
+            .q-material-button-outlined:active, .q-material-button-outlined:focus {
+                background-color: transparent;
             }
         `; 
     }

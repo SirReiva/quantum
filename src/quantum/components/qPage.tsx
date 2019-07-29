@@ -10,7 +10,13 @@ export default class qPage extends QuantumElement {
             display: block;
             top: 0px;
             left: 0px;
+            will-change: opacity, transform;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)
         }`; 
+    }
+
+    componentLoaded() {
+        this.dispatchEvent(new CustomEvent('loaded', {}));
     }
 
     constructor(props: any) {

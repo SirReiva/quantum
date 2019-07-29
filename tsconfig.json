@@ -6,7 +6,8 @@
       "target": "es6",
       "jsx": "react",
       "jsxFactory": "h",
-      "allowJs": true
+      "allowJs": true,
+      "moduleResolution": "node"
     },
     "exclude": [
       "node_modules"

@@ -19,6 +19,9 @@ import qImage from './qImage';
 import qListItem from './qListItem';
 import qSpinner from './qSpinner';
 import qRatingStar from './qRantingStar';
+import qRippleContainer from './ripplecontainer';
+import qRow from './qRow';
+import qColumn from './qColumn';
 
 export{ 
     qStack,
@@ -40,6 +43,9 @@ export{
     qImage,
     qSpinner,
     qRatingStar,
+    qRippleContainer,
+    qRow,
+    qColumn,
     qPage,
     qApp
 };

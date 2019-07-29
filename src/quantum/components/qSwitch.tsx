@@ -13,6 +13,9 @@ export default class qSwitch extends QuantumElement {
 
     styles() { 
         return `
+            :host {
+                width: fit-content;
+            }
             .q-material-switch {
                 z-index: 0;
                 position: relative;

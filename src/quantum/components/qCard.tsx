@@ -9,7 +9,7 @@ export default class qCard extends QuantumElement {
                     <div className="header">
                       <slot name="header"></slot>
                     </div>
-                    <figure className="rich_media" id="image_1"></figure>
+                    <slot name="img"></slot>
                     <div className="supporting_text">
                       <slot></slot>
                     </div>
@@ -26,7 +26,6 @@ export default class qCard extends QuantumElement {
 
     styles() { return `
         :host {
-            display: block;
             width: 100%;
             margin-top: 10px;
             margin-bottom: 10px;
@@ -64,9 +63,6 @@ export default class qCard extends QuantumElement {
             content: "";
             display: block;
             padding-top: 56.25%;
-          }
-          .card figure.rich_media#image_1 {
-            background-image: url(${this.attrs.imagemedia});
           }
           .card div.supplemental_actions {
             padding: 8px;

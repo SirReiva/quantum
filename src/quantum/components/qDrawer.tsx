@@ -2,6 +2,9 @@ import QuantumElement from '../core/quantumElement';
 import { h, checkMobile } from '../core/quantumCore';
 
 declare var window: any;
+interface arrDrawer {
+    [key: string]: qDrawer;
+}
 /*DRAWER*/
 export default class qDrawer extends QuantumElement {
     public static tagName = 'q-drawer';
@@ -48,8 +51,19 @@ export default class qDrawer extends QuantumElement {
         this.initDrawer();
     }
 
+    componentLoaded() {
+        if (this.attrs.menuid) qDrawer.instances[this.attrs.menuid] = this;
+    }
+
+    public static instances: arrDrawer = {};
+
     componentUnmounted() {
-        document.body.removeEventListener('click', this._listenerBody);
+        let keys = Object.keys(qDrawer.instances);
+        const pos = Object.values(qDrawer.instances).indexOf(this);
+        if(pos > -1) {
+            delete qDrawer.instances[keys[pos]];
+        }
+        //document.body.removeEventListener('click', this._listenerBody);
     }
 
     async _directive(e: any) {
@@ -121,17 +135,15 @@ export default class qDrawer extends QuantumElement {
             this.refs.backdrop.style.opacity = 1 - (0.8 * (-moveX / this.refs.content.offsetWidth)) - 0.2;
             if(Math.abs(x) > this._sensibillity) {
                 this.style.transition = "none";
-                this.refs.backdrop.style.display = 'block';
             }
             e.preventDefault();
         }
         return true;
     }
     _removeInlineTransform() {
-        this.style.transform = "";
-        this.style.transition = "";
-        this.refs.backdrop.style = null;
-        this.refs.backdrop.style.opacity = null;
+        if(this.style.transform) this.style.transform = "";
+        if(this.style.transition) this.style.transition = "";
+        if(this.refs.backdrop.style.opacity) this.refs.backdrop.style.opacity = null;
     }
 
     _listener: any;
@@ -146,8 +158,8 @@ export default class qDrawer extends QuantumElement {
         typeStart = isIE ? "MSPointerDown" : (isMobile ? "touchstart" : "mousedown"),
         typeMove = isIE ? "MSPointerMove" : (isMobile ? "touchmove" : "mousemove"),
         typeEnd = isIE ? "MSPointerUp" : (isMobile ? "touchend" : "mouseup");
-        this._listenerBody = this._directive.bind(this);
-        document.body.addEventListener('click', this._listenerBody);
+        //this._listenerBody = this._directive.bind(this);
+        //document.body.addEventListener('click', this._listenerBody);
         document.addEventListener(typeStart, (e: any) => {
             let evX = isMobile ? e.touches[0].clientX : e.clientX;
             if ((!this.isOpen() && evX < 54)) {
@@ -198,7 +210,7 @@ export default class qDrawer extends QuantumElement {
 
     styles() { return `
         :host {
-            display: block;
+            display: inline-block;
             width: 100%;
             height: 100%;
             position: absolute;
@@ -207,6 +219,7 @@ export default class qDrawer extends QuantumElement {
             z-index: 999;
             transform: translateX(-100%);
             transition: transform 0.3s ease-out;
+            will-change: transform;
             overflow: visible;
         }
         :host([open]) {
@@ -214,7 +227,7 @@ export default class qDrawer extends QuantumElement {
         }
         :host([open]) .backdrop {
             opacity: 0.8;
-            display: block;
+            pointer-events: auto;
         }
         .base {
             position: relative;
@@ -234,7 +247,8 @@ export default class qDrawer extends QuantumElement {
             opacity: 0;
             z-index: 0;
             transition: opacity 0.3s ease-out;
-            display: none;
+            pointer-events: none;
+            will-change: opacity;
         }
         .content {
             z-index: 1;
@@ -243,7 +257,8 @@ export default class qDrawer extends QuantumElement {
             height: 100%;
             background-color: white;
             box-sizing: border-box;
-            display: inline-block;
+            display: flex;
+            flex-direction: column;
         }
     `; }
 

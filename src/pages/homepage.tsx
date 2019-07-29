@@ -1,5 +1,5 @@
 import { h } from '../quantum/core/quantumCore';
-import { qPage, qStack } from '../quantum/components/index.qcomponents';
+import { qPage, qStack, qDrawer } from '../quantum/components/index.qcomponents';
 import { dummydata } from '../data/dummydata';
 
 export default class HomePage extends qPage {
@@ -7,20 +7,23 @@ export default class HomePage extends qPage {
     template() {
         // <q-avatar className="cardMovie" src={'http://image.tmdb.org/t/p/w185' + post.poster_path}></q-avatar>
         let result = this.props.loaded?this.props.posts.map((post:any) => 
-        <q-card imagemedia={'http://image.tmdb.org/t/p/w500' + post.backdrop_path}>
+        <q-card>
             <div slot="header">
                 <div class="text small">
                     <b>{ post.title }</b>
                 </div>
             </div>
+            <q-image hero="{'top': 0, 'width': '100%', 'left': 0}" className="mainimage" slot="img" srcimg={'http://image.tmdb.org/t/p/w500' + post.backdrop_path}>
+                <q-icon style="color: rgb(var(--q-material-primary-rgb));" icon="spinner" spin></q-icon>
+            </q-image>
             <div slot="leftFooter">
                 <q-button onClick={() => this.goPost(post)} mode="outline">Leer más</q-button>
             </div>
-        </q-card>):<q-spinner style="display: block;"></q-spinner>;
+        </q-card>):<q-spinner></q-spinner>;
 
         return  <q-scafold>
                     <q-appbar shadow>
-                        <q-toolbarbutton openMenu slot="start"><q-icon icon="bars"></q-icon></q-toolbarbutton>
+                        <q-toolbarbutton onClick={() =>{ qDrawer.instances['main'].open() }} slot="start"><q-icon icon="bars"></q-icon></q-toolbarbutton>
                         <span>Inicio</span>
                     </q-appbar>
                     <q-content padding>{result}</q-content>
@@ -43,7 +46,7 @@ export default class HomePage extends qPage {
                 this.props.loaded = true;
             });
         }, 1000);
-        
+        super.componentLoaded();
     }
 
     goPost(post :any) {

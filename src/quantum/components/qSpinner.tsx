@@ -12,7 +12,9 @@ export default class qSpinner extends QuantumElement {
 
     styles() { return `
         :host {
-            display: inline-block;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .pure-material-progress-circular {
             margin: 0 auto;

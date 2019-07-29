@@ -13,7 +13,7 @@ export default class qApp extends QuantumElement {
             width: 100%;
             padding-top: env(safe-area-inset-top);
             height: calc(100% - env(safe-area-inset-top));
-            position: absolute;
+            display: inline-block;
         }`; 
     }
 

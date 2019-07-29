@@ -40,6 +40,8 @@ export default class qContent extends QuantumElement {
             box-sizing: border-box;
             position: relative;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
         :host([padding]) .scrollContent{
             padding: 16px;
