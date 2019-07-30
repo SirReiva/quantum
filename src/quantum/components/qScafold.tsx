@@ -15,6 +15,7 @@ export default class qScafold extends QuantumElement {
             flex-flow: column;
             height: 100%;
             width: 100%;
+            background-color: white;
             top: 0px;
             left: 0px;
         }

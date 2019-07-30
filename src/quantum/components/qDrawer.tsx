@@ -25,6 +25,8 @@ export default class qDrawer extends QuantumElement {
         return this.hasAttribute('open');
     }
 
+    automaticDetection = false;
+
     open() {
         if(this.isOpen()) return;
         this._removeInlineTransform();

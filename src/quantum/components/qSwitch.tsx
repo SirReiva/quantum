@@ -24,6 +24,7 @@ export default class qSwitch extends QuantumElement {
                 font-family: var(--q-material-font, "Roboto", "Segoe UI", BlinkMacSystemFont, system-ui, -apple-system);
                 font-size: 16px;
                 line-height: 1.5;
+                -webkit-tap-highlight-color: rgba(var(--q-material-primary-rgb, 0, 0, 0), 0.3);
             }
             
             /* Input */

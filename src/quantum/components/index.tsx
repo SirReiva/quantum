@@ -22,6 +22,7 @@ import qRatingStar from './qRantingStar';
 import qRippleContainer from './ripplecontainer';
 import qRow from './qRow';
 import qColumn from './qColumn';
+import qVirtualList from './qVirtualList';
 
 export{ 
     qStack,
@@ -47,5 +48,6 @@ export{
     qRow,
     qColumn,
     qPage,
+    qVirtualList,
     qApp
 };

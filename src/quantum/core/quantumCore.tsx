@@ -236,8 +236,16 @@ function setProp(target: any, name: string, value: any) {
     if (typeof value === 'boolean') {
         return setBooleanProp(target, name, value);
     }
-    if (typeof value === 'object') {
+    if (Array.isArray(value)) {
         target.objectAttrs[name] = value;
+        return target.setAttribute(name, 'q-json-obj://' + JSON.stringify(value));
+    }
+    if(isFunction(value)) {
+        target.objectAttrs[name] = value;
+        return target.setAttribute(name, 'q-string-func://' + value);
+    }
+    if (typeof value === 'object') {
+        target.objectAttrs[name] = Object.assign({}, value);
         return target.setAttribute(name, 'q-json-obj://' + JSON.stringify(value));
     }
     //console.log(target, name, value);
@@ -255,7 +263,7 @@ function setProps(target: any, props: any) {
 function removeProp(target: any, name: string/*, value: any*/) {
     let value: any = null;
     if (target.objectAttrs && target.objectAttrs[name]) value = target.objectAttrs[name];
-    if (value && typeof value === 'object') {
+    if (value && (typeof value === 'object' || isFunction(value)) || Array.isArray(value)) {
         delete target.objectAttrs[name];
     }
     if (name === 'className') {

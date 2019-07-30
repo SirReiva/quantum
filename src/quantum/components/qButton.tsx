@@ -54,6 +54,7 @@ export default class qButton extends QuantumElement {
                 overflow: hidden;
                 outline: none;
                 cursor: pointer;
+                -webkit-tap-highlight-color: rgba(0,0,0,0);
             }
             
             .q-material-button-text::-moz-focus-inner {
@@ -146,6 +147,7 @@ export default class qButton extends QuantumElement {
                 overflow: hidden;
                 outline: none;
                 cursor: pointer;
+                -webkit-tap-highlight-color: rgba(var(--q-material-primary-rgb), 0.5);
             }
             
             .q-material-button-outlined::-moz-focus-inner {
@@ -239,6 +241,7 @@ export default class qButton extends QuantumElement {
                 outline: none;
                 cursor: pointer;
                 transition: box-shadow 0.2s;
+                -webkit-tap-highlight-color: rgba(0,0,0,0);
             }
             
             .q-material-button-contained::-moz-focus-inner {

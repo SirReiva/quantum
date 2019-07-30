@@ -6,7 +6,7 @@ import './font-awesome.scss';
 import { qStack, qScafold, qDrawer, qAppBar, qButton, qToolBarButton,
      qSwitch, qCheckBox, qContent, qIcon, qRadioButton, qTextInput, 
      qCard, qSlider, qAvatar, qApp, qImage, qListItem, qSpinner, 
-     qRatingStar, qRippleContainer, qColumn, qRow } from './quantum/components/index.qcomponents';
+     qRatingStar, qRippleContainer, qColumn, qRow, qVirtualList } from './quantum/components';
 import { Route } from './quantum/components/qStack';
 
 declare var Capacitor: any;
@@ -33,6 +33,7 @@ defineQuantumElement(qRippleContainer);
 defineQuantumElement(qRatingStar);
 defineQuantumElement(qColumn);
 defineQuantumElement(qRow);
+defineQuantumElement(qVirtualList);
 defineQuantumElement(qApp);
 
 const routes: Route[] = [
