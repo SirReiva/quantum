@@ -14,7 +14,14 @@ export default class HomePage extends qPage {
                         <q-toolbarbutton onClick={() =>{ qDrawer.instances['main'].open() }} slot="start"><q-icon icon="bars"></q-icon></q-toolbarbutton>
                         <span>Inicio</span>
                     </q-appbar>
-                    <q-content padding>{result}</q-content>
+                    <q-content padding>
+                        <div style="display: flex; flex-direction: column;">
+                            {result}
+                        </div>
+                        <q-infinitescrol ref="iScrol" onLoadmore={() => this.lm()}>
+                            <q-spinner></q-spinner>
+                        </q-infinitescrol>
+                    </q-content>
                 </q-scafold>;
     }
 
@@ -36,6 +43,20 @@ export default class HomePage extends qPage {
                 </q-card>;
     }
 
+    first = false;
+    lm() {
+        if(!this.first) {
+            this.first = true;
+            setTimeout(() => {
+                let data = dummydata;
+                this.props.posts = data.results.slice(0, 20);
+                this.refs.iScrol.setEnable(false);
+                this.refs.iScrol.complete();
+            }, 2000);
+        }
+        
+    }
+
     componentLoaded() {
         /*fetch('https://api.themoviedb.org/3/movie/popular?api_key=785e1bfa35690f914c6c1c83a043d807&language=es-ES').then((rawdata: any) => rawdata.json()).then(data => {
             this.transaction(() => {
@@ -46,7 +67,7 @@ export default class HomePage extends qPage {
         setTimeout(() => {
             let data = dummydata;
             this.transaction(() => {
-                this.props.posts = data.results;
+                this.props.posts = data.results.slice(0, 10);
                 this.props.loaded = true;
             });
         }, 1000);

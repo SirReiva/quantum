@@ -104,8 +104,11 @@ export default class QuantumElement extends HTMLElement {
         this._vDom = this.template();
         this._styleEl = document.createElement('style');
         this._styleEl.innerHTML = this.styles(); //+ ':host{ visible: "visible"; }';??
+        /*this._styleEl = new CSSStyleSheet();
+        this._styleEl.replaceSync(this.styles());*/
         this._shadowRoot.appendChild(createElement(this._vDom, this.refs));
         this._shadowRoot.appendChild(this._styleEl);
+        //this._shadowRoot.adoptedStyleSheets = [this._styleEl];
         this._initialized = true;
         this.componentLoaded();
     }
@@ -135,6 +138,9 @@ export default class QuantumElement extends HTMLElement {
     public reloadStyles() {
         if (!this._initialized) return;
         this._styleEl.innerHTML = this.styles();
+        /*this._styleEl = new CSSStyleSheet();
+        this._styleEl.replaceSync(this.styles());
+        this._shadowRoot.adoptedStyleSheets = [this._styleEl];*/
     }
 
     public refresh() {
@@ -148,7 +154,10 @@ export default class QuantumElement extends HTMLElement {
         this._vDom = this.template();
         this._styleEl = document.createElement('style');
         this._styleEl.innerHTML = this.styles();
+        /*this._styleEl = new CSSStyleSheet();
+        this._styleEl.replaceSync(this.styles());*/
         this._shadowRoot.appendChild(createElement(this._vDom, this.refs));
         this._shadowRoot.appendChild(this._styleEl);
+        //this._shadowRoot.adoptedStyleSheets = [this._styleEl];
     }
 }

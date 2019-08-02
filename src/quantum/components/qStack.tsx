@@ -1,10 +1,10 @@
 import QuantumElement from '../core/quantumElement';
 import { h, defineQuantumElement, isRegisteredQuantumElement } from '../core/quantumCore';
 import { TweenLite, TimelineLite } from 'gsap';
-
+//import lottie from 'lottie-web';
 
 interface animationPromise {
-    animation: TweenLite | TimelineLite;
+    cancel: Function;
     promise: Promise<any>;
     enter: boolean;
 }
@@ -14,56 +14,174 @@ export abstract class AnimationTransition {
     public abstract out(removedPage: HTMLElement, currentPage: HTMLElement, ghostLayer: HTMLElement): animationPromise
 }
 
-/*export class ClipPathAnimationTransition3 extends AnimationTransition {
+export class ChevronAnimationTransitionWebAPI extends AnimationTransition {
     public enter(pageIn: HTMLElement, lastPage: HTMLElement, ghostLayer: HTMLElement): animationPromise {
-        pageIn.style.clipPath = "path('M0 -0.12C8.33 -8.46 16.67 -12.62 25 -12.62C37.5 -12.62 35.91 0.15 50 -0.12C64.09 -0.4 62.5 -34.5 75 -34.5C87.5 -34.5 87.17 -4.45 100 -0.12C112.83 4.2 112.71 -17.95 125 -18.28C137.29 -18.62 137.76 1.54 150.48 -0.12C163.19 -1.79 162.16 -25.12 174.54 -25.12C182.79 -25.12 191.28 -16.79 200 -0.12L200 -34.37L0 -34.37L0 -0.12Z')";
-        (pageIn.style as any).webkitClipPath = "path('M0 -0.12C8.33 -8.46 16.67 -12.62 25 -12.62C37.5 -12.62 35.91 0.15 50 -0.12C64.09 -0.4 62.5 -34.5 75 -34.5C87.5 -34.5 87.17 -4.45 100 -0.12C112.83 4.2 112.71 -17.95 125 -18.28C137.29 -18.62 137.76 1.54 150.48 -0.12C163.19 -1.79 162.16 -25.12 174.54 -25.12C182.79 -25.12 191.28 -16.79 200 -0.12L200 -34.37L0 -34.37L0 -0.12Z')";
-        var tl = new TimelineLite({
-            paused: true
+        let anim = pageIn.animate([
+            { clipPath: "polygon(-25% 0%, 0% 50%, -25% 100%, -100% 100%, -75% 50%, -100% 0%)" },
+            { clipPath: "polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 25% 50%, 0% 0%)" },
+            { clipPath: "polygon(100% 0%, 100% 50%, 100% 100%, 0% 100%, 0% 50%, 0% 0%)" }
+        ], {
+            duration: 500,
         });
-        tl.add("enterios", 0).to(pageIn, 0.3, {
-            webkitClipPath: "path('M0 199.88C8.33 270.71 16.67 306.13 25 306.13C37.5 306.13 35.91 231.4 50 231.13C64.09 230.85 62.5 284.25 75 284.25C87.5 284.25 87.17 208.05 100 212.38C112.83 216.7 112.71 300.8 125 300.47C137.29 300.13 137.76 239.04 150.48 237.38C163.19 235.71 162.16 293.63 174.54 293.63C182.79 293.63 191.28 262.38 200 199.88L200 0.13L0 0.13L0 199.88Z')",
-            clipPath: "path('M0 199.88C8.33 270.71 16.67 306.13 25 306.13C37.5 306.13 35.91 231.4 50 231.13C64.09 230.85 62.5 284.25 75 284.25C87.5 284.25 87.17 208.05 100 212.38C112.83 216.7 112.71 300.8 125 300.47C137.29 300.13 137.76 239.04 150.48 237.38C163.19 235.71 162.16 293.63 174.54 293.63C182.79 293.63 191.28 262.38 200 199.88L200 0.13L0 0.13L0 199.88Z')"
-        },"enterios");
         return {
             promise: new Promise<any>((resolve, reject) => {
-                tl.eventCallback('onComplete', () => {
-                    if (tl.totalTime() === tl.time())
-                        resolve();
-                    else
-                        reject();
-                })
-                tl.play();
+                anim.onfinish = () => {
+                    resolve();
+                };                
+                anim.oncancel = () => {
+                    reject();
+                };
             }),
-            animation: tl,
+            cancel: () => {
+                anim.cancel();
+            },
             enter: true
         };
         
     }
     public out(removedPage: HTMLElement, currentPage: HTMLElement, ghostLayer: HTMLElement): animationPromise {
         currentPage.style.display = '';
-        var tl = new TimelineLite({
-            paused: true
+        let anim = removedPage.animate([
+            { clipPath: "polygon(100% 0%, 100% 50%, 100% 100%, 0% 100%, 0% 50%, 0% 0%)" },
+            { clipPath: "polygon(75% 0%, 100% 50%, 75% 100%, 0% 100%, 25% 50%, 0% 0%)" },
+            { clipPath: "polygon(175% 0%, 200% 50%, 175% 100%, 100% 100%, 125% 50%, 100% 0%)" }
+        ], {
+            duration: 500,
         });
-        tl.add("outios", 0).to(removedPage, 0.3, {
-            webkitClipPath: "",
-            clipPath: ""
-        }, "outios");
         return {
             promise: new Promise<any>((resolve, reject) => {
-                tl.eventCallback('onComplete', (params) => {
-                    if (tl.totalTime() === tl.time())
-                        resolve();
-                    else
-                        reject();
-                })
-                tl.play();
+                anim.onfinish = () => {
+                    resolve();
+                };
+                anim.oncancel = () => {
+                    reject();
+                };
             }),
-            animation: tl,
-            enter: false
+            cancel: () => {
+                anim.cancel();
+            },
+            enter: true
         };
     }
-}*/
+}
+
+export class SlideDownAnimationTransitionWebAPI extends AnimationTransition {
+    public enter(pageIn: HTMLElement, lastPage: HTMLElement, ghostLayer: HTMLElement): animationPromise {
+        let anim = pageIn.animate([
+            { clipPath: "inset(0 0 100% 0)" }, 
+            { clipPath: "inset(0)" }
+        ], {
+            duration: 200,
+        });
+        return {
+            promise: new Promise<any>((resolve, reject) => {
+                anim.onfinish = () => {
+                    resolve();
+                };                
+                anim.oncancel = () => {
+                    reject();
+                };
+            }),
+            cancel: () => {
+                anim.cancel();
+            },
+            enter: true
+        };
+        
+    }
+    public out(removedPage: HTMLElement, currentPage: HTMLElement, ghostLayer: HTMLElement): animationPromise {
+        currentPage.style.display = '';
+        let anim = removedPage.animate([
+            { clipPath: "inset(0)" },
+            { clipPath: "inset(0 0 100% 0)" }
+        ], {
+            duration: 200,
+        });
+        return {
+            promise: new Promise<any>((resolve, reject) => {
+                anim.onfinish = () => {
+                    resolve();
+                };
+                anim.oncancel = () => {
+                    reject();
+                };
+            }),
+            cancel: () => {
+                anim.cancel();
+            },
+            enter: true
+        };
+    }
+}
+
+export class IOSAnimationTransitionWebAPI extends AnimationTransition {
+    public enter(pageIn: HTMLElement, lastPage: HTMLElement, ghostLayer: HTMLElement): animationPromise {
+        //pageIn.style.transform = 'translateX(' + screen.availWidth + 'px)';
+        let anim = pageIn.animate([
+            { transform: 'translateX(' + screen.availWidth + 'px)' }, 
+            { transform: 'translateX(0px)' }
+        ], {
+            duration: 500,
+            easing: 'cubic-bezier(0.32,0.72,0,1)'
+        });
+        let anim2 = lastPage.animate([ 
+            { transform: 'translateX(0px)' },
+            { transform: 'translateX(' + -.55 * screen.availWidth + 'px)' }
+        ], {
+            duration: 450,
+            easing: 'cubic-bezier(0.32,0.72,0,1)',
+            delay: 50
+        });
+        return {
+            promise: new Promise<any>((resolve, reject) => {
+                anim.onfinish = () => {
+                    resolve();
+                };                
+                anim.oncancel = () => {
+                    reject();
+                };
+            }),
+            cancel: () => {
+                anim.cancel();
+                anim2.cancel();
+            },
+            enter: true
+        };
+        
+    }
+    public out(removedPage: HTMLElement, currentPage: HTMLElement, ghostLayer: HTMLElement): animationPromise {
+        currentPage.style.display = '';
+        let anim = removedPage.animate([ 
+            { transform: 'translateX(0px)' },
+            { transform: 'translateX(' + screen.availWidth + 'px)' }
+        ], {
+            duration: 500,
+            easing: 'cubic-bezier(0.32,0.72,0,1)'
+        });
+        let anim2 = currentPage.animate([
+            { transform: 'translateX(' + -.55 * screen.availWidth + 'px)' },
+            { transform: 'translateX(0px)' }
+        ], {
+            duration: 500,
+            easing: 'cubic-bezier(0.32,0.72,0,1)'
+        });
+        return {
+            promise: new Promise<any>((resolve, reject) => {
+                anim.onfinish = () => {
+                    resolve();
+                };
+                anim.oncancel = () => {
+                    reject();
+                };
+            }),
+            cancel: () => {
+                anim.cancel();
+                anim2.cancel();
+            },
+            enter: true
+        };
+    }
+}
 
 export class ClipPathAnimationTransition2 extends AnimationTransition {
     public enter(pageIn: HTMLElement, lastPage: HTMLElement, ghostLayer: HTMLElement): animationPromise {
@@ -86,7 +204,7 @@ export class ClipPathAnimationTransition2 extends AnimationTransition {
                 })
                 tl.play();
             }),
-            animation: tl,
+            cancel: tl.kill.bind(tl),
             enter: true
         };
         
@@ -110,7 +228,7 @@ export class ClipPathAnimationTransition2 extends AnimationTransition {
                 })
                 tl.play();
             }),
-            animation: tl,
+            cancel: tl.kill.bind(tl),
             enter: false
         };
     }
@@ -135,7 +253,7 @@ export class ClipPathAnimationTransition extends AnimationTransition {
                 })
                 tl.play();
             }),
-            animation: tl,
+            cancel: tl.kill.bind(tl),
             enter: true
         };
         
@@ -158,7 +276,7 @@ export class ClipPathAnimationTransition extends AnimationTransition {
                 })
                 tl.play();
             }),
-            animation: tl,
+            cancel: tl.kill.bind(tl),
             enter: false
         };
     }
@@ -186,7 +304,7 @@ export class IOSAnimationTransition extends AnimationTransition {
                 })
                 tl.play();
             }),
-            animation: tl,
+            cancel: tl.kill.bind(tl),
             enter: true
         };
         
@@ -211,7 +329,7 @@ export class IOSAnimationTransition extends AnimationTransition {
                 })
                 tl.play();
             }),
-            animation: tl,
+            cancel: tl.kill.bind(tl),
             enter: false
         };
     }
@@ -244,7 +362,7 @@ export class AndroidAnimationTransition extends AnimationTransition {
         });
         return {
             promise: new Promise<any>((resolve, reject) => {
-                tl.eventCallback('onComplete', (params) => {
+                tl.eventCallback('onComplete', () => {
                     if (tl.totalTime() === .3)
                         resolve();
                     else
@@ -252,7 +370,7 @@ export class AndroidAnimationTransition extends AnimationTransition {
                 })
                 tl.play();
             }),
-            animation: tl,
+            cancel: tl.kill.bind(tl),
             enter: true
         };
     }
@@ -273,7 +391,7 @@ export class AndroidAnimationTransition extends AnimationTransition {
                 });
                 tl.play();
             }),
-            animation: tl,
+            cancel: tl.kill.bind(tl),
             enter: false
         };
     }
@@ -325,7 +443,6 @@ export default class qStack extends QuantumElement {
     automaticDetection = false;
     template() {
         return  <div className="baseStack">
-                    <link rel="stylesheet" href="./static/animate.min.css"/>
                     <div ref="ghostLayer" className="ghostLayer"></div>
                     <div ref="stackview" className="stackview"></div>
                 </div>;
@@ -358,6 +475,7 @@ export default class qStack extends QuantumElement {
             opacity: 0;
             pointer-events: none;
             will-change: opacity;
+            contain: layout size style;
         }`; 
     }
 
@@ -427,7 +545,7 @@ export default class qStack extends QuantumElement {
         return new Promise(resolve => {
             if (this.canGoBack()) {
                 if (this._currentEnterAnimation && this._currentEnterAnimation.enter) {
-                    this._currentEnterAnimation.animation.kill();
+                    this._currentEnterAnimation.cancel();
                 }
                 let removed = this._stackElements.pop();
                 this._currentOutAnimation = this._animationTransition.out(removed, (removed.previousSibling as HTMLElement), this.refs.ghostLayer);
@@ -531,7 +649,7 @@ export default class qStack extends QuantumElement {
     }
 
     componentLoaded() {
-        this._animationTransition = new ClipPathAnimationTransition2();
+        this._animationTransition = new IOSAnimationTransitionWebAPI();
         if (this.attrs.stackid) qStack.instances[this.attrs.stackid] = this;
         this.setRootName(this.attrs.root);
         this._preloadRoutes();

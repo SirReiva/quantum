@@ -23,6 +23,8 @@ import qRippleContainer from './ripplecontainer';
 import qRow from './qRow';
 import qColumn from './qColumn';
 import qVirtualList from './qVirtualList';
+import qSearchBar from './qSearchBar';
+import qInfiniteScroll from './qInfiniteScroll';
 
 export{ 
     qStack,
@@ -48,6 +50,8 @@ export{
     qRow,
     qColumn,
     qPage,
+    qSearchBar,
     qVirtualList,
+    qInfiniteScroll,
     qApp
 };

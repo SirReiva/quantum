@@ -1,6 +1,6 @@
 import QuantumElement from '../core/quantumElement';
 import { h } from '../core/quantumCore';
-import * as _ from 'lodash';
+import { debounce } from 'lodash';
 
 const SUPPORT_TYPES = ['text', 'password', 'number', 'email'];
 /*TEXTINPUT*/
@@ -32,7 +32,7 @@ export default class qTextInput extends QuantumElement {
         } 
     }
 
-    private cchange = _.debounce(e => {
+    private cchange = debounce(e => {
         this._debounce();
     }, 500);
 

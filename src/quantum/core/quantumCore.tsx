@@ -339,16 +339,23 @@ function doPatchsHidden() {
 
 requestAnimationFrame(doPatchs);
 
-function patch(parent: any, patches: any, refs: any, index = 0) {
+function patch(parent: any, patches: any, refs: any, index = 0): number {
     if (!patches || patches.length == 0) { return 0; }
     const el = parent.childNodes[index];
     switch (patches.type) {
         case CREATE:
             {
                 const { newNode } = patches;
+                if(newNode.type === undefined)
+                    return 0;
                 const newEl = createElement(newNode, refs);
-                parent.appendChild(newEl);
-                return 0;
+                if(parent.childNodes[index]) {
+                    parent.insertBefore(newEl, parent.childNodes[index]);
+                    return 1;
+                } else {
+                    parent.appendChild(newEl);
+                    return 0;
+                }
             }
         case REMOVE:
             {
@@ -372,13 +379,15 @@ function patch(parent: any, patches: any, refs: any, index = 0) {
             }
         case UPDATE:
             {
+                if (!el) return 0;
                 const { props, children } = patches;
-                if (!children) return;
                 patchProps(el, props);
+                if (!children) return;
+                let childI = 0;
                 for (let i = 0; i < children.length; i++) {
                     if (children[i]) {
-                        let df: any = patch(el, children[i], refs, i);
-                        i += df;
+                        let df = patch(el, children[i], refs, childI);
+                        childI += df + 1;
                     }
                 }
                 return 0;
@@ -389,6 +398,8 @@ function patch(parent: any, patches: any, refs: any, index = 0) {
 
 /*VDOM*/
 export function h(type: string, props: any, ...children: any[]) {
+    if(!type)
+        return undefined;
     const vElem = Object.create(null);
     // props = JSON.parse(JSON.stringify(props || {}));
     props = copyObject(props);
@@ -396,7 +407,7 @@ export function h(type: string, props: any, ...children: any[]) {
     Object.assign(vElem, {
         type,
         props,
-        children: flatten(children)
+        children: flatten(children.filter(ch => (ch !== null && ch !== undefined && ch !== false)))
     });
     return vElem;
 }

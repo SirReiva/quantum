@@ -48,11 +48,19 @@ export default class qContent extends QuantumElement {
         }
     `; }
 
+    static get observedAttributes() {
+        return ['scollevents'];
+    }
+
     scrollEvent(e: Event) {
         this.dispatchEvent(new Event(e.type, e));//set scroll props
     }
 
     constructor() {
         super({ items: []});
+    }
+
+    getScrollElement() {
+        return this.getRoot().querySelector('.scrollContent');
     }
 }

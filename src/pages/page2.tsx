@@ -5,10 +5,10 @@ export default class Page2 extends qPage {
     public static tagName = 'q-page2';
     template() {
         return  <q-scafold>
-                    <q-appbar>
+                    <q-searchbar over>
                         <q-toolbarbutton onClick={() => this.navigate()} slot="start"><q-icon icon="arrow-left"></q-icon></q-toolbarbutton>
                         <span>Detail</span>
-                    </q-appbar>
+                    </q-searchbar>
                     <q-content>
                         <q-image srcimg='https://picsum.photos/2000/2000?random'>
                             <q-icon style="color: rgb(var(--q-material-primary-rgb));" icon="spinner" spin></q-icon>

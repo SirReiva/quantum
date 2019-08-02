@@ -19,6 +19,7 @@ export default class qImage extends QuantumElement {
             display: block; 
             position: relative;
             background-color: gray;
+            min-heigt: 24px;
         }
         .base {
             display: flex;
@@ -77,6 +78,7 @@ export default class qImage extends QuantumElement {
     }
 
     componentUnmounted() {
+        this.observer && this.observer.unobserve(this);
         this.observer && this.observer.disconnect();
         this.observer = null;
     }

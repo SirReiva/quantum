@@ -223,6 +223,8 @@ export default class qDrawer extends QuantumElement {
             transition: transform 0.3s ease-out;
             will-change: transform;
             overflow: visible;
+            contain: layout size style;
+            overscroll-behavior-x: none;
         }
         :host([open]) {
             transform: translateX(0%);
