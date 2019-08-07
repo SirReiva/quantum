@@ -37,6 +37,8 @@ export default class qImage extends QuantumElement {
             transition: visibility 0s linear, opacity .5s linear;
             display: block;
             opacity: 0;
+            background-position: center;
+            background-size: contain;
         }
         .loaded .loadImg {
             display: none;
@@ -47,30 +49,47 @@ export default class qImage extends QuantumElement {
         }
     `; }
 
+    public static observer: any;
+    public static obsevableCount = 0;
+    public static createObsever() {
+        const config = {
+            threshold: 0.01
+        };
+        qImage.observer = new IntersectionObserver(qImage.onIntersection, config);
+    }
+
     static get observedAttributes() {
         return ['srcimg'];
     }
 
-    private observer :any = null;
-    private observerListener: any = null;
+    componentAttributeChange() {
+        //console.log(this.attrs.srcimg, this.refs.mainImg.src);
+        this.refs.mainImg.setAttribute('src', this.attrs.srcimg);
+    }
     componentLoaded() {
-        const config = {
-            threshold: 0.01
-        };
-        this.observerListener =  this.onIntersection.bind(this);
-        this.observer = new IntersectionObserver(this.observerListener, config);
-        this.observer.observe(this);
+        if(!qImage.observer) {
+            qImage.createObsever();
+        }
+        qImage.observer.observe(this);
+        qImage.obsevableCount++;
     }
 
-    onIntersection(entries: any[]) {
+    public static onIntersection(entries: any[]) {
         entries.forEach(entry => {
             if (entry.intersectionRatio > 0) {
-                this.refs.mainImg.setAttribute('src', this.attrs.srcimg);
-                this.observer.unobserve(entry.target);
-                this.observer && this.observer.disconnect();
-                this.observer = null;
+                (entry.target as qImage).viewIntersect();
+                qImage.observer.unobserve(entry.target);
+                qImage.obsevableCount--;
+                if(qImage.obsevableCount <= 0) {
+                    qImage.observer.disconnect();
+                    qImage.observer = null;
+                }
             }
         });
+    }
+
+    public viewIntersect() {
+        this.refs.mainImg.setAttribute('src', this.attrs.srcimg);
     }
 
     imageloaded() {
@@ -78,12 +97,11 @@ export default class qImage extends QuantumElement {
     }
 
     componentUnmounted() {
-        this.observer && this.observer.unobserve(this);
-        this.observer && this.observer.disconnect();
-        this.observer = null;
+        qImage.observer && qImage.observer.unobserve(this);
     }
 
     constructor() {
         super({ loaded: '' });
     }
 }
+

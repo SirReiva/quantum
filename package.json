@@ -34,6 +34,7 @@
         "lodash": "^4.17.15",
         "lottie-web": "^5.5.7",
         "redux": "^4.0.4",
-        "redux-devtools": "^3.5.0"
+        "redux-devtools": "^3.5.0",
+        "web-animations-js": "^2.3.2"
     }
 }

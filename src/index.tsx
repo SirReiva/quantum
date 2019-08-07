@@ -6,7 +6,8 @@ import './font-awesome.scss';
 import { qStack, qScafold, qDrawer, qAppBar, qButton, qToolBarButton,
      qSwitch, qCheckBox, qContent, qIcon, qRadioButton, qTextInput, 
      qCard, qSlider, qAvatar, qApp, qImage, qListItem, qSpinner, 
-     qRatingStar, qRippleContainer, qColumn, qRow, qVirtualList, qSearchBar, qInfiniteScroll } from './quantum/components';
+     qRatingStar, qRippleContainer, qColumn, qRow, qVirtualList,
+     qSearchBar, qInfiniteScroll, qRefresher, qBackdrop } from './quantum/components';
 import { Route } from './quantum/components/qStack';
 
 defineQuantumElement(qStack);
@@ -34,6 +35,8 @@ defineQuantumElement(qRow);
 defineQuantumElement(qVirtualList);
 defineQuantumElement(qSearchBar);
 defineQuantumElement(qInfiniteScroll);
+defineQuantumElement(qRefresher);
+defineQuantumElement(qBackdrop);
 defineQuantumElement(qApp);
 
 declare var Capacitor: any;

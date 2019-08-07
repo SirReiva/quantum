@@ -29,6 +29,7 @@ export default class qCard extends QuantumElement {
             width: 100%;
             margin-top: 10px;
             margin-bottom: 10px;
+            display: block;
         }
         * {
             font-family: 'Roboto', sans-serif;

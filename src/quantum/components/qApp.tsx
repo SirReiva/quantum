@@ -10,10 +10,17 @@ export default class qApp extends QuantumElement {
 
     styles() { return `
         :host {
-            width: 100%;
-            padding-top: env(safe-area-inset-top);
-            height: calc(100% - env(safe-area-inset-top));
-            display: inline-block;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            position: absolute;
+            flex-direction: column;
+            justify-content: space-between;
+            contain: layout size style;
+            overflow: hidden;
+            z-index: 0;
         }`; 
     }
 

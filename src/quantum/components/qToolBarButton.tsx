@@ -36,8 +36,11 @@ export default class qToolBarButton extends QuantumElement {
                 margin-left: 10px;
                 margin-right: 10px;
                 -webkit-tap-highlight-color: rgba(0,0,0,0);
-            }  
-
+                contain: layout style;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+            }
             button:focus,
             button:active {
                 outline:none;

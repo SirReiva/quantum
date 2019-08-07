@@ -139,6 +139,7 @@ export default class qDrawer extends QuantumElement {
                 this.style.transition = "none";
             }
             e.preventDefault();
+            e.stopPropagation();
         }
         return true;
     }
@@ -150,7 +151,7 @@ export default class qDrawer extends QuantumElement {
 
     _listener: any;
     _listenerBody: any;
-    initDrawer() {
+    initDrawer() {//remove listeners unmount...
         this._endSwipe = null;
         this._swipeDirection = 0;
         this._listener = this._move.bind(this);
@@ -164,19 +165,19 @@ export default class qDrawer extends QuantumElement {
         //document.body.addEventListener('click', this._listenerBody);
         document.addEventListener(typeStart, (e: any) => {
             let evX = isMobile ? e.touches[0].clientX : e.clientX;
-            if ((!this.isOpen() && evX < 54)) {
+            if ((!this.isOpen() && evX < 24)) {
                 this._swipeDirection = 1;
                 this._startX = evX;
                 this._swiping = true;
                 /*this.style.transition = "none";
                 this.refs.backdrop.style.display = 'block';*/
-                document.addEventListener(typeMove, this._listener);
+                document.body.addEventListener(typeMove, this._listener);
             } else if(this.isOpen()) {
                 this._swipeDirection = -1;
                 this._startX = evX - this.refs.content.offsetWidth;
                 this._swiping = true;
                 this.style.transition = "none";
-                document.addEventListener(typeMove, this._listener);
+                document.body.addEventListener(typeMove, this._listener);
             }
             return true;
         });
@@ -205,7 +206,7 @@ export default class qDrawer extends QuantumElement {
                 this._swiping = false;
                 this._removeInlineTransform();
             }
-            document.removeEventListener(typeMove, this._listener);
+            document.body.removeEventListener(typeMove, this._listener);
             return true;
         });
     }
@@ -221,7 +222,6 @@ export default class qDrawer extends QuantumElement {
             z-index: 999;
             transform: translateX(-100%);
             transition: transform 0.3s ease-out;
-            will-change: transform;
             overflow: visible;
             contain: layout size style;
             overscroll-behavior-x: none;
@@ -252,17 +252,15 @@ export default class qDrawer extends QuantumElement {
             z-index: 0;
             transition: opacity 0.3s ease-out;
             pointer-events: none;
-            will-change: opacity;
         }
         .content {
             z-index: 1;
-            position: relative;
+            position: absolute;
             width: 70%;
             height: 100%;
             background-color: white;
             box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
+            display: block;
         }
     `; }
 

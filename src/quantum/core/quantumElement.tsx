@@ -106,7 +106,7 @@ export default class QuantumElement extends HTMLElement {
         this._styleEl.innerHTML = this.styles(); //+ ':host{ visible: "visible"; }';??
         /*this._styleEl = new CSSStyleSheet();
         this._styleEl.replaceSync(this.styles());*/
-        this._shadowRoot.appendChild(createElement(this._vDom, this.refs));
+        if(this._vDom) this._shadowRoot.appendChild(createElement(this._vDom, this.refs));
         this._shadowRoot.appendChild(this._styleEl);
         //this._shadowRoot.adoptedStyleSheets = [this._styleEl];
         this._initialized = true;

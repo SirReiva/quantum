@@ -10,7 +10,7 @@ export default class DetailPage extends qPage {
                         <span>{ this.props.title }</span>
                     </q-appbar>
                     <q-content>
-                        <q-image srcimg={'http://image.tmdb.org/t/p/w500' +  this.props.backdrop_path }><q-icon icon="spinner" spin></q-icon></q-image>
+                        <q-image srcimg={ (this.props.backdrop_path)?'http://image.tmdb.org/t/p/w500' + this.props.backdrop_path:'https://via.placeholder.com/500x281' }><q-icon icon="spinner" spin></q-icon></q-image>
                         <q-row style="justify-content: space-around;">
                             <q-image className="poster" srcimg={'http://image.tmdb.org/t/p/w500' +  this.props.poster_path }><q-icon icon="spinner" spin></q-icon></q-image>
                             <div></div>

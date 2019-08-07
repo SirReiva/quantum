@@ -30,9 +30,15 @@ export default class qButton extends QuantumElement {
             :host {
                 display: inline-block;
                 margin: 2px;
-                width: fit-content;
+            }
+            button {
+                contain: layout style;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
             }
             .q-material-button-text {
+                width: 100%;
                 position: relative;
                 display: inline-block;
                 box-sizing: border-box;
@@ -125,6 +131,7 @@ export default class qButton extends QuantumElement {
                 opacity: 0;
             }
             .q-material-button-outlined {
+                width: 100%;
                 position: relative;
                 display: inline-block;
                 box-sizing: border-box;
@@ -218,6 +225,7 @@ export default class qButton extends QuantumElement {
                 opacity: 0;
             }
             .q-material-button-contained {
+                width: 100%;
                 position: relative;
                 display: inline-block;
                 box-sizing: border-box;

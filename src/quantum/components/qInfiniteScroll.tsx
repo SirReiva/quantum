@@ -27,7 +27,7 @@ export default class qInfiniteScroll extends QuantumElement {
 
     private _scrolled(e: any) {
         const scroller = this._evParent.getScrollElement();
-        if((scroller.offsetHeight + scroller.scrollTop >= scroller.scrollHeight) && !this.hasAttribute('showing') && !this._disable) {
+        if((scroller.offsetHeight + scroller.scrollTop + 20 >= scroller.scrollHeight) && !this.hasAttribute('showing') && !this._disable) {
             this.setAttribute('showing', '');
             scroller.scrollTo(0, scroller.scrollHeight);
             this.dispatchEvent(new CustomEvent('loadmore'));
@@ -39,7 +39,6 @@ export default class qInfiniteScroll extends QuantumElement {
     }, 250);
 
     _disable = false;
-    private _eVScroll: any = null;
     private _evParent: qContent = null;
     componentMounted() {
         if (this.closest('q-content')) {
@@ -59,6 +58,7 @@ export default class qInfiniteScroll extends QuantumElement {
 
     componentUnmounted() {
         this._evParent && this._evParent.removeEventListener('scroll', this._scrollChange);
+        this._evParent = null;
     }
 
     constructor() {

@@ -25,6 +25,8 @@ import qColumn from './qColumn';
 import qVirtualList from './qVirtualList';
 import qSearchBar from './qSearchBar';
 import qInfiniteScroll from './qInfiniteScroll';
+import qRefresher from './qRefresher';
+import qBackdrop from './qBackdrop';
 
 export{ 
     qStack,
@@ -53,5 +55,7 @@ export{
     qSearchBar,
     qVirtualList,
     qInfiniteScroll,
+    qRefresher,
+    qBackdrop,
     qApp
 };

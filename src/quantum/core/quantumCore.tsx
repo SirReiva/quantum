@@ -17,10 +17,47 @@ const REMOVE_EVENT = 'REMOVE EVENT';
 
 const SPECIAL_PROPS = ['value', 'checked'];
 
+const PATCHSFPS = 40;
+
 declare var window: any;
 const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
     window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 window.requestAnimationFrame = requestAnimationFrame;
+
+const pElement = document.createElement('p');
+const divElement = document.createElement('div');
+const inputElement = document.createElement('input');
+const h1Element = document.createElement('h1');
+const h2Element = document.createElement('h1');
+const h3Element = document.createElement('h1');
+const h4Element = document.createElement('h1');
+const h5Element = document.createElement('h1');
+const h6Element = document.createElement('h1');
+const spanElement = document.createElement('span');
+const bElement = document.createElement('b');
+const ulElement = document.createElement('ul');
+const olElement = document.createElement('ol');
+const liElement = document.createElement('li');
+const aElement = document.createElement('a');
+const imgElement = document.createElement('img');
+
+const precachedElements: any = [];
+precachedElements['p'] = pElement;
+precachedElements['div'] = divElement;
+precachedElements['input'] = inputElement;
+precachedElements['h1'] = h1Element;
+precachedElements['h2'] = h2Element;
+precachedElements['h3'] = h3Element;
+precachedElements['h4'] = h4Element;
+precachedElements['h5'] = h5Element;
+precachedElements['h6'] = h6Element;
+precachedElements['span'] = spanElement;
+precachedElements['b'] = bElement;
+precachedElements['ul'] = ulElement;
+precachedElements['ol'] = olElement;
+precachedElements['li'] = liElement;
+precachedElements['a'] = aElement;
+precachedElements['img'] = imgElement;
 
 document.addEventListener('visibilitychange', function() {
     if (document.visibilityState === 'hidden') {
@@ -28,6 +65,15 @@ document.addEventListener('visibilitychange', function() {
     }
 });
 /*UTILS*/
+export function isInViewport(elem: HTMLElement):Boolean {
+    var bounding = elem.getBoundingClientRect();
+    return (
+        bounding.top + bounding.height >= 0 &&
+        bounding.left + bounding.width >= 0 &&
+        bounding.bottom - bounding.height <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right - bounding.width <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
 export function isFunction(functionToCheck: any) {
     return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
 }
@@ -123,9 +169,10 @@ function diffProps(newNode: any, oldNode: any) {
         if (isEventProp(name)) {
             if (!newVal) {
                 patches.push({ type: REMOVE_EVENT, name, value: oldVal });
-            } else if (!oldVal && newVal.toString() !== oldVal.toString()) {
+            } else if (!oldVal && newVal/*.toString() !== oldVal.toString()*/) {
                 patches.push({ type: SET_EVENT, name, value: newVal });
-            } else if (oldVal && newVal.toString() !== oldVal.toString()) {
+            } else /*if (oldVal && newVal.toString() !== oldVal.toString())*/ {
+                //console.log(name, newNode.type);
                 patches.push({ type: REPLACE_EVENT, name, value: newVal, prevVal: oldVal });
             }
         } else {
@@ -176,11 +223,12 @@ export function diff(newNode: any, oldNode: any) {
     return null;
 }
 /*DOM & PATCHS*/
-export function createElement(node: any, refs: any) {
+export function createElement(node: any, refs: any = {}) {
     if (typeof node === 'string' || typeof node === 'number') {
         return document.createTextNode(node.toString());
     }
-    const el = document.createElement(node.type);
+    
+    const el = (precachedElements[node.type])?precachedElements[node.type].cloneNode():document.createElement(node.type);
     if (node.props && node.props.ref) {
         refs[node.props.ref] = el;
     }
@@ -237,7 +285,7 @@ function setProp(target: any, name: string, value: any) {
         return setBooleanProp(target, name, value);
     }
     if (Array.isArray(value)) {
-        target.objectAttrs[name] = value;
+        target.objectAttrs[name] = [...value];
         return target.setAttribute(name, 'q-json-obj://' + JSON.stringify(value));
     }
     if(isFunction(value)) {
@@ -292,11 +340,11 @@ function patchProps(parent: any, patches: any) {
             removeProp(parent, name/*, value*/);
         } else if (type === REMOVE_EVENT) {
             removeEvent(parent, value, name);
-        } else if (SET_EVENT) {
-            addEvent(parent, value, name);
-        } else if (REPLACE_EVENT) {
-            removeEvent(parent, prevVal, name);
-            addEvent(parent, value, name);
+        } else if (type === SET_EVENT) {
+            addEvent(parent, value, extractEventName(name));
+        } else if (type === REPLACE_EVENT) {
+            removeEvent(parent, prevVal, extractEventName(name));
+            addEvent(parent, value, extractEventName(name));
         }
     }
 }
@@ -314,7 +362,7 @@ function doPatchs() {
             let { parent, patches, refs, index } = ptch;
             patch(parent, patches, refs, index);
             i++;
-            if (i > 20) break;
+            if (i > PATCHSFPS) break;
         }
     }
     requestAnimationFrame(doPatchs);
@@ -328,7 +376,7 @@ function doPatchsHidden() {
             let { parent, patches, refs, index } = ptch;
             patch(parent, patches, refs, index);
             i++;
-            if (i > 20) break;
+            if (i > PATCHSFPS) break;
         }
     }
     if (document.visibilityState === 'hidden') {

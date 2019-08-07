@@ -15,6 +15,8 @@ export default class qAppBar extends QuantumElement {
 
     styles() { return `
         :host {
+            display: block;
+            position: relative;
             flex: 0 1 auto;
             color: var(--app-font-color);
             position: relative;

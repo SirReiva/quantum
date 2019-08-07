@@ -5,46 +5,39 @@ import { h } from '../core/quantumCore';
 export default class qContent extends QuantumElement {
     public static tagName = 'q-content';
     template() {
-        if (this.hasAttribute('scollevents'))
-            return  <div className="baseContent">
-                        <div className="fix"><div onScroll={(e: any) => this.scrollEvent(e)} className="scrollContent"><slot></slot></div></div>
-                    </div>;
-        else
-            return  <div className="baseContent">
-                        <div className="fix"><div className="scrollContent"><slot></slot></div></div>
-                    </div>;
+        if(this.hasAttribute('scollevents')) return <div onScroll={(e:any) => this.scrollEvent(e)} className="innerScroll"><slot></slot></div>;
+        return <div className="innerScroll"><slot></slot></div>
     }
 
     styles() { return `
         :host {
-            flex: 1 1 auto;
             background-color: white;
-        }
-        .baseContent {
-            box-sizing: border-box;
-            width: 100%;
-            height: 100%;
-            max-height: 100%;
-            max-width: 100%;
+            display: block;
             position: relative;
-        }
-        .fix {
-            position: absolute;
+            -ms-flex: 1;
+            flex: 1;
             width: 100%;
             height: 100%;
-            overflow: hidden;
+            margin: 0!important;
+            padding: 0!important;
+            contain: size style;
         }
-        .scrollContent {
-            width: 100%;
-            height: 100%;
-            box-sizing: border-box;
-            position: relative;
+        :host([padding]) .innerScroll{
+            padding-left: 16px;
+            padding-right: 16px;
+            padding-top: 16px;
+            padding-bottom: 16px;
+        }
+        .innerScroll {
+            touch-action: pan-y;
             overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-        :host([padding]) .scrollContent{
-            padding: 16px;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            position: absolute;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
         }
     `; }
 
@@ -61,6 +54,6 @@ export default class qContent extends QuantumElement {
     }
 
     getScrollElement() {
-        return this.getRoot().querySelector('.scrollContent');
+        return this.getRoot().querySelector('.innerScroll');
     }
 }

@@ -98,6 +98,7 @@ export default class qSearchBar extends QuantumElement {
             outline: none;
             color: var(--app-font-color);
             font-size: .7em;
+            font-family: "Roboto", "Segoe UI";
         }
         .searchInput::-webkit-input-placeholder {
             color: lightgray;
