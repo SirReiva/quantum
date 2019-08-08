@@ -1,13 +1,7 @@
 import QuantumElement from '../core/quantumElement';
 import { h, defineQuantumElement, isRegisteredQuantumElement } from '../core/quantumCore';
 import { AnimationTransition, animationPromise, AndroidAnimationTransition } from './utils/animation-routes/animations';
-
-export interface Route{
-    name: string,
-    component?: QuantumElement,
-    resolve?: Function,
-    preload?: boolean
-}
+import { Route } from './utils/routes/index';
 
 interface arrStack {
     [key: string]: qStack;
@@ -18,7 +12,7 @@ export default class qStack extends QuantumElement {
     public static tagName = 'q-stack';
     automaticDetection = false;
     template() {
-        return  <slot></slot>;
+        return  false;
     }
 
     public static instances: arrStack = {};
@@ -130,8 +124,12 @@ export default class qStack extends QuantumElement {
         let page: HTMLElement = document.createElement(comp.tagName);
         this.clearStack();
         page.style.zIndex = this._stackElements.length + 1 + "";
+        page.style.willChange = 'opacity, transform, contents';
         this._stackElements.push(page);
         this.shadowRoot.appendChild(page);
+        setTimeout(() => {//mientras no hay animacion de root
+            page.style.willChange = '';
+        }, 10);
     }
 
     getStackPositionComponent(i: number): HTMLElement {

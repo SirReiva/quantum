@@ -18,17 +18,11 @@ export default class qRow extends QuantumElement {
         :host([reverse]) {
             flex-direction: row-reverse;
         }
-        :host([mainAlign=start]) {
-            justify-content: start;
+        :host([data-mainAlign]) {
+            justify-content: attr(data-mainAlign);
         }
-        :host([mainAlign=end]) {
-            justify-content: end;
-        }
-        :host([corssAlign=start]) {
-            align-items: start;
-        }
-        :host([corssAlign=end]) {
-            align-items: end;
+        :host([data-corssAlign]) {
+            align-items: attr(data-corssAlign);
         }
     `; }
 

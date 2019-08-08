@@ -2,15 +2,16 @@ import QuantumElement from './quantum/core/quantumElement';
 import { h, defineQuantumElement } from './quantum/core/quantumCore';
 import './app.scss';
 import './font-awesome.scss';
+import { Route } from './quantum/components/utils/routes/index';
 
 import { qStack, qScafold, qDrawer, qAppBar, qButton, qToolBarButton,
      qSwitch, qCheckBox, qContent, qIcon, qRadioButton, qTextInput, 
      qCard, qSlider, qAvatar, qApp, qImage, qListItem, qSpinner, 
      qRatingStar, qRippleContainer, qColumn, qRow, qVirtualList,
-     qSearchBar, qInfiniteScroll, qRefresher, qBackdrop } from './quantum/components';
-import { Route } from './quantum/components/qStack';
+     qSearchBar, qInfiniteScroll, qRefresher, qBackdrop, qTabStack } from './quantum/components';
 
 defineQuantumElement(qStack);
+defineQuantumElement(qTabStack);
 defineQuantumElement(qScafold);
 defineQuantumElement(qDrawer);
 defineQuantumElement(qAppBar);
@@ -59,6 +60,10 @@ const routes: Route[] = [
     {
         name: 'page2',
         resolve: () => import('./pages/page2'),
+    },
+    {
+        name: 'page3',
+        resolve: () => import('./pages/page3'),
     }
 ];
 

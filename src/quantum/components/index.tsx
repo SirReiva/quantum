@@ -27,9 +27,11 @@ import qSearchBar from './qSearchBar';
 import qInfiniteScroll from './qInfiniteScroll';
 import qRefresher from './qRefresher';
 import qBackdrop from './qBackdrop';
+import qTabStack from './qTabStack';
 
 export{ 
     qStack,
+    qTabStack,
     qScafold,
     qDrawer,
     qAppBar,

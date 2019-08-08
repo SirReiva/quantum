@@ -6,9 +6,9 @@ export default class Page1 extends qPage {
     template() {
         return  <q-scafold>
                     <q-appbar shadow>
-                        <q-toolbarbutton  onClick={() =>{ qDrawer.instances['main'].open() }} slot="start"><q-icon icon="bars"></q-icon></q-toolbarbutton>
+                        <q-toolbarbutton onClick={() =>{ qDrawer.instances['main'].open() }} slot="start"><q-icon icon="bars"></q-icon></q-toolbarbutton>
                         <span>{ this.props.title }</span>
-                        <q-toolbarbutton slot="end"><q-icon icon="music"></q-icon></q-toolbarbutton>
+                        <q-toolbarbutton onClick={() =>{ qStack.instances["main"].pushName('page3'); }} slot="end"><q-icon icon="music"></q-icon></q-toolbarbutton>
                     </q-appbar>
                     <q-content padding>
                         <p>Prueba</p>

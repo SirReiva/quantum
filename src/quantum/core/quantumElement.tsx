@@ -4,17 +4,17 @@ interface arrReferences {
     [key: string]: any;
 }
 
-export default class QuantumElement extends HTMLElement {
-    template(): any { return ''; }
+export default abstract class QuantumElement extends HTMLElement {
+    template(): any { return false; }
     styles(): string { return ''; }
-    protected componentBeforeLoaded() {}
-    protected componentMounted() {}
-    protected componentLoaded() {}
-    protected componentBeforeUpdate() {}
-    protected componentAfterUpdate() {}
-    protected componentUnmounted() {}
-    protected componentAttributeChange(name: string, oldVal: any, newVal: any) { }
-    protected componentPropChange(name: string, oldVal: any, newVal: any) { }
+    protected componentBeforeLoaded?(): void;
+    protected componentMounted?(): void;
+    protected componentLoaded?(): void;
+    protected componentBeforeUpdate?(): void;
+    protected componentAfterUpdate?(): void;
+    protected componentUnmounted?(): void;
+    protected componentAttributeChange?(name: string, oldVal: any, newVal: any): void;
+    protected componentPropChange?(name: string, oldVal: any, newVal: any): void;
 
     public static encapsulation: boolean = true;
     public static tagName: string = null;
@@ -43,10 +43,10 @@ export default class QuantumElement extends HTMLElement {
     }
 
     connectedCallback() {
-        this.componentMounted();
+        this.componentMounted && this.componentMounted();
     }
     disconnectedCallback() {
-        this.componentUnmounted();
+        this.componentUnmounted && this.componentUnmounted();
     }
 
     private _get(target: any, key: string) {
@@ -67,7 +67,7 @@ export default class QuantumElement extends HTMLElement {
             let oldVal = target[key];
             target[key] = value;
             if (this.automaticDetection) {
-                this.componentPropChange(key, oldVal, value);
+                this.componentPropChange && this.componentPropChange(key, oldVal, value);
                 this._render();
             }
         }
@@ -76,7 +76,7 @@ export default class QuantumElement extends HTMLElement {
 
     attributeChangedCallback(_attrName: string, oldVal: any, newVal: any) {
         if ((oldVal !== newVal) && this.automaticDetection && this._initialized) {
-            this.componentAttributeChange(_attrName, oldVal, newVal);
+            this.componentAttributeChange && this.componentAttributeChange(_attrName, oldVal, newVal);
             this._render();
         }
     }
@@ -99,7 +99,7 @@ export default class QuantumElement extends HTMLElement {
     }
 
     private _mount() {
-        this.componentBeforeLoaded();
+        this.componentBeforeLoaded && this.componentBeforeLoaded();
         //this.style.visible = 'hidden';
         this._vDom = this.template();
         this._styleEl = document.createElement('style');
@@ -110,7 +110,7 @@ export default class QuantumElement extends HTMLElement {
         this._shadowRoot.appendChild(this._styleEl);
         //this._shadowRoot.adoptedStyleSheets = [this._styleEl];
         this._initialized = true;
-        this.componentLoaded();
+        this.componentLoaded && this.componentLoaded();
     }
 
     public getRoot() {
@@ -127,12 +127,12 @@ export default class QuantumElement extends HTMLElement {
 
     private _render() {
         if (!this._initialized) return;
-        this.componentBeforeUpdate();
+        this.componentBeforeUpdate && this.componentBeforeUpdate();
         const oldVDom = this._vDom;
         const newVDom = this.template();
         queuPatches(this._shadowRoot, diff(newVDom, oldVDom), this.refs);
         this._vDom = newVDom;
-        this.componentAfterUpdate();
+        this.componentAfterUpdate && this.componentAfterUpdate();
     }
 
     public reloadStyles() {

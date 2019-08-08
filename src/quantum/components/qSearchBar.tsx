@@ -101,16 +101,16 @@ export default class qSearchBar extends QuantumElement {
             font-family: "Roboto", "Segoe UI";
         }
         .searchInput::-webkit-input-placeholder {
-            color: lightgray;
+            color: #8C8C8C;
         }
         .searchInput::-moz-placeholder {
-            color: lightgray;
+            color: #8C8C8C;
         }
         .searchInput:-ms-input-placeholder {
-            color: lightgray;
+            color: #8C8C8C;
         }
         .searchInput:-moz-placeholder {
-            color: lightgray;
+            color: #8C8C8C;
         }
         @-webkit-keyframes slideInDown {
             from {
