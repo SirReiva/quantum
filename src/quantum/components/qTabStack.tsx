@@ -35,6 +35,9 @@ export default class qTabStack extends QuantumElement {
             flex: 0 0 auto;
             overflow: auto;
         }
+        :host([hidebars])::-webkit-scrollbar {
+            width: 0px;
+        }
     `; }
 
     private _preloadRoutes() {
@@ -82,15 +85,17 @@ export default class qTabStack extends QuantumElement {
         return Math.round(this.scrollLeft / this.clientWidth);
     }
 
-    selectIndex(i: number) {
-        const ci = this.getTabIndexPosition()
-        if(i * this.clientWidth > this.scrollWidth || ci === i || i < 0) return;
+    _waitFor :number = null;
+    selectIndex(i: number, dptch = false) {
+        const ci = this.getTabIndexPosition();
+        if(i >= this.shadowRoot.querySelectorAll('.baseTab').length || ci === i || i < 0) return;
         this._currentIndex = i;
+        this._waitFor = i * this.clientWidth;
         this.scrollTo({
             left: i * this.clientWidth,
             behavior: 'smooth'
         });
-        this.dispatchEvent(new CustomEvent('change', {'detail': i}));
+        if(dptch) this.dispatchEvent(new CustomEvent('change', {'detail': i}));
     }
 
     //private _stackElements: HTMLElement[] = [];
@@ -106,12 +111,27 @@ export default class qTabStack extends QuantumElement {
 
     private _currentIndex =  0;
     private _onscroll = debounce((e:any) => {
-        const ci = this.getTabIndexPosition();
-        if(this._currentIndex !== ci) {
-            this._currentIndex = ci;
-            this.dispatchEvent(new CustomEvent('change', {'detail': ci}));
+        if(this._waitFor === null) {
+            const ci = this.getTabIndexPosition();
+            if(this._currentIndex !== ci) {
+                this._currentIndex = ci;
+                this.dispatchEvent(new CustomEvent('change', {'detail': ci}));
+            }
+        } else {
+            if(this._waitFor === this.scrollLeft) {
+                this._waitFor = null;
+            }            
         }
+        
     }, 500, {maxWait: 500})
+
+    static get observedAttributes() {
+        return ['index'];
+    }
+
+    componentAttributeChange() {
+        this.selectIndex(parseInt(this.getAttribute('index')));
+    }
 
     constructor() {
         super({});

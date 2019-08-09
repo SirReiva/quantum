@@ -8,13 +8,14 @@ import { qStack, qScafold, qDrawer, qAppBar, qButton, qToolBarButton,
      qSwitch, qCheckBox, qContent, qIcon, qRadioButton, qTextInput, 
      qCard, qSlider, qAvatar, qApp, qImage, qListItem, qSpinner, 
      qRatingStar, qRippleContainer, qColumn, qRow, qVirtualList,
-     qSearchBar, qInfiniteScroll, qRefresher, qBackdrop, qTabStack } from './quantum/components';
+     qSearchBar, qInfiniteScroll, qRefresher, qBackdrop, qTabStack, qTabBar } from './quantum/components';
 
 defineQuantumElement(qStack);
 defineQuantumElement(qTabStack);
 defineQuantumElement(qScafold);
 defineQuantumElement(qDrawer);
 defineQuantumElement(qAppBar);
+defineQuantumElement(qTabBar);
 defineQuantumElement(qButton);
 defineQuantumElement(qToolBarButton);
 defineQuantumElement(qSwitch);
@@ -64,6 +65,7 @@ const routes: Route[] = [
     {
         name: 'page3',
         resolve: () => import('./pages/page3'),
+        preload: true
     }
 ];
 
@@ -77,6 +79,7 @@ class exampleApp extends QuantumElement {
                         <ul>
                             <li onClick={() => this.navigate()} toggleMenu>Themoviedb</li>
                             <li onClick={() => this.navigate2()} toggleMenu>Test</li>
+                            <li onClick={() => this.navigate3()} toggleMenu>Tabs</li>
                         </ul>
                     </q-drawer>
                     <q-stack routes={routes} stackid="main" root="home" ref="navigation"></q-stack>
@@ -101,6 +104,11 @@ class exampleApp extends QuantumElement {
     navigate2() {
         qDrawer.instances['main'].close();
         qStack.instances['main'].setRootName('home2');
+    }
+
+    navigate3() {
+        qDrawer.instances['main'].close();
+        qStack.instances['main'].setRootName('page3');
     }
 
     componentLoaded() {

@@ -75,7 +75,7 @@ export default abstract class QuantumElement extends HTMLElement {
     }
 
     attributeChangedCallback(_attrName: string, oldVal: any, newVal: any) {
-        if ((oldVal !== newVal) && this.automaticDetection && this._initialized) {
+        if ((oldVal !== newVal) && this._initialized) {
             this.componentAttributeChange && this.componentAttributeChange(_attrName, oldVal, newVal);
             this._render();
         }

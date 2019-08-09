@@ -176,7 +176,7 @@ function diffProps(newNode: any, oldNode: any) {
                 patches.push({ type: REPLACE_EVENT, name, value: newVal, prevVal: oldVal });
             }
         } else {
-            if (!newVal && newVal !== '') {
+            if (newVal === null || newVal === false) {
                 patches.push({ type: REMOVE_PROP, name, value: oldVal });
             } else if (!oldVal || JSON.stringify(newVal) !== JSON.stringify(oldVal)) { //comparar valor??
                 patches.push({ type: SET_PROP, name, value: newVal });
@@ -279,7 +279,10 @@ function setBooleanProp(target: any, name: string, value: boolean) {
 function setProp(target: any, name: string, value: any) {
     if (isEventProp(name)) return;
     if (name === 'className') {
-        return target.setAttribute('class', value);
+        if (value === '')
+            return target.removeAttribute('class');
+        else
+            return target.setAttribute('class', value);
     }
     if (typeof value === 'boolean') {
         return setBooleanProp(target, name, value);
@@ -478,8 +481,10 @@ export function compileTemplateString(temlpate: string) {
 }
 
 /*WEBCOMPONENTS*/
+let registeredQElements: string[] = [];
 export function isRegisteredQuantumElement(name: string) {
-    return document.createElement(name).constructor !== HTMLElement;
+    return registeredQElements.indexOf(name) !== -1;
+    //return document.createElement(name).constructor !== HTMLElement;
 }
 
 export function defineQuantumElement(calssEl: any, tag?: string) {
@@ -487,17 +492,18 @@ export function defineQuantumElement(calssEl: any, tag?: string) {
         if(tag) {
             if(!isRegisteredQuantumElement(tag)) {
                 customElements.define(tag, calssEl);
+                registeredQElements.push(tag);
             } else {
                 console.error(tag + ' Already defined');
             }
         } else {
             if(!isRegisteredQuantumElement(calssEl.tagName)) {
                 customElements.define(calssEl.tagName, calssEl);
+                registeredQElements.push(calssEl.tagName);
             } else {
                 console.error(calssEl.tagName + ' Already defined');
             }
         }
-        
     } catch( exc ) { console.warn(exc); }
 }
 

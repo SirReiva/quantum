@@ -51,6 +51,19 @@ export default class qAppBar extends QuantumElement {
             content: "";
             z-index: 1;
         }
+        :host([topshadow]):after {
+            transform: rotate(180deg);
+            left: 0;
+            top: -8px;
+            background-position: left 0 top 0;
+            position: absolute;
+            width: 100%;
+            height: 8px;
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAIBAMAAAACWGKkAAAAFVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAASAQCkAAAAB3RSTlMFTEIzJBcOYhQUIwAAAB9JREFUCNdjEIQCBiUoYDCGAgYXKGAIhQKGNChgwAAAorMLKSCkL40AAAAASUVORK5CYII=");
+            background-repeat: repeat-x;
+            content: "";
+            z-index: 1;
+        }
         .toolbar-container {
             padding: 4px;
             display: -ms-flexbox;
