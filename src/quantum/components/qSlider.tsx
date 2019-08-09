@@ -24,7 +24,7 @@ export default class qSlider extends QuantumElement {
     componentLoaded() {
         this.listener = this.prevents.bind(this);
         this.typeMove = this.isIE ? "MSPointerMove" : (checkMobile ? "touchmove" : "mousemove");
-        this.refs.slide.addEventListener(this.typeMove, this.listener, {passive: true});
+        this.refs.slide.addEventListener(this.typeMove, this.listener, {capture : true, passive: true});
     }
 
     componentUnmounted() {

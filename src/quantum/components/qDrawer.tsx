@@ -141,7 +141,7 @@ export default class qDrawer extends QuantumElement {
             e.preventDefault();
             e.stopPropagation();
         }
-        return true;
+        //return true;
     }
     _removeInlineTransform() {
         if(this.style.transform) this.style.transform = "";
@@ -169,6 +169,8 @@ export default class qDrawer extends QuantumElement {
                 this._swipeDirection = 1;
                 this._startX = evX;
                 this._swiping = true;
+                e.preventDefault();
+                e.stopPropagation();
                 /*this.style.transition = "none";
                 this.refs.backdrop.style.display = 'block';*/
                 document.body.addEventListener(typeMove, this._listener);
@@ -179,8 +181,8 @@ export default class qDrawer extends QuantumElement {
                 this.style.transition = "none";
                 document.body.addEventListener(typeMove, this._listener);
             }
-            return true;
-        });
+            //return true;
+        }, true);
         document.addEventListener(typeEnd, (e: any) => {
             if (this._swiping && this._endSwipe !== null) {
                 if (this._swipeDirection == 1) {
@@ -207,7 +209,7 @@ export default class qDrawer extends QuantumElement {
                 this._removeInlineTransform();
             }
             document.body.removeEventListener(typeMove, this._listener);
-            return true;
+            //return true;
         });
     }
 

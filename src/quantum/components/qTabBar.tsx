@@ -82,8 +82,7 @@ export default class qTabBar extends QuantumElement {
             contain: content;
             -webkit-box-sizing: border-box;
             box-sizing: border-box;
-            overflow-y: hidden;
-            overflow-x: scroll;
+            overflow: hidden;
             scroll-snap-type: x mandatory;
             flex-wrap: nowrap;
         }
