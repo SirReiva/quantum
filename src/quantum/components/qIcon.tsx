@@ -29,6 +29,7 @@ export default class qIcon extends QuantumElement {
             align-items: center;
             justify-content: center;
             align-self: center;
+            color: rgb(var(--q-material-primary-rgb));
         }
         .xsmall {
             font-size: 70%;

@@ -54,8 +54,8 @@ export default class qRefresher extends QuantumElement {
         } else {
             this.style.height = Math.min(Math.max(0, currY - this._startY), 128) + "px";
         }
-        if (this._evParent.getScrollElement().scrollTop !== 0)
-            e.preventDefault();
+        /*if (this._evParent.getScrollElement().scrollTop !== 0)
+            e.preventDefault();*/
         return true;
     }
 
@@ -70,14 +70,14 @@ export default class qRefresher extends QuantumElement {
             this._typeMove = isIE ? "MSPointerMove" : (isMobile ? "touchmove" : "mousemove");
             //this._listenerBody = this._directive.bind(this);
             //document.body.addEventListener('click', this._listenerBody);
-            this._listDown = (e: any) => {
+            this._listDown = () => {
                 if (this._evParent.getScrollElement().scrollTop === 0 && this._evParent.getScrollElement().offsetParent)
-                    document.addEventListener(this._typeMove, this._listener);
+                this._evParent.addEventListener(this._typeMove, this._listener, { passive: true });
                 return true;
             };
-            this._listUp = (e: any) => {
+            this._listUp = () => {
                 this._startY = null;
-                document.removeEventListener(this._typeMove, this._listener);
+                this._evParent.removeEventListener(this._typeMove, this._listener);
                 const mh = parseInt(this.style.height);
                     this.style.height = '';
                 if (mh >= 48) {
@@ -86,8 +86,8 @@ export default class qRefresher extends QuantumElement {
                 }
                 return true;
             };
-            document.addEventListener(this._typeStart, this._listDown);
-            document.addEventListener(this._typeEnd, this._listUp);
+            this._evParent.addEventListener(this._typeStart, this._listDown, { passive: true });
+            this._evParent.addEventListener(this._typeEnd, this._listUp);
         } else { console.log('not'); }
     }
 
@@ -100,8 +100,8 @@ export default class qRefresher extends QuantumElement {
     }
 
     componentUnmounted() {
-        document.removeEventListener(this._typeStart, this._listDown);
-        document.removeEventListener(this._typeEnd, this._listUp);
+        this._evParent.removeEventListener(this._typeStart, this._listDown);
+        this._evParent.removeEventListener(this._typeEnd, this._listUp);
         this._evParent = null;
     }
 

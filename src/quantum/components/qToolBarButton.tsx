@@ -90,6 +90,9 @@ export default class qToolBarButton extends QuantumElement {
                 box-shadow: none!important;
                 outline: 0;
             }
+            ::slotted(q-icon) {
+                color: var(--app-font-color);
+            }
         `; 
     }
     

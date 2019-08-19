@@ -11,3 +11,8 @@ export interface TabRoute {
     resolve?: Function,
     preload?: boolean
 }
+
+export interface TabBarItem {
+    icon?: string;
+    text?: string; 
+}

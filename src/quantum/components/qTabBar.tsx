@@ -1,10 +1,6 @@
 import QuantumElement from '../core/quantumElement';
 import { h } from '../core/quantumCore';
-
-export interface TabBarItem {
-    icon?: string;
-    text?: string; 
-}
+import { TabBarItem } from './utils/routes/index';
 
 /*TABBAR*/
 export default class qTabBar extends QuantumElement {
@@ -56,6 +52,11 @@ export default class qTabBar extends QuantumElement {
             background-repeat: repeat-x;
             content: "";
             z-index: 1;
+        }
+        :host([top]) .selected {
+            color: var(--app-font-color);
+            border-bottom: 2px solid;
+            border-top: none;
         }
         .bgBar {
             top: 0px;
@@ -154,8 +155,14 @@ export default class qTabBar extends QuantumElement {
             color: var(--app-font-color);
             border-top: 2px solid;
         }
+        .selected  q-icon{
+            color: var(--app-font-color);
+        }
         button > q-icon {
             display: inline;
+        }
+        q-icon{
+            color: #666666;;
         }
     `; }
 

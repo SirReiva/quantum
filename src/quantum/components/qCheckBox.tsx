@@ -15,8 +15,11 @@ export default class qCheckBox extends QuantumElement {
         return `
             :host {
                 width: fit-content;
+                display: inline-block;
             }
             .q-material-checkbox {
+                width: 100%;
+                height: 100%;
                 z-index: 0;
                 position: relative;
                 display: inline-block;

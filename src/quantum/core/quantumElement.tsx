@@ -1,4 +1,5 @@
 import { createElement, diff, queuPatches, isFunction } from './quantumCore';
+import 'hammerjs';
 
 interface arrReferences {
     [key: string]: any;
@@ -15,6 +16,11 @@ export default abstract class QuantumElement extends HTMLElement {
     protected componentUnmounted?(): void;
     protected componentAttributeChange?(name: string, oldVal: any, newVal: any): void;
     protected componentPropChange?(name: string, oldVal: any, newVal: any): void;
+
+    private _promiseReadyResolver:Function = null;
+    public isReady = new Promise((resolve) => {
+        this._promiseReadyResolver = resolve;
+    });
 
     public static encapsulation: boolean = true;
     public static tagName: string = null;
@@ -47,6 +53,12 @@ export default abstract class QuantumElement extends HTMLElement {
     }
     disconnectedCallback() {
         this.componentUnmounted && this.componentUnmounted();
+        delete this.props;
+        delete this.objectAttrs;
+        delete this._vDom;
+        delete this.refs;
+        delete this._shadowRoot;
+        delete this._styleEl;
     }
 
     private _get(target: any, key: string) {
@@ -66,8 +78,8 @@ export default abstract class QuantumElement extends HTMLElement {
         if (target[key] !== value) {
             let oldVal = target[key];
             target[key] = value;
+            this.componentPropChange && this.componentPropChange(key, oldVal, value);
             if (this.automaticDetection) {
-                this.componentPropChange && this.componentPropChange(key, oldVal, value);
                 this._render();
             }
         }
@@ -77,7 +89,8 @@ export default abstract class QuantumElement extends HTMLElement {
     attributeChangedCallback(_attrName: string, oldVal: any, newVal: any) {
         if ((oldVal !== newVal) && this._initialized) {
             this.componentAttributeChange && this.componentAttributeChange(_attrName, oldVal, newVal);
-            this._render();
+            if(this.automaticDetection)
+                this._render();
         }
     }
 
@@ -100,17 +113,20 @@ export default abstract class QuantumElement extends HTMLElement {
 
     private _mount() {
         this.componentBeforeLoaded && this.componentBeforeLoaded();
+        const frag = document.createDocumentFragment();
         //this.style.visible = 'hidden';
         this._vDom = this.template();
         this._styleEl = document.createElement('style');
         this._styleEl.innerHTML = this.styles(); //+ ':host{ visible: "visible"; }';??
         /*this._styleEl = new CSSStyleSheet();
         this._styleEl.replaceSync(this.styles());*/
-        if(this._vDom) this._shadowRoot.appendChild(createElement(this._vDom, this.refs));
-        this._shadowRoot.appendChild(this._styleEl);
+        if(this._vDom) frag.appendChild(createElement(this._vDom, this.refs));
+        frag.appendChild(this._styleEl);
+        this._shadowRoot.appendChild(frag);
         //this._shadowRoot.adoptedStyleSheets = [this._styleEl];
         this._initialized = true;
         this.componentLoaded && this.componentLoaded();
+        this._promiseReadyResolver();
     }
 
     public getRoot() {
@@ -150,14 +166,16 @@ export default abstract class QuantumElement extends HTMLElement {
 
     public rebuild() { //testear...
         if (!this._initialized) return;
+        const frag = document.createDocumentFragment();
         this._shadowRoot.innerHTML = '';
         this._vDom = this.template();
         this._styleEl = document.createElement('style');
         this._styleEl.innerHTML = this.styles();
         /*this._styleEl = new CSSStyleSheet();
         this._styleEl.replaceSync(this.styles());*/
-        this._shadowRoot.appendChild(createElement(this._vDom, this.refs));
-        this._shadowRoot.appendChild(this._styleEl);
+        frag.appendChild(createElement(this._vDom, this.refs));
+        frag.appendChild(this._styleEl);
+        this._shadowRoot.appendChild(frag);
         //this._shadowRoot.adoptedStyleSheets = [this._styleEl];
     }
 }

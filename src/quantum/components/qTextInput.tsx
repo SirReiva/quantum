@@ -44,6 +44,7 @@ export default class qTextInput extends QuantumElement {
         return `
             :host {
                 width: fit-content;
+                display: inline-block;
             }
             .q-material-textfield-outlined {
                 --q-material-safari-helper1: rgb(var(--q-material-primary-rgb, 33, 150, 243));
@@ -54,6 +55,7 @@ export default class qTextInput extends QuantumElement {
                 font-size: 16px;
                 line-height: 1.5;
                 overflow: hidden;
+                width: 100%;
             }
             
             /* Input, Textarea */
@@ -242,6 +244,7 @@ export default class qTextInput extends QuantumElement {
                 font-size: 16px;
                 line-height: 1.5;
                 overflow: hidden;
+                width: 100%;
             }
             
             /* Input, Textarea */

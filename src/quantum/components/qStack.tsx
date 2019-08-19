@@ -48,19 +48,22 @@ export default class qStack extends QuantumElement {
 
     private _pushComponent(comp: QuantumElement) {
         if(!isRegisteredQuantumElement(comp.tagName)) defineQuantumElement(comp);
-        let page: HTMLElement = document.createElement(comp.tagName);
-        page.style.zIndex = this._stackElements.length + 1 + "" ;
-        this._stackElements.push(page);
-        this.shadowRoot.appendChild(page);
-        page.style.willChange = 'opacity, transform, contents';
-        (page.previousSibling as HTMLElement).style.willChange = 'opacity, transform, contents';
-        this._currentEnterAnimation = this._animationTransition.enter(page, (page.previousSibling as HTMLElement), this.refs.ghostLayer);
-        this._currentEnterAnimation.promise.then(() => {
-            page.style.willChange = '';
-            (page.previousSibling as HTMLElement).style.willChange = '';
-            (page.previousSibling as HTMLElement).style.display = 'none';
+        let page: QuantumElement = (document.createElement(comp.tagName) as QuantumElement);
+        page.isReady.then(() => {
+            page.style.zIndex = this._stackElements.length + 1 + "" ;
+            this._stackElements.push(page);
+            this.shadowRoot.appendChild(page);
+            page.style.willChange = 'opacity, transform, contents';
+            (page.previousSibling as HTMLElement).style.willChange = 'opacity, transform, contents';
+            this._currentEnterAnimation = this._animationTransition.enter(page, (page.previousSibling as HTMLElement), this.refs.ghostLayer);
+            this._currentEnterAnimation.promise.then(() => {
+                page.style.willChange = '';
+                (page.previousSibling as HTMLElement).style.willChange = '';
+                (page.previousSibling as HTMLElement).style.display = 'none';
+            });
+            this.dispatchEvent(new CustomEvent('navigate', {'detail': ''}));
         });
-        this.dispatchEvent(new CustomEvent('navigate', {'detail': ''}));
+        
     }
 
     pushName(name: string, args: any =  {}):Promise<boolean> {
@@ -74,9 +77,9 @@ export default class qStack extends QuantumElement {
                         resolve(true);
                         return;
                     } else if(route.resolve) {
-                        route.resolve().then((m: any) => {
+                        route.resolve().then((c: any) => {
                             this._args = Object.assign({}, args);;
-                            this._pushComponent(m.default);
+                            this._pushComponent(c);
                             resolve(true);
                             return;
                         }).catch(() => resolve(false));  
@@ -121,15 +124,18 @@ export default class qStack extends QuantumElement {
 
     private _setRootComponent(comp: QuantumElement) {
         if(!isRegisteredQuantumElement(comp.tagName)) defineQuantumElement(comp);
-        let page: HTMLElement = document.createElement(comp.tagName);
+        let page: QuantumElement = (document.createElement(comp.tagName) as QuantumElement);
         this.clearStack();
-        page.style.zIndex = this._stackElements.length + 1 + "";
-        page.style.willChange = 'opacity, transform, contents';
-        this._stackElements.push(page);
-        this.shadowRoot.appendChild(page);
-        setTimeout(() => {//mientras no hay animacion de root
-            page.style.willChange = '';
-        }, 10);
+        page.isReady.then(() => {
+            page.style.zIndex = this._stackElements.length + 1 + "";
+            page.style.willChange = 'opacity, transform, contents';
+            this._stackElements.push(page);
+            this.shadowRoot.appendChild(page);
+            setTimeout(() => {//mientras no hay animacion de root
+                page.style.willChange = '';
+            }, 10);
+        });
+        
     }
 
     getStackPositionComponent(i: number): HTMLElement {
@@ -149,8 +155,8 @@ export default class qStack extends QuantumElement {
                         resolve(true);
                         return;
                     } else if(route.resolve) {
-                        route.resolve().then((m: any) => {
-                            this._setRootComponent(m.default);
+                        route.resolve().then((c: any) => {
+                            this._setRootComponent(c);
                             resolve(true);
                             return;
                         }).catch(() => resolve(false));  
@@ -195,9 +201,9 @@ export default class qStack extends QuantumElement {
         let route: Route;
         for (route of this.objectAttrs.routes) {
             if(route.resolve && route.preload) {
-                route.resolve().then((m: any) => {
-                    if(!isRegisteredQuantumElement(m.default.tagName))
-                        defineQuantumElement(m.default);
+                route.resolve().then((c: any) => {
+                    if(!isRegisteredQuantumElement(c.tagName))
+                        defineQuantumElement(c);
                 });
             }
         }

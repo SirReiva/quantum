@@ -58,8 +58,10 @@ export default class qRadioButton extends QuantumElement {
         return `
             :host {
                 width: fit-content;
+                display: inline-block;
             }
             .q-material-radio {
+                width: 100%;
                 z-index: 0;
                 position: relative;
                 display: inline-block;

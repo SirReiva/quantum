@@ -1,17 +1,17 @@
 import { h } from '../quantum/core/quantumCore';
 import { qPage, qDrawer } from '../quantum/components';
 import { TabRoute } from '../quantum/components/utils/routes';
-import { TabBarItem } from '../quantum/components/qTabBar';
+import { TabBarItem } from '../quantum/components/utils/routes/index';
 
 const routes: TabRoute[] = [
     {
-        resolve: () => import('../components/comp1'),
+        resolve: () => import('../components/comp1').then(m => m.default),
     },
     {
-        resolve: () => import('../components/comp2'),
+        resolve: () => import('../components/comp2').then(m => m.default),
     },
     {
-        resolve: () => import('../components/comp1'),
+        resolve: () => import('../components/comp1').then(m => m.default),
     }
 ];
 
@@ -41,7 +41,7 @@ export default class Page3 extends qPage {
                     <q-content>
                         <q-tabstack hidebars ref="tabs" index={this.props.num} onChange={(e:any) => this.onchangeTab(e)} routes={routes}></q-tabstack>
                     </q-content>
-                    <q-tabbar items={prueba} topshadow index={this.props.num} onChange={(e:any) => this.onchangeTab(e)}></q-tabbar>
+                    <q-tabbar items={prueba} top topshadow index={this.props.num} onChange={(e:any) => this.onchangeTab(e)}></q-tabbar>
                 </q-scafold>;
     }
 

@@ -5,6 +5,7 @@ declare global {
         }
     }
 }
+
 const CREATE = 'CREATE';
 const REMOVE = 'REMOVE';
 const REPLACE = 'REPLACE';
@@ -227,18 +228,25 @@ export function createElement(node: any, refs: any = {}) {
     if (typeof node === 'string' || typeof node === 'number') {
         return document.createTextNode(node.toString());
     }
-    
+    const frag = document.createDocumentFragment();
     const el = (precachedElements[node.type])?precachedElements[node.type].cloneNode():document.createElement(node.type);
+    frag.append(el);
+    if(el instanceof HTMLUnknownElement) {
+        throw new Error("Unkown element tag " + node.type);
+    }
     if (node.props && node.props.ref) {
         refs[node.props.ref] = el;
     }
     setProps(el, node.props);
     addEventListeners(el, node.props);
-    if (node.children && node.children.length > 0)
+    if (node.children && node.children.length > 0) {
+        const fragChilds = document.createDocumentFragment();
         node.children
         .map((childEl: any) => createElement(childEl, refs))
-        .forEach(el.appendChild.bind(el));
-    return el;
+        .forEach(fragChilds.appendChild.bind(fragChilds));
+        el.appendChild(fragChilds);
+    }
+    return frag;
 }
 
 /*if (isTwoWayDataBindingProp(name)) {
@@ -397,9 +405,13 @@ function patch(parent: any, patches: any, refs: any, index = 0): number {
         case CREATE:
             {
                 const { newNode } = patches;
-                if(newNode.type === undefined)
+                if(newNode.type === undefined && typeof newNode !== 'string' && typeof newNode !== 'number')
                     return 0;
                 const newEl = createElement(newNode, refs);
+                /*if(parent.childElementCount === 0) {
+                    parent.appendChild(newEl);
+                    return 0;
+                } else*/
                 if(parent.childNodes[index]) {
                     parent.insertBefore(newEl, parent.childNodes[index]);
                     return 1;

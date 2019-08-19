@@ -78,7 +78,6 @@ export default class qVirtualList extends QuantumElement {
     
         return maxIndex;
     }
-
     private _indexOfMin(arr: number[]) {
         if (arr.length === 0) {
             return -1;
@@ -96,7 +95,6 @@ export default class qVirtualList extends QuantumElement {
     
         return maxIndex;
     }
-
     private _swapPrev() {
         const prevIndex = Math.min(...this._arrIt) - 1;
         if(prevIndex > -1) {
@@ -104,7 +102,6 @@ export default class qVirtualList extends QuantumElement {
             this._arrIt[changeIndex] = prevIndex;
         }
     }
-
     private _swapNext() {
         const nextIndex = Math.max(...this._arrIt) + 1;
         if(nextIndex < this.objectAttrs.items.length) {    
@@ -171,7 +168,8 @@ export default class qVirtualList extends QuantumElement {
         const instersecarr = this._arrIt.filter(i => prevArr.indexOf(i) !== -1);
         this._arrIt = [...adf, ...instersecarr];
 
-        /*console.log(adf, instersecarr);
+        /*console.log(this._arrIt);
+        console.log(adf, instersecarr);
         console.log(this._arrIt);
         console.log('-----------');*/
     }
@@ -206,7 +204,7 @@ export default class qVirtualList extends QuantumElement {
             this.refs.base.style.height = this.objectAttrs.items.length * this._itemHeight + "px";
             this._reestructFromIndex();
             this.refresh();
-        } else { console.log('not'); }
+        } else { console.error('not q-content found parent'); }
     }
 
     componentUnmounted() {
@@ -219,4 +217,3 @@ export default class qVirtualList extends QuantumElement {
         super({});
     }
 }
-

@@ -23,6 +23,7 @@ export default class qBackdrop extends QuantumElement {
             opacity: .01;
             -ms-touch-action: none;
             touch-action: none;
+            background-color: #000;
         }
     `; }
 

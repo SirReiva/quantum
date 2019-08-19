@@ -19,7 +19,7 @@ import qImage from './qImage';
 import qListItem from './qListItem';
 import qSpinner from './qSpinner';
 import qRatingStar from './qRantingStar';
-import qRippleContainer from './ripplecontainer';
+import qRippleContainer from './qRipplecontainer';
 import qRow from './qRow';
 import qColumn from './qColumn';
 import qVirtualList from './qVirtualList';
@@ -29,6 +29,8 @@ import qRefresher from './qRefresher';
 import qBackdrop from './qBackdrop';
 import qTabStack from './qTabStack';
 import qTabBar from './qTabBar';
+import qList from './qList';
+import qFab from './qFab';
 
 export{ 
     qStack,
@@ -48,6 +50,7 @@ export{
     qCard,
     qSlider,
     qAvatar,
+    qList,
     qListItem,
     qImage,
     qSpinner,
@@ -61,5 +64,6 @@ export{
     qInfiniteScroll,
     qRefresher,
     qBackdrop,
+    qFab,
     qApp
 };

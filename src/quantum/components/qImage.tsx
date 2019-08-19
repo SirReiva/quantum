@@ -1,7 +1,7 @@
 import QuantumElement from '../core/quantumElement';
 import { h } from '../core/quantumCore';
 
-
+//loading="lazy"
 /*IMAGE*/
 export default class qImage extends QuantumElement {
     public static tagName = 'q-image';
@@ -93,7 +93,8 @@ export default class qImage extends QuantumElement {
     }
 
     imageloaded() {
-        this.props.loaded = 'loaded';
+        if  (this.props)
+            this.props.loaded = 'loaded';
     }
 
     componentUnmounted() {

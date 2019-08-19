@@ -18,7 +18,8 @@ export default class HomePage extends qPage {
                         <q-refresher ref="fresh" onRefresh={() => this.loadActual()}>
                             <q-spinner></q-spinner>
                         </q-refresher>
-                        <q-spinner style={(this.props.loaded?'display: none;':'')}></q-spinner>
+                        {this.props.error && <div>Datos no disponibles...</div>}
+                        <q-spinner style={((this.props.loaded || this.props.error)?'display: none;':'')}></q-spinner>
                         <q-virtuallist itemheight="370" items={this.props.posts} renderitem={this.rendItem.bind(this)}></q-virtuallist>
                         <q-infinitescrol ref="iScrol" onLoadmore={() => this.loadMore()}>
                             <q-spinner></q-spinner>
@@ -47,15 +48,17 @@ export default class HomePage extends qPage {
 
     first = false;
     loadMore() {
-        fetch('https://api.themoviedb.org/3/movie/popular?api_key=785e1bfa35690f914c6c1c83a043d807&language=es-ES&page=' + this.page).then((rawdata: any) => rawdata.json()).then(data => {
-            this.transaction(() => {
-                this.props.posts = [...this.props.posts,...data.results];
-                this.props.itemsCount = this.props.posts.length;
+        setTimeout(() => {
+            fetch('https://api.themoviedb.org/3/movie/popular?api_key=785e1bfa35690f914c6c1c83a043d807&language=es-ES&page=' + this.page).then((rawdata: any) => rawdata.json()).then(data => {
+                this.transaction(() => {
+                    this.props.posts = [...this.props.posts,...data.results];
+                    this.props.itemsCount = this.props.posts.length;
+                });
+                this.page++;
+                //this.refs.iScrol.setEnable(false);
+                this.refs.iScrol.complete();
             });
-            this.page++;
-            //this.refs.iScrol.setEnable(false);
-            this.refs.iScrol.complete();
-        });
+        }, 2000);
     }
 
     private page = 1;
@@ -67,6 +70,7 @@ export default class HomePage extends qPage {
                 this.transaction(() => {
                     this.props.posts = data.results;
                     this.props.loaded = true;
+                    this.props.error = false;    
                     this.props.itemsCount = this.props.posts.length;
                 });
                 this.page++;
@@ -84,6 +88,8 @@ export default class HomePage extends qPage {
             });
             this.page++;
             this.refs.fresh.complete();
+        }).catch(ex => {
+            this.props.error = true;
         });
     }
 
@@ -105,7 +111,7 @@ export default class HomePage extends qPage {
 
 
     constructor() {
-        super({posts: [], loaded: false, itemsCount: 0});
+        super({posts: [], loaded: false, itemsCount: 0, error: false});
     }
 }
 

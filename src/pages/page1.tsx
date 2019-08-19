@@ -8,13 +8,13 @@ export default class Page1 extends qPage {
                     <q-appbar shadow>
                         <q-toolbarbutton onClick={() =>{ qDrawer.instances['main'].open() }} slot="start"><q-icon icon="bars"></q-icon></q-toolbarbutton>
                         <span>{ this.props.title }</span>
-                        <q-toolbarbutton onClick={() =>{ qStack.instances["main"].pushName('page3'); }} slot="end"><q-icon icon="music"></q-icon></q-toolbarbutton>
+                        <q-toolbarbutton slot="end"><q-icon icon="music"></q-icon></q-toolbarbutton>
                     </q-appbar>
                     <q-content padding>
                         <p>Prueba</p>
                         <q-button onClick={() => this.changeTitle()}><q-icon icon="music"></q-icon> Click</q-button>
                         <q-button onClick={() => this.changeAll()}>Click</q-button>
-                        <q-button mode="outline" onClick={() => this.navigate()}>Click</q-button>
+                        <q-button mode="outline" onClick={() => this.navigate()}><q-icon icon="music"></q-icon> Click</q-button>
                         <q-checkbox>Label</q-checkbox>
                         <q-checkbox>Label</q-checkbox>
                         <q-radiobutton value="v1" checked group="grp1">Label</q-radiobutton>

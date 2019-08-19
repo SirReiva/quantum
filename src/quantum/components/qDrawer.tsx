@@ -5,56 +5,184 @@ declare var window: any;
 interface arrDrawer {
     [key: string]: qDrawer;
 }
+const isMobile = checkMobile(navigator.userAgent || navigator.vendor || window.opera);
+const isIE = window.navigator.msPointerEnabled;
+const typeMove = isIE ? "MSPointerMove" : (isMobile ? "touchmove" : "mousemove");
+const typeStart = isIE ? "MSPointerDown" : (isMobile ? "touchstart" : "mousedown");
+const typeEnd = isIE ? "MSPointerUp" : (isMobile ? "touchend" : "mouseup");
 /*DRAWER*/
 export default class qDrawer extends QuantumElement {
     public static tagName = 'q-drawer';
     template() {
-        return <div className="base">
-                    <div ref="backdrop" onMouseDown={() => this.close()} className="backdrop"></div>
-                    <div ref="content" className="content">
+        return <div ref="base" className="base">
+                    <q-backdrop onClick={() => this.close()} ref="bckdrp"></q-backdrop>
+                    <div ref="content" className="menu-inner">
                         <slot></slot>
                     </div>
                 </div>;
     }
 
-    static get observedAttributes() {
-        return ['open'];
-    }
+    static automaticDetection = false;
+    
+    styles() { return `
+       .base {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            contain: strict;
+            z-index: 9999;
+       }
+       .menu-inner {
+            left: 0;
+            right: auto;
+            top: 0;
+            bottom: 0;
+            display: flex;
+            position: absolute;        
+            flex-direction: column;
+            justify-content: space-between;
+            transform: translateX(-100%);     
+            width: 250px;
+            height: auto;
+            contain: strict;
+            background-color: white;
+        }
+        q-backdrop {
+            display: none;
+          
+            opacity: .01;
+            z-index: -1;
+        }
+        .show {
+            display: block;
+        }
+        .show q-backdrop {
+            display: block;
+        }
+    `; }
 
-    isOpen() {
-        return this.hasAttribute('open');
-    }
+    /*_panstartEv(ev: HammerInput) {
+        if(ev.center.x > 0 && ev.center.x < 40 && !this._isOpen && ev.direction === Hammer.DIRECTION_RIGHT) {
+            console.log(ev.center.x);
+            this._startX = ev.center.x;
+            this._isSwiping = true;
+            this._direction = 1;
+            this.refs.base.classList.add('show');
 
-    automaticDetection = false;
-
-    open() {
-        if(this.isOpen()) return;
-        this._removeInlineTransform();
-        this.setAttribute('open', '');
-        this.dispatchEvent(new CustomEvent('change', {'detail': this.hasAttribute('open')}));
-    }
-
-    close() {
-        if(!this.isOpen()) return;
-        this._removeInlineTransform();
-        this.removeAttribute('open');
-        this.dispatchEvent(new CustomEvent('change', {'detail': this.hasAttribute('open')}));
-    }
-
-    toggle() {
-        if (this.isOpen()) {
-            this.close();
-        } else {
-            this.open();
+        } else if(this._isOpen && ev.direction === Hammer.DIRECTION_LEFT) {
+            console.log('closeing');
+            this._startX = ev.center.x;
+            this._isSwiping = true;
+            this._direction = -1;
         }
     }
 
-    componentMounted() {
-        this.initDrawer();
+    _panmoveEv(ev: HammerInput) {
+        console.log('panmove');
+        if(this._isSwiping) {
+            const w = this.refs.content.offsetWidth;
+            const percentaje = Math.min((((ev.center.x - this._startX)/ w) * 100) - 100, 0);
+            this.refs.content.style.transform = 'translateX(' + percentaje +'%)';
+        }
+    }
+
+    _panendEv(ev: HammerInput) {
+        this._isSwiping = false;
+        const w = this.refs.content.offsetWidth;
+        const percentaje = Math.min((((ev.center.x - this._startX)/ w) * 100) - 100, 0);
+        if(this._direction === 1 && percentaje > -65) {
+            this._openAnimation();
+        } else if(this._direction === -1 && percentaje < -35) {
+            this._closeAnimation();
+        }
+        console.log(percentaje);
+    }
+
+    _panstart: any;
+    _panmove: any;
+    _panend: any;*/
+
+    private _isOpen = false;
+    private _startswiping = false;
+    private _swiping = false;
+    private _listener: any;
+    private _swipeDirection = 0;
+    private _startX = 0;
+    private _lastPercentage = 0;
+    private _sensibillity = 14;
+
+    _move(e: any) {
+        let currX = isMobile ? e.touches[0].clientX : e.clientX;
+        if (this._swiping) {
+            const w = this.refs.content.offsetWidth;
+            const per = Math.min((((currX - this._startX)/ w) * 100) - 100, 0);
+            this._lastPercentage = per;
+            this.refs.content.style.transform = 'translateX(' + per +'%)';
+            this.refs.bckdrp.style.opacity = ((((per + 100) / 100) * 0.31) + 0.01) + ''; 
+            e.preventDefault();
+            e.stopPropagation();
+        } else if(this._startswiping) {
+            if(Math.abs(this._startX - currX) > this._sensibillity) {
+                this._swiping = true;
+                this.refs.base.classList.add('show');
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        }
+        //return true;
     }
 
     componentLoaded() {
         if (this.attrs.menuid) qDrawer.instances[this.attrs.menuid] = this;
+        this._init();
+    }
+
+    private _init() {
+        this._listener = this._move.bind(this);
+        document.addEventListener(typeStart, (e: any) => {
+            let evX = isMobile ? e.touches[0].clientX : e.clientX;
+            if ((!this._isOpen && evX < 24)) {
+                this._swipeDirection = 1;
+                this._startX = evX;
+                this._startswiping = true;
+                e.preventDefault();
+                e.stopPropagation();
+                document.body.addEventListener(typeMove, this._listener);
+            } else if(this._isOpen) {
+                this._swipeDirection = -1;
+                this._startX = evX - this.refs.content.offsetWidth;
+                this._startswiping = true;
+                document.body.addEventListener(typeMove, this._listener);
+            }
+            //return true;
+        }, true);
+        document.addEventListener(typeEnd, (e: any) => {
+            if (this._swiping) {
+                if (this._swipeDirection == 1) {
+                    if(this._lastPercentage > -65) {
+                        this._openAnimation();
+                    } else {
+                        this._closeAnimation();
+                    }
+                } else if (this._swipeDirection == -1) {
+                    if (this._lastPercentage < -35) {
+                        this._closeAnimation();
+                    } else {
+                        this._openAnimation();
+                    }
+                }
+                this._swiping = false;
+                this._swipeDirection = 0;
+            } else {
+                this._swiping = false;
+            }
+            this._startswiping = false;
+            document.body.removeEventListener(typeMove, this._listener);
+            //return true;
+        });
     }
 
     public static instances: arrDrawer = {};
@@ -65,206 +193,80 @@ export default class qDrawer extends QuantumElement {
         if(pos > -1) {
             delete qDrawer.instances[keys[pos]];
         }
-        //document.body.removeEventListener('click', this._listenerBody);
     }
 
-    async _directive(e: any) {
-        if(e.path) {
-            for(let tgts = 0; tgts < e.path.length; tgts++) {
-                if(!e.path[tgts].hasAttribute) {}
-                else if (e.path[tgts].hasAttribute('openmenu')) {
-                    this.open();
-                    return true;
-                } else if (e.path[tgts].hasAttribute('togglemenu')) {
-                    this.toggle();
-                    return true;
-                } else if (e.path[tgts].hasAttribute('closenmenu')) {
-                    this.close();
-                    return true;
-                }
-            }
-        } else {
-            let fd = this.findDirective(e.originalTarget);
-            if(fd) {
-                if(!fd.hasAttribute) {}
-                else if (fd.hasAttribute('openmenu')) {
-                    this.open();
-                    return true;
-                } else if (fd.hasAttribute('togglemenu')) {
-                    this.toggle();
-                    return true;
-                } else if (fd.hasAttribute('closenmenu')) {
-                    this.close();
-                    return true;
-                }
-            }
-        }        
-        return true;
-    }
-
-    private findDirective(el: any) {
-        try {
-            while (el){
-                if (el.hasAttribute && (el.hasAttribute('openmenu') || el.hasAttribute('togglemenu') || el.hasAttribute('closenmenu'))) {
-                    return el;
-                }
-                if(el.parentNode) el = el.parentNode;
-                else if(el.host) el = el.host;
-                else el = null;
-            }
-        } catch(exc) { return null; }
-        
-        return null;
+    isOpen() {
+        return this._isOpen;
     }
 
 
-    _swiping: any;
-    _startX: any;
-    _endSwipe: any;
-    _swipeDirection: any;
-    _sensibillity = 10;
-    _move(e: any) {
-        if (this._swiping) {
-            let isMobile = checkMobile(navigator.userAgent || navigator.vendor || window.opera);
-            let currX = isMobile ? e.touches[0].clientX : e.clientX;
-            let x = this._startX - currX;
-            let moveX = (-this.refs.content.offsetWidth  + (-x));
-            if(moveX > 0) {
-                moveX = 0;
-            }
-            this._endSwipe = moveX;
-            this.style.transform = "translateX(" + moveX +"px)";
-            this.refs.backdrop.style.opacity = 1 - (0.8 * (-moveX / this.refs.content.offsetWidth)) - 0.2;
-            if(Math.abs(x) > this._sensibillity) {
-                this.style.transition = "none";
-            }
-            e.preventDefault();
-            e.stopPropagation();
-        }
-        //return true;
-    }
-    _removeInlineTransform() {
-        if(this.style.transform) this.style.transform = "";
-        if(this.style.transition) this.style.transition = "";
-        if(this.refs.backdrop.style.opacity) this.refs.backdrop.style.opacity = null;
+    open() {
+        this._openAnimation();
     }
 
-    _listener: any;
-    _listenerBody: any;
-    initDrawer() {//remove listeners unmount...
-        this._endSwipe = null;
-        this._swipeDirection = 0;
-        this._listener = this._move.bind(this);
-        this._swiping = false;
-        let isMobile = checkMobile(navigator.userAgent || navigator.vendor || window.opera),
-        isIE = window.navigator.msPointerEnabled,
-        typeStart = isIE ? "MSPointerDown" : (isMobile ? "touchstart" : "mousedown"),
-        typeMove = isIE ? "MSPointerMove" : (isMobile ? "touchmove" : "mousemove"),
-        typeEnd = isIE ? "MSPointerUp" : (isMobile ? "touchend" : "mouseup");
-        //this._listenerBody = this._directive.bind(this);
-        //document.body.addEventListener('click', this._listenerBody);
-        document.addEventListener(typeStart, (e: any) => {
-            let evX = isMobile ? e.touches[0].clientX : e.clientX;
-            if ((!this.isOpen() && evX < 24)) {
-                this._swipeDirection = 1;
-                this._startX = evX;
-                this._swiping = true;
-                e.preventDefault();
-                e.stopPropagation();
-                /*this.style.transition = "none";
-                this.refs.backdrop.style.display = 'block';*/
-                document.body.addEventListener(typeMove, this._listener);
-            } else if(this.isOpen()) {
-                this._swipeDirection = -1;
-                this._startX = evX - this.refs.content.offsetWidth;
-                this._swiping = true;
-                this.style.transition = "none";
-                document.body.addEventListener(typeMove, this._listener);
-            }
-            //return true;
-        }, true);
-        document.addEventListener(typeEnd, (e: any) => {
-            if (this._swiping && this._endSwipe !== null) {
-                if (this._swipeDirection == 1) {
-                    this._removeInlineTransform();
-                    if(this._endSwipe + this.refs.content.offsetWidth > 150) {
-                        this.open();
-                    } else {
-                        this.close();
-                    }
-                    this._endSwipe = null;
-                } else if (this._swipeDirection == -1) {
-                    this._removeInlineTransform();
-                    if (-this._endSwipe > 150) {
-                        this.close();
-                    } else {
-                        this.open();
-                    }
-                    this._endSwipe = null;
-                }
-                this._swiping = false;
-                this._swipeDirection = 0;
-            } else {
-                this._swiping = false;
-                this._removeInlineTransform();
-            }
-            document.body.removeEventListener(typeMove, this._listener);
-            //return true;
-        });
+    _openAnimation() {
+        this.refs.base.classList.add('show');
+        const initT = this.refs.content.style.transform || 'translateX(-100%)';
+        const initO = parseFloat(this.refs.bckdrp.style.opacity) || 0;
+        this.refs.content.style.willChange = 'transform';
+        this.refs.bckdrp.style.willChange = 'opacity';
+        this.refs.content.animate([
+            { transform: initT }, 
+            { transform: 'translateX(0%)' }
+        ], {
+            duration: 300,
+            easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
+        }).onfinish = () => {
+            this.refs.content.style.willChange = '';
+            this.refs.content.style.transform = 'translateX(0%)';
+            this._isOpen = true; 
+        };
+        this.refs.bckdrp.animate([
+            { opacity: initO }, 
+            { opacity: 0.32 }
+        ], {
+            duration: 300,
+            easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
+        }).onfinish = () => {
+            this.refs.bckdrp.style.willChange = '';
+            this.refs.bckdrp.style.opacity = '0.32';
+        };
     }
 
-    styles() { return `
-        :host {
-            display: inline-block;
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            z-index: 999;
-            transform: translateX(-100%);
-            transition: transform 0.3s ease-out;
-            overflow: visible;
-            contain: layout size style;
-            overscroll-behavior-x: none;
-        }
-        :host([open]) {
-            transform: translateX(0%);
-        }
-        :host([open]) .backdrop {
-            opacity: 0.8;
-            pointer-events: auto;
-        }
-        .base {
-            position: relative;
-            top: 0px;
-            box-sizing: border-box;
-            width: 100%;
-            height: 100%;
-            overflow: visible;
-        }
-        .backdrop {
-            width: 200%;
-            height: 100%;
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            background-color: black;
-            opacity: 0;
-            z-index: 0;
-            transition: opacity 0.3s ease-out;
-            pointer-events: none;
-        }
-        .content {
-            z-index: 1;
-            position: absolute;
-            width: 70%;
-            height: 100%;
-            background-color: white;
-            box-sizing: border-box;
-            display: block;
-        }
-    `; }
+    _closeAnimation() {
+        const initT = this.refs.content.style.transform || 'translateX(-100%)';
+        const initO = parseFloat(this.refs.bckdrp.style.opacity) || 0;
+        this.refs.content.style.willChange = 'transform';
+        this.refs.bckdrp.style.willChange = 'opacity';
+        this.refs.content.animate([
+            { transform: initT }, 
+            { transform: 'translateX(-100%)' }
+        ], {
+            duration: 300,
+            easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
+        }).onfinish = () => {
+            this.refs.content.style.willChange = '';
+            this.refs.content.style.transform = 'translateX(-100%)';
+            this._isOpen = false; 
+            this.refs.base.classList.remove('show');
+        };
+        this.refs.bckdrp.animate([
+            { opacity: initO }, 
+            { opacity: 0.01 }
+        ], {
+            duration: 300,
+            easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
+        }).onfinish = () => {
+            this.refs.bckdrp.style.willChange = '';
+            this.refs.bckdrp.style.opacity = '0.01';
+        };
+    }
+
+    close() {
+        this._closeAnimation();
+    }
+
+    toggle() {}
 
     constructor() {
         super({});

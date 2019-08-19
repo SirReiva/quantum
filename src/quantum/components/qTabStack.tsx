@@ -51,12 +51,12 @@ export default class qTabStack extends QuantumElement {
 
     private _preloadRoute(route: TabRoute, index: number) {
         if(route.resolve) {
-            route.resolve().then((m: any) => {
-                if(!isRegisteredQuantumElement(m.default.tagName)) {
-                    defineQuantumElement(m.default);
-                    this.addComponent(m.default, index); 
+            route.resolve().then((c: any) => {
+                if(!isRegisteredQuantumElement(c.tagName)) {
+                    defineQuantumElement(c);
+                    this.addComponent(c, index); 
                 } else {
-                    this.addComponent(m.default, index); 
+                    this.addComponent(c, index); 
                 }  
             });
         } else if(route.component) {
