@@ -151,6 +151,6 @@ export default class qSwitch extends QuantumElement {
     }
     
     constructor() {
-        super({});
+        super(false);
     }
 }

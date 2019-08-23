@@ -97,6 +97,6 @@ export default class qToolBarButton extends QuantumElement {
     }
     
     constructor() {
-        super({});
+        super(false);
     }
 }

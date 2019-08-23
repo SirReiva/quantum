@@ -27,6 +27,6 @@ export default class qFab extends QuantumElement {
     `; }
 
     constructor() {
-        super({});
+        super(false);
     }
 }

@@ -191,7 +191,7 @@ export default class qRadioButton extends QuantumElement {
     public static instances: qRadioButton[] = [];
     
     constructor() {
-        super({});
+        super(false);
         qRadioButton.instances.push(this);
     }
 }

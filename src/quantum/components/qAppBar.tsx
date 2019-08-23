@@ -97,6 +97,6 @@ export default class qAppBar extends QuantumElement {
     `; }
 
     constructor() {
-        super({});
+        super(false);
     }
 }

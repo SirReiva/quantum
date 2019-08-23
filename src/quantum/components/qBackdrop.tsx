@@ -28,6 +28,6 @@ export default class qBackdrop extends QuantumElement {
     `; }
 
     constructor() {
-        super({});
+        super(false);
     }
 }

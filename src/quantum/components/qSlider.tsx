@@ -320,6 +320,6 @@ export default class qSlider extends QuantumElement {
     }
     
     constructor() {
-        super({});
+        super(false);
     }
 }

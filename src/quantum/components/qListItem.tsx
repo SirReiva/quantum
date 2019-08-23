@@ -44,6 +44,6 @@ export default class qListItem extends QuantumElement {
     `; }
 
     constructor() {
-        super({ items: []});
+        super(false);
     }
 }

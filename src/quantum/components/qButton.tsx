@@ -342,6 +342,6 @@ export default class qButton extends QuantumElement {
     }
 
     constructor() {
-        super({});
+        super(false);
     }
 }

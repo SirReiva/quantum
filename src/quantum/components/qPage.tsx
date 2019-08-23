@@ -18,7 +18,7 @@ export default class qPage extends QuantumElement {
         }`; 
     }
 
-    constructor(props: any) {
-        super(props);        
+    constructor(pr: any = false) {
+        super(pr);        
     }
 }

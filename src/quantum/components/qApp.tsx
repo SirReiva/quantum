@@ -25,6 +25,6 @@ export default class qApp extends QuantumElement {
     }
 
     constructor() {
-        super({});        
+        super(false);        
     }
 }

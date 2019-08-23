@@ -28,12 +28,15 @@ export default class qStack extends QuantumElement {
             contain: layout size style;
             overflow: hidden;
             z-index: 0;
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
         }`; 
     }
 
     private clearStack() {
         while (this._stackElements.length > 0) {
             const el = this._stackElements.pop();
+            el.style.visibility = 'hidden';
             this.shadowRoot.removeChild(el);
         }
     }
@@ -57,9 +60,9 @@ export default class qStack extends QuantumElement {
             (page.previousSibling as HTMLElement).style.willChange = 'opacity, transform, contents';
             this._currentEnterAnimation = this._animationTransition.enter(page, (page.previousSibling as HTMLElement), this.refs.ghostLayer);
             this._currentEnterAnimation.promise.then(() => {
+                (page.previousSibling as HTMLElement).style.display = 'none';
                 page.style.willChange = '';
                 (page.previousSibling as HTMLElement).style.willChange = '';
-                (page.previousSibling as HTMLElement).style.display = 'none';
             });
             this.dispatchEvent(new CustomEvent('navigate', {'detail': ''}));
         });
@@ -104,6 +107,7 @@ export default class qStack extends QuantumElement {
                 (removed.previousSibling as HTMLElement).style.willChange = 'opacity, transform, contents';
                 this._currentOutAnimation = this._animationTransition.out(removed, (removed.previousSibling as HTMLElement), this.refs.ghostLayer);
                 this._currentOutAnimation.promise.then(() => {
+                    removed.style.visibility = 'hidden';
                     removed.style.willChange = '';
                     (removed.previousSibling as HTMLElement).style.willChange = '';
                     (removed.previousSibling as HTMLElement).style.display = '';

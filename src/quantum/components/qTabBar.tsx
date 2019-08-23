@@ -180,6 +180,6 @@ export default class qTabBar extends QuantumElement {
     }
 
     constructor() {
-        super({});
+        super(false);
     }
 }

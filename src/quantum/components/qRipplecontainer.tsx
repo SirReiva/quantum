@@ -186,7 +186,7 @@ export default class qRippleContainer extends QuantumElement {
 
     automaticDetection = false;
 
-    constructor(props: any) {
-        super(props);        
+    constructor() {
+        super(false);        
     }
 }

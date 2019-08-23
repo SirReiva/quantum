@@ -62,6 +62,6 @@ export default class qInfiniteScroll extends QuantumElement {
     }
 
     constructor() {
-        super({ items: []});
+        super(false);
     }
 }

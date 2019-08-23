@@ -124,6 +124,6 @@ export default class qCard extends QuantumElement {
     `; }
 
     constructor() {
-        super({});        
+        super(false);        
     }
 }

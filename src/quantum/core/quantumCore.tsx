@@ -66,6 +66,11 @@ document.addEventListener('visibilitychange', function() {
     }
 });
 /*UTILS*/
+export function validateSelector(selector: string) {
+    if (selector.indexOf('-') <= 0) {
+        throw new Error('You need at least 1 dash in the custom element name!');
+    }
+};
 export function isInViewport(elem: HTMLElement):Boolean {
     var bounding = elem.getBoundingClientRect();
     return (

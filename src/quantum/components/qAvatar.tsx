@@ -32,6 +32,6 @@ export default class qAvatar extends QuantumElement {
     `; }
 
     constructor() {
-        super({});        
+        super(false);        
     }
 }

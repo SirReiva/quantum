@@ -138,6 +138,6 @@ export default class qSpinner extends QuantumElement {
     `; }
 
     constructor() {
-        super({});
+        super(false);
     }
 }

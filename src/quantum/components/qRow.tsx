@@ -27,6 +27,6 @@ export default class qRow extends QuantumElement {
     `; }
 
     constructor() {
-        super({});
+        super(false);
     }
 }

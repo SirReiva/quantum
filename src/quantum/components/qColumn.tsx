@@ -32,6 +32,6 @@ export default class qColumn extends QuantumElement {
     `; }
 
     constructor() {
-        super({});
+        super(false);
     }
 }

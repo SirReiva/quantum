@@ -50,7 +50,7 @@ export default class qContent extends QuantumElement {
     }
 
     constructor() {
-        super({ items: []});
+        super(false);
     }
 
     getScrollElement() {

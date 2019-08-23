@@ -48,6 +48,6 @@ export default class qIcon extends QuantumElement {
     `; }
 
     constructor() {
-        super({});
+        super(false);
     }
 }

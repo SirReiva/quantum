@@ -106,6 +106,6 @@ export default class qRefresher extends QuantumElement {
     }
 
     constructor() {
-        super({ items: []});
+        super(false);
     }
 }

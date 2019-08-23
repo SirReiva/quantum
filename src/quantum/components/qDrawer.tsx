@@ -25,7 +25,7 @@ export default class qDrawer extends QuantumElement {
     static automaticDetection = false;
     
     styles() { return `
-       .base {
+        .base {
             display: none;
             position: absolute;
             top: 0;
@@ -34,8 +34,8 @@ export default class qDrawer extends QuantumElement {
             bottom: 0;
             contain: strict;
             z-index: 9999;
-       }
-       .menu-inner {
+        }
+        .menu-inner {
             left: 0;
             right: auto;
             top: 0;

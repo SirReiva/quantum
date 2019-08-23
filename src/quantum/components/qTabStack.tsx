@@ -134,6 +134,6 @@ export default class qTabStack extends QuantumElement {
     }
 
     constructor() {
-        super({});
+        super(false);
     }
 }

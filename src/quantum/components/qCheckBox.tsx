@@ -165,6 +165,6 @@ export default class qCheckBox extends QuantumElement {
     }
     
     constructor() {
-        super({});
+        super(false);
     }
 }

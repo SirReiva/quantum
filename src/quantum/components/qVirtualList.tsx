@@ -214,6 +214,6 @@ export default class qVirtualList extends QuantumElement {
     }
 
     constructor() {
-        super({});
+        super(false);
     }
 }

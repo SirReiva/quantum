@@ -44,7 +44,7 @@ export default abstract class QuantumElement extends HTMLElement {
             this._shadowRoot = this.attachShadow({ mode: 'open' }); //, delegatesFocus: true??
         else
             this._shadowRoot = this;
-        this.props = new Proxy(prps, this._validator);
+        if (prps !== false) this.props = new Proxy(prps, this._validator);
         setTimeout(() => this._mount(), 1);
     }
 
@@ -59,6 +59,9 @@ export default abstract class QuantumElement extends HTMLElement {
         delete this.refs;
         delete this._shadowRoot;
         delete this._styleEl;
+        delete this._validator;
+        delete this.isReady;
+        delete this._promiseReadyResolver;
     }
 
     private _get(target: any, key: string) {

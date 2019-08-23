@@ -366,6 +366,6 @@ export default class qTextInput extends QuantumElement {
     }
     
     constructor() {
-        super({});
+        super(false);
     }
 }

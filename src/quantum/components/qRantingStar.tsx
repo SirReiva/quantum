@@ -30,6 +30,6 @@ export default class qRatingStar extends QuantumElement {
     `; }
 
     constructor() {
-        super({});
+        super(false);
     }
 }
