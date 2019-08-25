@@ -23,6 +23,10 @@ export default class qFab extends QuantumElement {
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
+        }
+        ::slotted(q-toolbarbutton) {
+            transform: scale(1.35);
         }
     `; }
 

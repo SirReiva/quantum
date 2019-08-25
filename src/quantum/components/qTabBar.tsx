@@ -135,6 +135,7 @@ export default class qTabBar extends QuantumElement {
             opacity: 0;
             transform: translate(-50%, -50%) scale(1);
             transition: opacity 1s, transform 0.5s;
+            pointer-events: none;
         }
         button:active::after {
             opacity: 0.32;

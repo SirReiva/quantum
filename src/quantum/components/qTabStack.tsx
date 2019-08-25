@@ -64,7 +64,7 @@ export default class qTabStack extends QuantumElement {
         }
     }
 
-    insertChildAtIndex = function(child: HTMLElement, index: number) {
+    private _insertChildAtIndex = function(child: HTMLElement | DocumentFragment, index: number) {
         if (index >= this.shadowRoot.children.length) {
           this.shadowRoot.appendChild(child);
         } else {
@@ -73,12 +73,14 @@ export default class qTabStack extends QuantumElement {
     }
 
     addComponent(c: QuantumElement, pos: number) {
+        const frag = document.createDocumentFragment();
         let page: HTMLElement = document.createElement(c.tagName);
         let container = document.createElement('div');
         container.classList.add('baseTab');
         container.appendChild(page);
+        frag.appendChild(container);
         //this.shadowRoot.appendChild(container);
-        this.insertChildAtIndex(container, pos);
+        this._insertChildAtIndex(frag, pos);
     }
 
     getTabIndexPosition() {

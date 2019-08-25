@@ -95,11 +95,7 @@ class exampleApp extends QuantumElement {
                 </q-app>;
     }
 
-    styles() { return `:host{
-        display: block;
-        width: 100%;
-        height: 100%;
-    }`; }
+    styles() { return `:host{}`; }
 
     constructor() {
         super({});

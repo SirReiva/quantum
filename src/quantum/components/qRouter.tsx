@@ -3,34 +3,23 @@ import { h, defineQuantumElement, isRegisteredQuantumElement } from '../core/qua
 import { AnimationTransition, animationPromise, AndroidAnimationTransition } from './utils/animation-routes/animations';
 import { Route } from './utils/routes/index';
 
-interface arrStack {
-    [key: string]: qStack;
+interface arrRouter {
+    [key: string]: qRouter;
 }
 
 /*STACK*/
-export default class qStack extends QuantumElement {
-    public static tagName = 'q-stack';
+export default class qRouter extends QuantumElement {
+    public static tagName = 'q-router';
     automaticDetection = false;
     template() {
         return  false;
     }
 
-    public static instances: arrStack = {};
+    public static instances: arrRouter = {};
     private _animationTransition: AnimationTransition;
 
     styles() { return `
-        :host {
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            position: absolute;
-            contain: layout size style;
-            overflow: hidden;
-            z-index: 0;
-            -webkit-transform: translateZ(0);
-            transform: translateZ(0);
-        }`; 
+        :host {}`; 
     }
 
     private clearStack() {
@@ -51,13 +40,11 @@ export default class qStack extends QuantumElement {
 
     private _pushComponent(comp: QuantumElement) {
         if(!isRegisteredQuantumElement(comp.tagName)) defineQuantumElement(comp);
-        const frag = document.createDocumentFragment();
         let page: QuantumElement = (document.createElement(comp.tagName) as QuantumElement);
-        frag.appendChild(page);
         page.isReady.then(() => {
             page.style.zIndex = this._stackElements.length + 1 + "" ;
             this._stackElements.push(page);
-            this.shadowRoot.appendChild(frag);
+            this.shadowRoot.appendChild(page);
             page.style.willChange = 'opacity, transform, contents';
             (page.previousSibling as HTMLElement).style.willChange = 'opacity, transform, contents';
             this._currentEnterAnimation = this._animationTransition.enter(page, (page.previousSibling as HTMLElement), this.refs.ghostLayer);
@@ -130,15 +117,13 @@ export default class qStack extends QuantumElement {
 
     private _setRootComponent(comp: QuantumElement) {
         if(!isRegisteredQuantumElement(comp.tagName)) defineQuantumElement(comp);
-        const frag = document.createDocumentFragment();
         let page: QuantumElement = (document.createElement(comp.tagName) as QuantumElement);
-        frag.appendChild(page);
         this.clearStack();
         page.isReady.then(() => {
             page.style.zIndex = this._stackElements.length + 1 + "";
             page.style.willChange = 'opacity, transform, contents';
             this._stackElements.push(page);
-            this.shadowRoot.appendChild(frag);
+            this.shadowRoot.appendChild(page);
             setTimeout(() => {//mientras no hay animacion de root
                 page.style.willChange = '';
             }, 10);
@@ -195,10 +180,10 @@ export default class qStack extends QuantumElement {
     private _currentOutAnimation:  animationPromise = null;
 
     componentUnmounted() {
-        let keys = Object.keys(qStack.instances);
-        const pos = Object.values(qStack.instances).indexOf(this);
+        let keys = Object.keys(qRouter.instances);
+        const pos = Object.values(qRouter.instances).indexOf(this);
         if(pos > -1) {
-            delete qStack.instances[keys[pos]];
+            delete qRouter.instances[keys[pos]];
         }
         this._stackElements = null;
     }
@@ -219,7 +204,7 @@ export default class qStack extends QuantumElement {
 
     componentLoaded() {
         this._animationTransition = new AndroidAnimationTransition();
-        if (this.attrs.stackid) qStack.instances[this.attrs.stackid] = this;
+        if (this.attrs.stackid) qRouter.instances[this.attrs.stackid] = this;
         this.setRootName(this.attrs.root);
         this._preloadRoutes();
     }
