@@ -1,3 +1,4 @@
+import qWorker from './qWorker';
 declare global {
     namespace JSX {
         interface IntrinsicElements {
@@ -5,6 +6,8 @@ declare global {
         }
     }
 }
+
+export const DIFF_MODE_WOKER = true;
 
 const CREATE = 'CREATE';
 const REMOVE = 'REMOVE';
@@ -19,6 +22,11 @@ const REMOVE_EVENT = 'REMOVE EVENT';
 const SPECIAL_PROPS = ['value', 'checked'];
 
 const PATCHSFPS = 40;
+
+let worker:qWorker = null;
+if(DIFF_MODE_WOKER) {
+    worker = new qWorker();
+}
 
 declare var window: any;
 const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
@@ -36,6 +44,7 @@ const h5Element = document.createElement('h1');
 const h6Element = document.createElement('h1');
 const spanElement = document.createElement('span');
 const bElement = document.createElement('b');
+const strongElement = document.createElement('strong');
 const ulElement = document.createElement('ul');
 const olElement = document.createElement('ol');
 const liElement = document.createElement('li');
@@ -54,6 +63,7 @@ precachedElements['h5'] = h5Element;
 precachedElements['h6'] = h6Element;
 precachedElements['span'] = spanElement;
 precachedElements['b'] = bElement;
+precachedElements['strong'] = strongElement;
 precachedElements['ul'] = ulElement;
 precachedElements['ol'] = olElement;
 precachedElements['li'] = liElement;
@@ -227,6 +237,67 @@ export function diff(newNode: any, oldNode: any) {
         };
     }
     return null;
+}
+
+function diffChildrenFunctions(newNode: any, oldNode: any) {
+    const patches = [];
+    const patchesLength = Math.max(
+        newNode.children.length,
+        (oldNode)?oldNode.children.length: 0
+    );
+    for (let i = 0; i < patchesLength; i++) {
+        let df: any = diffOnlyFunction(
+            newNode.children[i],
+            (oldNode)?oldNode.children[i]:null
+        )
+        if (df) patches[i] = df;
+    }
+    return patches;
+}
+
+function diffPropsFun(newNode: any, oldNode: any) {
+    const patches: any[] = [];
+    const props = Object.assign({}, newNode.props, (oldNode)?oldNode.props || {}: {});
+    Object.keys(props).forEach(name => {
+        if (isEventProp(name)) {
+            const newVal = newNode.props[name];
+            if(oldNode) {
+                const oldVal = oldNode.props[name];
+                if (isEventProp(name)) {
+                    if (!newVal) {
+                        patches.push({ type: REMOVE_EVENT, name, value: oldVal });
+                    } else if (!oldVal && newVal/*.toString() !== oldVal.toString()*/) {
+                        patches.push({ type: SET_EVENT, name, value: newVal });
+                    } else /*if (oldVal && newVal.toString() !== oldVal.toString())*/ {
+                        //console.log(name, newNode.type);
+                        patches.push({ type: REPLACE_EVENT, name, value: newVal, prevVal: oldVal });
+                    }
+                }
+            } else {
+                patches.push({ type: SET_EVENT, name, value: newVal });
+            }
+        }
+    });
+    return patches;
+}
+export function diffOnlyFunction(newNode: any, oldNode: any) {
+    if (newNode && newNode.type) {
+        return {
+            type: UPDATE,
+            props: diffPropsFun(newNode, oldNode),
+            children: diffChildrenFunctions(newNode, oldNode),
+        };
+    }
+    return null;
+}
+export function asyncDiff(newNode: any, oldNode: any) {
+    if(worker) {
+        return worker.call({
+            newNode,
+            oldNode
+        })
+    }
+    return Promise.reject('Not worker initializated');
 }
 /*DOM & PATCHS*/
 export function createElement(node: any, refs: any = {}) {

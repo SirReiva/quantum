@@ -7,7 +7,7 @@ interface arrRouter {
     [key: string]: qRouter;
 }
 
-/*STACK*/
+/*ROUTER*/
 export default class qRouter extends QuantumElement {
     public static tagName = 'q-router';
     automaticDetection = false;

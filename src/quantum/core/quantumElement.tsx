@@ -1,4 +1,4 @@
-import { createElement, diff, queuPatches, isFunction } from './quantumCore';
+import { createElement, diff, queuPatches, isFunction, DIFF_MODE_WOKER, asyncDiff, diffOnlyFunction } from './quantumCore';
 import 'hammerjs';
 
 interface arrReferences {
@@ -144,13 +144,19 @@ export default abstract class QuantumElement extends HTMLElement {
         this._render();
     }
 
-    private _render() {
+    private async _render() {
         if (!this._initialized) return;
         this.componentBeforeUpdate && this.componentBeforeUpdate();
         const oldVDom = this._vDom;
         const newVDom = this.template();
-        queuPatches(this._shadowRoot, diff(newVDom, oldVDom), this.refs);
         this._vDom = newVDom;
+        if(DIFF_MODE_WOKER) {
+            queuPatches(this._shadowRoot, await asyncDiff(newVDom, oldVDom), this.refs);
+            queuPatches(this._shadowRoot, diffOnlyFunction(newVDom, oldVDom), this.refs);
+        }
+        else {
+            queuPatches(this._shadowRoot, diff(newVDom, oldVDom), this.refs);
+        }
         this.componentAfterUpdate && this.componentAfterUpdate();
     }
 
