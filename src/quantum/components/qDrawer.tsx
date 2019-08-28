@@ -233,37 +233,40 @@ export default class qDrawer extends QuantumElement {
         };
     }
 
-    _closeAnimation() {
-        const initT = this.refs.content.style.transform || 'translateX(-100%)';
-        const initO = parseFloat(this.refs.bckdrp.style.opacity) || 0;
-        this.refs.content.style.willChange = 'transform';
-        this.refs.bckdrp.style.willChange = 'opacity';
-        this.refs.content.animate([
-            { transform: initT }, 
-            { transform: 'translateX(-100%)' }
-        ], {
-            duration: 300,
-            easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
-        }).onfinish = () => {
-            this.refs.content.style.willChange = '';
-            this.refs.content.style.transform = 'translateX(-100%)';
-            this._isOpen = false; 
-            this.refs.base.classList.remove('show');
-        };
-        this.refs.bckdrp.animate([
-            { opacity: initO }, 
-            { opacity: 0.01 }
-        ], {
-            duration: 300,
-            easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
-        }).onfinish = () => {
-            this.refs.bckdrp.style.willChange = '';
-            this.refs.bckdrp.style.opacity = '0.01';
-        };
+    _closeAnimation():Promise<null> {
+        return new Promise((resolve, reject) => {
+            const initT = this.refs.content.style.transform || 'translateX(-100%)';
+            const initO = parseFloat(this.refs.bckdrp.style.opacity) || 0;
+            this.refs.content.style.willChange = 'transform';
+            this.refs.bckdrp.style.willChange = 'opacity';
+            this.refs.content.animate([
+                { transform: initT }, 
+                { transform: 'translateX(-100%)' }
+            ], {
+                duration: 300,
+                easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
+            }).onfinish = () => {
+                this.refs.content.style.willChange = '';
+                this.refs.content.style.transform = 'translateX(-100%)';
+                this._isOpen = false; 
+                this.refs.base.classList.remove('show');
+                resolve();
+            };
+            this.refs.bckdrp.animate([
+                { opacity: initO }, 
+                { opacity: 0.01 }
+            ], {
+                duration: 300,
+                easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
+            }).onfinish = () => {
+                this.refs.bckdrp.style.willChange = '';
+                this.refs.bckdrp.style.opacity = '0.01';
+            };
+        });
     }
 
-    close() {
-        this._closeAnimation();
+    close():Promise<null> {
+        return this._closeAnimation();
     }
 
     toggle() {}

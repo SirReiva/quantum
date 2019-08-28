@@ -152,7 +152,7 @@ export default abstract class QuantumElement extends HTMLElement {
         this._vDom = newVDom;
         if(DIFF_MODE_WOKER) {
             queuPatches(this._shadowRoot, await asyncDiff(newVDom, oldVDom), this.refs);
-            queuPatches(this._shadowRoot, diffOnlyFunction(newVDom, oldVDom), this.refs);
+            queuPatches(this._shadowRoot, diffOnlyFunction(newVDom, oldVDom), this.refs);//LISTERNERS DIFF
         }
         else {
             queuPatches(this._shadowRoot, diff(newVDom, oldVDom), this.refs);

@@ -1,0 +1,21 @@
+{
+    "name": "Quantum App",
+    "short_name": "Quantum App",
+    "theme_color": "#F0881A",
+    "background_color": "#202F40",
+    "display": "standalone",
+    "orientation": "portrait",
+    "Scope": "/",
+    "start_url": "/",
+    "icons": [{
+            "src": "logo.png",
+            "type": "image/png",
+            "sizes": "64x64"
+        },
+        {
+            "src": "logo144x144.png",
+            "type": "image/png",
+            "sizes": "144x144"
+        }
+    ]
+}

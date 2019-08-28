@@ -84,10 +84,10 @@ class exampleApp extends QuantumElement {
         return  <q-app>
                     <q-drawer menuid="main">
                         <q-list>
-                            <q-ripplecontainer data-rippleEffect="button"><q-listitem border onClick={() => this.navigate()}><q-icon icon="film"></q-icon>Themoviedb</q-listitem></q-ripplecontainer>
-                            <q-ripplecontainer data-rippleEffect="button"><q-listitem border onClick={() => this.navigate2()}><q-icon icon="list"></q-icon>Test</q-listitem></q-ripplecontainer>
-                            <q-ripplecontainer data-rippleEffect="button"><q-listitem border onClick={() => this.navigate3()}><q-icon icon="folder"></q-icon>Tabs</q-listitem></q-ripplecontainer>
-                            <q-ripplecontainer data-rippleEffect="button"><q-listitem border onClick={() => this.navigate4()}><q-icon icon="folder"></q-icon>List</q-listitem></q-ripplecontainer>
+                            <q-listitem border onClick={() => this.navigate()}><q-icon icon="film"></q-icon>Themoviedb</q-listitem>
+                            <q-listitem border onClick={() => this.navigate2()}><q-icon icon="list"></q-icon>Test</q-listitem>
+                            <q-listitem border onClick={() => this.navigate3()}><q-icon icon="folder"></q-icon>Tabs</q-listitem>
+                            <q-listitem border onClick={() => this.navigate4()}><q-icon icon="folder"></q-icon>List</q-listitem>
                         </q-list>
                     </q-drawer>
                     <q-stack routes={routes} stackid="main" root="home" ref="navigation"></q-stack>
@@ -101,23 +101,23 @@ class exampleApp extends QuantumElement {
         super({});
     }
 
-    navigate() {
-        qDrawer.instances['main'].close();
+    async navigate() {
+        await qDrawer.instances['main'].close();
         qStack.instances['main'].setRootName('home');
     }
 
-    navigate2() {
-        qDrawer.instances['main'].close();
+    async navigate2() {
+        await qDrawer.instances['main'].close();
         qStack.instances['main'].setRootName('home2');
     }
 
-    navigate3() {
-        qDrawer.instances['main'].close();
+    async navigate3() {
+        await qDrawer.instances['main'].close();
         qStack.instances['main'].setRootName('page3');
     }
 
-    navigate4() {
-        qDrawer.instances['main'].close();
+    async navigate4() {
+        await qDrawer.instances['main'].close();
         qStack.instances['main'].setRootName('pagelist');
     }
 

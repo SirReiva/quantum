@@ -73,10 +73,12 @@ function diff(newNode, oldNode) {
     return null;
 }
 self.addEventListener('message', function(e) {
+    //console.time("diff" + e.data.id);
     const { id, payload } = e.data;
     const msg = {
         id,
         payload: diff(payload.newNode, payload.oldNode)
     }
     self.postMessage(msg);
+    //console.timeEnd("diff" + e.data.id);
 }, false);

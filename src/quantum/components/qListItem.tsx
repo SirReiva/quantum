@@ -19,6 +19,7 @@ export default class qListItem extends QuantumElement {
             display: flex;
             align-items: center;
             min-height: 32px;
+            font-family: "Roboto", "Segoe UI"; 
         }
         :host([hover]) li:hover {
             background-color: rgba(var(--q-material-primary-rgb), 0.3);

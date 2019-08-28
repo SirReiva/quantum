@@ -7,7 +7,7 @@ declare global {
     }
 }
 
-export const DIFF_MODE_WOKER = true;
+export const DIFF_MODE_WOKER = true && (typeof(Worker) !== "undefined");
 
 const CREATE = 'CREATE';
 const REMOVE = 'REMOVE';
@@ -564,7 +564,7 @@ export function compileTemplateString(temlpate: string) {
         return jsonToHyperscript(xmlToJson(stringToXml(temlpate)));
     } catch (exp) {
         console.error(exp);
-        return h('div', null, ' ')
+        return false;
     }
 }
 
