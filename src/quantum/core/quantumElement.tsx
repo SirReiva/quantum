@@ -100,8 +100,8 @@ export default abstract class QuantumElement extends HTMLElement {
     private _getAttributesInObject() {
         let attrs: any = {};
         for (let i = 0; i < this.attributes.length; i++) {
-            if (this.attributes[i].value.startsWith('q-json-obj://')) {
-                attrs[this.attributes[i].name] = JSON.parse(this.attributes[i].value.substr(13));
+            if (this.attributes[i].value.startsWith('q-json-obj://') || this.attributes[i].value.startsWith('q-string-func://')) {
+                attrs[this.attributes[i].name] = this.objectAttrs[this.attributes[i].name];//JSON.parse(this.attributes[i].value.substr(13));
             } else {
                 attrs[this.attributes[i].name] = this.attributes[i].value;
             }
@@ -176,7 +176,7 @@ export default abstract class QuantumElement extends HTMLElement {
     public rebuild() { //testear...
         if (!this._initialized) return;
         const frag = document.createDocumentFragment();
-        this._shadowRoot.innerHTML = '';
+        this._shadowRoot.innerHTML = '';//cambiar
         this._vDom = this.template();
         this._styleEl = document.createElement('style');
         this._styleEl.innerHTML = this.styles();

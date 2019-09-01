@@ -33,10 +33,30 @@ export default class qStack extends QuantumElement {
         }`; 
     }
 
+    private _setZIndex(leavingEl: QuantumElement, enteringEl: QuantumElement, direction:number = 0) {
+        if (enteringEl) {
+            enteringEl.style.zIndex = (direction === 0)
+              ? '9'
+              : '11';
+        }
+        if (leavingEl) {
+            leavingEl.style.zIndex = '10';
+        }
+    }
+
+    private _setWillChanges(leavingEl: QuantumElement, enteringEl: QuantumElement, remove: boolean = false) {
+        if (enteringEl) {
+            enteringEl.style.willChange = (remove)?'':'opacity, transform, contents';
+        }
+        if (leavingEl) {
+            leavingEl.style.willChange = (remove)?'':'opacity, transform, contents';
+        }
+    }
+
     private clearStack() {
         while (this._stackElements.length > 0) {
             const el = this._stackElements.pop();
-            el.style.visibility = 'hidden';
+            el.style.display = 'none';
             this.shadowRoot.removeChild(el);
         }
     }
@@ -54,17 +74,17 @@ export default class qStack extends QuantumElement {
         const frag = document.createDocumentFragment();
         let page: QuantumElement = (document.createElement(comp.tagName) as QuantumElement);
         frag.appendChild(page);
+        let last = this._stackElements[this._stackElements.length -1];
+        this._setWillChanges(last, page);
+        this._setZIndex(last, page, 1);
         page.isReady.then(() => {
-            page.style.zIndex = this._stackElements.length + 1 + "" ;
             this._stackElements.push(page);
             this.shadowRoot.appendChild(frag);
-            page.style.willChange = 'opacity, transform, contents';
-            (page.previousSibling as HTMLElement).style.willChange = 'opacity, transform, contents';
-            this._currentEnterAnimation = this._animationTransition.enter(page, (page.previousSibling as HTMLElement), this.refs.ghostLayer);
+            this._currentEnterAnimation = this._animationTransition.enter(page, /*(page.previousSibling as HTMLElement)*/last, this.refs.ghostLayer);
             this._currentEnterAnimation.promise.then(() => {
-                (page.previousSibling as HTMLElement).style.display = 'none';
-                page.style.willChange = '';
-                (page.previousSibling as HTMLElement).style.willChange = '';
+                //(page.previousSibling as HTMLElement)
+                last.style.display = 'none';
+                this._setWillChanges(last, page, true);
             });
             this.dispatchEvent(new CustomEvent('navigate', {'detail': ''}));
         });
@@ -107,11 +127,12 @@ export default class qStack extends QuantumElement {
                 let removed = this._stackElements.pop();
                 removed.style.willChange = 'opacity, transform, contents';
                 (removed.previousSibling as HTMLElement).style.willChange = 'opacity, transform, contents';
+                this._setWillChanges(removed, removed.previousSibling as QuantumElement);
+                this._setZIndex(removed, (removed.previousSibling as QuantumElement), 0);
                 this._currentOutAnimation = this._animationTransition.out(removed, (removed.previousSibling as HTMLElement), this.refs.ghostLayer);
                 this._currentOutAnimation.promise.then(() => {
-                    removed.style.visibility = 'hidden';
-                    removed.style.willChange = '';
-                    (removed.previousSibling as HTMLElement).style.willChange = '';
+                    removed.style.display = 'none';
+                    this._setWillChanges(removed, removed.previousSibling as QuantumElement, true);
                     (removed.previousSibling as HTMLElement).style.display = '';
                     this.shadowRoot.removeChild(removed);
                     this._currentOutAnimation = null;
@@ -134,13 +155,14 @@ export default class qStack extends QuantumElement {
         let page: QuantumElement = (document.createElement(comp.tagName) as QuantumElement);
         frag.appendChild(page);
         this.clearStack();
+        page.style.willChange = 'opacity, transform, contents';
+        this._setWillChanges(null, page);
+        this._setZIndex(null, page, 1);
         page.isReady.then(() => {
-            page.style.zIndex = this._stackElements.length + 1 + "";
-            page.style.willChange = 'opacity, transform, contents';
             this._stackElements.push(page);
             this.shadowRoot.appendChild(frag);
             setTimeout(() => {//mientras no hay animacion de root
-                page.style.willChange = '';
+                this._setWillChanges(null, page, true);
             }, 10);
         });
         
@@ -203,7 +225,7 @@ export default class qStack extends QuantumElement {
         this._stackElements = null;
     }
 
-    private _stackElements: HTMLElement[] = [];
+    private _stackElements: QuantumElement[] = [];
 
     private _preloadRoutes() {
         let route: Route;

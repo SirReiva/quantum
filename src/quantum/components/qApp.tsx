@@ -5,8 +5,10 @@ import { h } from '../core/quantumCore';
 export default class qApp extends QuantumElement {
     public static tagName = 'q-app';
     template() {
-        return <slot></slot>;
+        return false;
     }
+
+    static readonly encapsulation = false;
 
     styles() { return `
         :host {

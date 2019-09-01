@@ -412,6 +412,8 @@ export class AndroidAnimationTransition extends AnimationTransition {
         return {
             promise: new Promise<any>((resolve, reject) => {
                 tl.eventCallback('onComplete', () => {
+                    pageIn.style.transform = '';
+                    pageIn.style.opacity = '';
                     if (tl.totalTime() === .3)
                         resolve();
                     else
@@ -433,6 +435,7 @@ export class AndroidAnimationTransition extends AnimationTransition {
         return {
             promise: new Promise<any>((resolve, reject) => {
                 tl.eventCallback('onComplete', (params) => {
+                    currentPage.style.opacity = '';
                     if (tl.totalTime() === .3)
                         resolve();
                     else
@@ -453,7 +456,7 @@ export class SlideAnimationTransition extends AnimationTransition {
         var tl = new TimelineLite({
             paused: true
         });
-        tl.add("enterios", 0).to(lastPage, 0.15, {
+        tl.add("enterios", 0).to(lastPage, 0.25, {
             scale: .95,
         },"enterios").to(pageIn, 0.5, {
             x: 0,
@@ -479,7 +482,7 @@ export class SlideAnimationTransition extends AnimationTransition {
         var tl = new TimelineLite({
             paused: true
         });
-        tl.add("outios", 0).to(currentPage, 0.15, {
+        tl.add("outios", 0).to(currentPage, 0.5, {
             scale: 1,
         }, "outios").to(removedPage, 0.5, {
             x: screen.availWidth,

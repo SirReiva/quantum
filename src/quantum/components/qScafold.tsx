@@ -6,7 +6,7 @@ export default class qScafold extends QuantumElement {
     public static tagName = 'q-scafold';
     static readonly encapsulation = false;
     template() {
-        return <slot></slot>;
+        return false;
     }
 
     styles() { return `

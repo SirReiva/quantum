@@ -304,9 +304,7 @@ export function createElement(node: any, refs: any = {}) {
     if (typeof node === 'string' || typeof node === 'number') {
         return document.createTextNode(node.toString());
     }
-    const frag = document.createDocumentFragment();
     const el = (precachedElements[node.type])?precachedElements[node.type].cloneNode():document.createElement(node.type);
-    frag.append(el);
     if(el instanceof HTMLUnknownElement) {
         throw new Error("Unkown element tag " + node.type);
     }
@@ -322,7 +320,7 @@ export function createElement(node: any, refs: any = {}) {
         .forEach(fragChilds.appendChild.bind(fragChilds));
         el.appendChild(fragChilds);
     }
-    return frag;
+    return el;
 }
 
 /*if (isTwoWayDataBindingProp(name)) {

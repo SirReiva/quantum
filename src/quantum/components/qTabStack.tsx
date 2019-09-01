@@ -131,8 +131,8 @@ export default class qTabStack extends QuantumElement {
         return ['index'];
     }
 
-    componentAttributeChange() {
-        this.selectIndex(parseInt(this.getAttribute('index')));
+    componentAttributeChange(name: string, oldVal: any, newVal: any) {
+        this.selectIndex(newVal);
     }
 
     constructor() {
