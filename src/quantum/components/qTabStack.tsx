@@ -8,7 +8,7 @@ export default class qTabStack extends QuantumElement {
     public static tagName = 'q-tabstack';
     automaticDetection = false;
     template() {
-        return false;
+        return null;
     }
 
     styles() { return `
@@ -88,23 +88,23 @@ export default class qTabStack extends QuantumElement {
     }
 
     _waitFor :number = null;
-    selectIndex(i: number, dptch = false) {
+    _nextIndex = null;
+    selectIndex(i: number) {
         const ci = this.getTabIndexPosition();
-        if(i >= this.shadowRoot.querySelectorAll('.baseTab').length || ci === i || i < 0) return;
-        this._currentIndex = i;
+        if((i >= this.shadowRoot.querySelectorAll('.baseTab').length) || (ci === i) || (i < 0) || (this._nextIndex === i)) return;
         this._waitFor = i * this.clientWidth;
+        this._nextIndex = i;
         this.scrollTo({
             left: i * this.clientWidth,
             behavior: 'smooth'
         });
-        if(dptch) this.dispatchEvent(new CustomEvent('change', {'detail': i}));
     }
 
     //private _stackElements: HTMLElement[] = [];
 
     componentLoaded() {
-        this.addEventListener('scroll', this._onscroll);
         this._preloadRoutes();
+        this.addEventListener('scroll', this._onscroll);
     }
 
     componentUnmounted() {
@@ -113,17 +113,18 @@ export default class qTabStack extends QuantumElement {
 
     private _currentIndex =  0;
     private _onscroll = debounce((e:any) => {
-        if(this._waitFor === null) {
-            const ci = this.getTabIndexPosition();
+        const ci = this.getTabIndexPosition();
+        if(this._waitFor !== null && this._waitFor === this.scrollLeft) {
+            this._currentIndex = ci;
+            this._nextIndex = null;
+        } else {
             if(this._currentIndex !== ci) {
                 this._currentIndex = ci;
+                this._nextIndex = ci;
                 this.dispatchEvent(new CustomEvent('change', {'detail': ci}));
             }
-        } else {
-            if(this._waitFor === this.scrollLeft) {
-                this._waitFor = null;
-            }            
         }
+        this._waitFor = null;
         
     }, 500, {maxWait: 500})
 
@@ -132,7 +133,7 @@ export default class qTabStack extends QuantumElement {
     }
 
     componentAttributeChange(name: string, oldVal: any, newVal: any) {
-        this.selectIndex(newVal);
+        this.selectIndex(parseInt(newVal));
     }
 
     constructor() {

@@ -5,8 +5,9 @@ import { h } from '../core/quantumCore';
 export default class qScafold extends QuantumElement {
     public static tagName = 'q-scafold';
     static readonly encapsulation = false;
+    automaticDetection = false;
     template() {
-        return false;
+        return null;
     }
 
     styles() { return `

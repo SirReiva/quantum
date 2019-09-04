@@ -44,7 +44,7 @@ export default class qDrawer extends QuantumElement {
             position: absolute;        
             flex-direction: column;
             justify-content: space-between;
-            transform: translateX(-100%);     
+            transform: translate3d(-100%, 0px, 0px); 
             width: 250px;
             height: auto;
             contain: strict;
@@ -64,47 +64,6 @@ export default class qDrawer extends QuantumElement {
         }
     `; }
 
-    /*_panstartEv(ev: HammerInput) {
-        if(ev.center.x > 0 && ev.center.x < 40 && !this._isOpen && ev.direction === Hammer.DIRECTION_RIGHT) {
-            console.log(ev.center.x);
-            this._startX = ev.center.x;
-            this._isSwiping = true;
-            this._direction = 1;
-            this.refs.base.classList.add('show');
-
-        } else if(this._isOpen && ev.direction === Hammer.DIRECTION_LEFT) {
-            console.log('closeing');
-            this._startX = ev.center.x;
-            this._isSwiping = true;
-            this._direction = -1;
-        }
-    }
-
-    _panmoveEv(ev: HammerInput) {
-        console.log('panmove');
-        if(this._isSwiping) {
-            const w = this.refs.content.offsetWidth;
-            const percentaje = Math.min((((ev.center.x - this._startX)/ w) * 100) - 100, 0);
-            this.refs.content.style.transform = 'translateX(' + percentaje +'%)';
-        }
-    }
-
-    _panendEv(ev: HammerInput) {
-        this._isSwiping = false;
-        const w = this.refs.content.offsetWidth;
-        const percentaje = Math.min((((ev.center.x - this._startX)/ w) * 100) - 100, 0);
-        if(this._direction === 1 && percentaje > -65) {
-            this._openAnimation();
-        } else if(this._direction === -1 && percentaje < -35) {
-            this._closeAnimation();
-        }
-        console.log(percentaje);
-    }
-
-    _panstart: any;
-    _panmove: any;
-    _panend: any;*/
-
     private _isOpen = false;
     private _startswiping = false;
     private _swiping = false;
@@ -120,7 +79,7 @@ export default class qDrawer extends QuantumElement {
             const w = this.refs.content.offsetWidth;
             const per = Math.min((((currX - this._startX)/ w) * 100) - 100, 0);
             this._lastPercentage = per;
-            this.refs.content.style.transform = 'translateX(' + per +'%)';
+            this.refs.content.style.transform = 'translate3d(' + per +'%, 0px, 0px)';
             this.refs.bckdrp.style.opacity = ((((per + 100) / 100) * 0.31) + 0.01) + ''; 
             e.preventDefault();
             e.stopPropagation();
@@ -206,19 +165,19 @@ export default class qDrawer extends QuantumElement {
 
     _openAnimation() {
         this.refs.base.classList.add('show');
-        const initT = this.refs.content.style.transform || 'translateX(-100%)';
+        const initT = this.refs.content.style.transform || 'translate3d(-100%, 0px, 0px)';
         const initO = parseFloat(this.refs.bckdrp.style.opacity) || 0;
         this.refs.content.style.willChange = 'transform';
         this.refs.bckdrp.style.willChange = 'opacity';
         this.refs.content.animate([
             { transform: initT }, 
-            { transform: 'translateX(0%)' }
+            { transform: 'translate3d(0%, 0px, 0px)' }
         ], {
             duration: 300,
             easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
         }).onfinish = () => {
             this.refs.content.style.willChange = '';
-            this.refs.content.style.transform = 'translateX(0%)';
+            this.refs.content.style.transform = 'translate3d(0%, 0px, 0px)';
             this._isOpen = true; 
         };
         this.refs.bckdrp.animate([
@@ -235,19 +194,19 @@ export default class qDrawer extends QuantumElement {
 
     _closeAnimation():Promise<null> {
         return new Promise((resolve, reject) => {
-            const initT = this.refs.content.style.transform || 'translateX(-100%)';
+            const initT = this.refs.content.style.transform || 'translate3d(-100%, 0px, 0px)';
             const initO = parseFloat(this.refs.bckdrp.style.opacity) || 0;
             this.refs.content.style.willChange = 'transform';
             this.refs.bckdrp.style.willChange = 'opacity';
             this.refs.content.animate([
                 { transform: initT }, 
-                { transform: 'translateX(-100%)' }
+                { transform: 'translate3d(-100%, 0px ,0px)' }
             ], {
                 duration: 300,
                 easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
             }).onfinish = () => {
                 this.refs.content.style.willChange = '';
-                this.refs.content.style.transform = 'translateX(-100%)';
+                this.refs.content.style.transform = 'translate3d(-100%, 0px ,0px)';
                 this._isOpen = false; 
                 this.refs.base.classList.remove('show');
                 resolve();

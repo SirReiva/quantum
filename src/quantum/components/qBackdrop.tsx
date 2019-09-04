@@ -4,12 +4,14 @@ import { h } from '../core/quantumCore';
 /*BACKDROP*/
 export default class qBackdrop extends QuantumElement {
     public static tagName = 'q-backdrop';
+    automaticDetection = false;
+    static readonly encapsulation = false;
     template() {
-        return false;
+        return null;
     }
 
     styles() { return `
-        :host {
+        q-backdrop {
             left: 0;
             right: 0;
             top: 0;

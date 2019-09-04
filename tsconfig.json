@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
       "outDir": "./www/",
-      "noImplicitAny": true,
+      "noImplicitAny": false,
       "module": "esnext",
       "target": "es6",
       "jsx": "react",

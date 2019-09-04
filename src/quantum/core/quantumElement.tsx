@@ -1,12 +1,13 @@
-import { createElement, diff, queuPatches, isFunction, DIFF_MODE_WOKER, asyncDiff, diffOnlyFunction } from './quantumCore';
+import { createElement, diff, queuPatches, isFunction, DIFF_MODE_WOKER, asyncDiff, diffOnlyFunction, scrapListenersRemove } from './quantumCore';
 import 'hammerjs';
+import { qVNode } from './interfaces';
 
 interface arrReferences {
     [key: string]: any;
 }
 
 export default abstract class QuantumElement extends HTMLElement {
-    template(): any { return false; }
+    template(): any { return null; }
     styles(): string { return ''; }
     protected componentBeforeLoaded?(): void;
     protected componentMounted?(): void;
@@ -33,7 +34,7 @@ export default abstract class QuantumElement extends HTMLElement {
         set: this._set.bind(this),
         get: this._get.bind(this),
     };
-    private _vDom: any = null;
+    private _vDom: qVNode | null = null;
     private _initialized = false;
     private _shadowRoot: any = null;
     private _styleEl: any = null;
@@ -45,7 +46,7 @@ export default abstract class QuantumElement extends HTMLElement {
         else
             this._shadowRoot = this;
         if (prps !== false) this.props = new Proxy(prps, this._validator);
-        setTimeout(() => this._mount(), 1);
+        setTimeout(() => this._mount());
     }
 
     connectedCallback() {
@@ -53,6 +54,7 @@ export default abstract class QuantumElement extends HTMLElement {
     }
     disconnectedCallback() {
         this.componentUnmounted && this.componentUnmounted();
+        scrapListenersRemove(this._shadowRoot);
         delete this.props;
         delete this.objectAttrs;
         delete this._vDom;
@@ -148,7 +150,7 @@ export default abstract class QuantumElement extends HTMLElement {
         if (!this._initialized) return;
         this.componentBeforeUpdate && this.componentBeforeUpdate();
         const oldVDom = this._vDom;
-        const newVDom = this.template();
+        const newVDom = (this.template() as qVNode);
         this._vDom = newVDom;
         if(DIFF_MODE_WOKER) {
             queuPatches(this._shadowRoot, await asyncDiff(newVDom, oldVDom), this.refs);

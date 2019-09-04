@@ -5,7 +5,7 @@ import { h } from '../core/quantumCore';
 export default class qApp extends QuantumElement {
     public static tagName = 'q-app';
     template() {
-        return false;
+        return null;
     }
 
     static readonly encapsulation = false;
