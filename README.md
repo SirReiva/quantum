@@ -2,7 +2,7 @@
 
 ![](https://github.com/SirReiva/quantum/blob/master/logobig.png?raw=true)
 
-VirtualDom wih webcomponents.
+VirtualDom with webcomponents.
 
 ## Installation
 
