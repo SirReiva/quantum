@@ -11,6 +11,14 @@ NPM
 ```bash
 npm install
 ```
+```bash
+npm start
+```
+```bash
+npm run build
+```
+
+
 
 ## Documentation
 

@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "start": "npx webpack-dev-server --host 0.0.0.0",
+        "start": "npx webpack-dev-server --host 0.0.0.0 --compress",
         "build": "npx webpack -p"
     },
     "author": "",
