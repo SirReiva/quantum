@@ -102,12 +102,12 @@ export default abstract class QuantumElement extends HTMLElement {
     private _getAttributesInObject() {
         let attrs: any = {};
         for (let i = 0; i < this.attributes.length; i++) {
-            if (this.attributes[i].value.startsWith('q-json-obj://') || this.attributes[i].value.startsWith('q-string-func://')) {
+            /*if (this.attributes[i].value.startsWith('q-json-obj://') || this.attributes[i].value.startsWith('q-string-func://')) {
                 attrs[this.attributes[i].name] = this.objectAttrs[this.attributes[i].name];//JSON.parse(this.attributes[i].value.substr(13));
             } else {
                 attrs[this.attributes[i].name] = this.attributes[i].value;
-            }
-
+            }*/
+            attrs[this.attributes[i].name] = this.objectAttrs[this.attributes[i].name];
         }
         return attrs;
     }

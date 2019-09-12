@@ -3,7 +3,7 @@ import { h, isRegisteredQuantumElement, defineQuantumElement } from '../core/qua
 import { TabRoute } from './utils/routes/index';
 import { debounce } from 'lodash';
 
-/*ROW*/
+/*TABSTACK*/
 export default class qTabStack extends QuantumElement {
     public static tagName = 'q-tabstack';
     automaticDetection = false;
@@ -20,11 +20,14 @@ export default class qTabStack extends QuantumElement {
             position: absolute;
             contain: layout size style;
             overflow-y: hidden;
-            overflow-x: scroll;
+            overflow-x: hidden;
             z-index: 0;
-            scroll-snap-type: x mandatory;
             display: flex;
             flex-wrap: nowrap;
+        }
+        :host([animated]) {
+            scroll-snap-type: x mandatory;
+            overflow-x: scroll;
         }
         .baseTab {
             position: relative;
@@ -64,23 +67,24 @@ export default class qTabStack extends QuantumElement {
         }
     }
 
-    private _insertChildAtIndex = function(child: HTMLElement | DocumentFragment, index: number) {
+    /*private _insertChildAtIndex = function(child: HTMLElement | DocumentFragment, index: number) {
         if (index >= this.shadowRoot.children.length) {
           this.shadowRoot.appendChild(child);
         } else {
           this.shadowRoot.insertBefore(child, this.shadowRoot.children[index]);
         }
-    }
+    }*/
 
     addComponent(c: QuantumElement, pos: number) {
         const frag = document.createDocumentFragment();
         let page: HTMLElement = document.createElement(c.tagName);
         let container = document.createElement('div');
+        container.style.order = pos + '';
         container.classList.add('baseTab');
         container.appendChild(page);
         frag.appendChild(container);
         //this.shadowRoot.appendChild(container);
-        this._insertChildAtIndex(frag, pos);
+        this.shadowRoot.prepend(frag);
     }
 
     getTabIndexPosition() {
@@ -96,7 +100,7 @@ export default class qTabStack extends QuantumElement {
         this._nextIndex = i;
         this.scrollTo({
             left: i * this.clientWidth,
-            behavior: 'smooth'
+            behavior: this.hasAttribute('animated') ? 'smooth' : 'auto'
         });
     }
 

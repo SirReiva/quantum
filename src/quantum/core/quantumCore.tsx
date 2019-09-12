@@ -1,5 +1,6 @@
 import qWorker from './qWorker';
 import { qVNode, qPatchProps, qPatch } from './interfaces';
+import { isString } from 'util';
 
 declare global {
     namespace JSX {
@@ -317,9 +318,13 @@ export function createElement(node: any, refs: any = {}) {
     addEventListeners(el, node.props);
     if (node.children && node.children.length > 0) {
         const fragChilds = document.createDocumentFragment();
-        node.children
+        for(let i = 0; i < node.children.length; i++) {
+            let vNonde = createElement(node.children[i], refs);
+            fragChilds.appendChild(vNonde)
+        }
+        /*node.children
         .map((childEl: any) => createElement(childEl, refs))
-        .forEach(fragChilds.appendChild.bind(fragChilds));
+        .forEach(fragChilds.appendChild.bind(fragChilds));*/
         el.appendChild(fragChilds);
     }
     return el;
@@ -369,20 +374,27 @@ function setProp(target: any, name: string, value: any) {
             return target.setAttribute('class', value);
     }
     if (typeof value === 'boolean') {
+        if(target.objectAttrs)
+            target.objectAttrs[name] = value;
         return setBooleanProp(target, name, value);
     }
     if (Array.isArray(value)) {
-        target.objectAttrs[name] = [...value];
+        if(target.objectAttrs)
+            target.objectAttrs[name] = [...value];
         return target.setAttribute(name, 'q-json-obj://' + JSON.stringify(value));
     }
     if(isFunction(value)) {
-        target.objectAttrs[name] = value;
+        if(target.objectAttrs)
+            target.objectAttrs[name] = value;
         return target.setAttribute(name, 'q-string-func://' + value);
     }
     if (typeof value === 'object') {
-        target.objectAttrs[name] = Object.assign({}, value);
+        if(target.objectAttrs)
+            target.objectAttrs[name] = Object.assign({}, value);
         return target.setAttribute(name, 'q-json-obj://' + JSON.stringify(value));
     }
+    if(target.objectAttrs)
+        target.objectAttrs[name] = value;
     //console.log(target, name, value);
     target.setAttribute(name, value);
     if (SPECIAL_PROPS.indexOf(name) !== -1) target[name] = value;
@@ -595,16 +607,20 @@ export function h(type: string, props: any, ...children: any[]): qVNode {
 }
 
 function jsonToHyperscript(jsObject: any) {
+    console.log(jsObject);
     return h(jsObject.type, jsObject.attributes, ...jsObject.children.map((o: any) => {
-        if (isObject(o)) return jsonToHyperscript(o);
+        if(isString(o)) {
+            console.log(o);
+        }
+        if (isObject(o)) return jsonToHyperscript.call(this, o);
         return o;
     }));
 
 }
 
-export function compileTemplateString(temlpate: string): qVNode | false {
+export function compileTemplateString(temlpate: string, context: any): qVNode | false {
     try {
-        return jsonToHyperscript(xmlToJson(stringToXml(temlpate)));
+        return jsonToHyperscript.call(context ,xmlToJson(stringToXml(temlpate)));
     } catch (exp) {
         console.error(exp);
         return false;

@@ -136,7 +136,7 @@ export default class qButton extends QuantumElement {
                 display: inline-block;
                 box-sizing: border-box;
                 border: solid 1px;
-                border-color: rgba(var(--q-material-onsurface-rgb, 0, 0, 0), 0.24);
+                border-color: rgba(var(--q-material-primary-rgb), 0.24);
                 border-radius: 4px;
                 padding: 0 16px;
                 min-width: 64px;
@@ -155,6 +155,7 @@ export default class qButton extends QuantumElement {
                 outline: none;
                 cursor: pointer;
                 -webkit-tap-highlight-color: rgba(var(--q-material-primary-rgb), 0.5);
+                --app-font-color: rgba(var(--q-material-primary-rgb), 1);
             }
             
             .q-material-button-outlined::-moz-focus-inner {

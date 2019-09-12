@@ -66,6 +66,7 @@ export default class qDrawer extends QuantumElement {
 
     private _isOpen = false;
     private _startswiping = false;
+    private _isAnmimating = false;
     private _swiping = false;
     private _listener: any;
     private _swipeDirection = 0;
@@ -74,13 +75,14 @@ export default class qDrawer extends QuantumElement {
     private _sensibillity = 14;
 
     _move(e: any) {
+        if(this._isAnmimating) return true;
         let currX = isMobile ? e.touches[0].clientX : e.clientX;
         if (this._swiping) {
             const w = this.refs.content.offsetWidth;
             const per = Math.min((((currX - this._startX)/ w) * 100) - 100, 0);
             this._lastPercentage = per;
             this.refs.content.style.transform = 'translate3d(' + per +'%, 0px, 0px)';
-            this.refs.bckdrp.style.opacity = ((((per + 100) / 100) * 0.31) + 0.01) + ''; 
+            this.refs.bckdrp.style.opacity = ((((per + 100) / 100) * 0.31) + 0.01) + '';
             e.preventDefault();
             e.stopPropagation();
         } else if(this._startswiping) {
@@ -102,6 +104,7 @@ export default class qDrawer extends QuantumElement {
     private _init() {
         this._listener = this._move.bind(this);
         document.addEventListener(typeStart, (e: any) => {
+            if(this._isAnmimating) return true;
             let evX = isMobile ? e.touches[0].clientX : e.clientX;
             if ((!this._isOpen && evX < 24)) {
                 this._swipeDirection = 1;
@@ -119,6 +122,7 @@ export default class qDrawer extends QuantumElement {
             //return true;
         }, true);
         document.addEventListener(typeEnd, (e: any) => {
+            if(this._isAnmimating) return true;
             if (this._swiping) {
                 if (this._swipeDirection == 1) {
                     if(this._lastPercentage > -65) {
@@ -164,6 +168,7 @@ export default class qDrawer extends QuantumElement {
     }
 
     _openAnimation() {
+        this._isAnmimating= true;
         this.refs.base.classList.add('show');
         const initT = this.refs.content.style.transform || 'translate3d(-100%, 0px, 0px)';
         const initO = parseFloat(this.refs.bckdrp.style.opacity) || 0;
@@ -178,7 +183,8 @@ export default class qDrawer extends QuantumElement {
         }).onfinish = () => {
             this.refs.content.style.willChange = '';
             this.refs.content.style.transform = 'translate3d(0%, 0px, 0px)';
-            this._isOpen = true; 
+            this._isOpen = true;
+            this._isAnmimating = false;
         };
         this.refs.bckdrp.animate([
             { opacity: initO }, 
@@ -194,6 +200,7 @@ export default class qDrawer extends QuantumElement {
 
     _closeAnimation():Promise<null> {
         return new Promise((resolve, reject) => {
+            this._isAnmimating = true;
             const initT = this.refs.content.style.transform || 'translate3d(-100%, 0px, 0px)';
             const initO = parseFloat(this.refs.bckdrp.style.opacity) || 0;
             this.refs.content.style.willChange = 'transform';
@@ -209,6 +216,7 @@ export default class qDrawer extends QuantumElement {
                 this.refs.content.style.transform = 'translate3d(-100%, 0px ,0px)';
                 this._isOpen = false; 
                 this.refs.base.classList.remove('show');
+                this._isAnmimating = false;
                 resolve();
             };
             this.refs.bckdrp.animate([

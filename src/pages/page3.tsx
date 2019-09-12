@@ -39,7 +39,7 @@ export default class Page3 extends qPage {
                         <span>{'TABS ' + this.props.num}</span>
                     </q-appbar>
                     <q-content>
-                        <q-tabstack hidebars ref="tabs" index={this.props.num} onChange={(e:any) => this.onchangeTab(e)} routes={routes}></q-tabstack>
+                        <q-tabstack animated hidebars ref="tabs" index={this.props.num} onChange={(e:any) => this.onchangeTab(e)} routes={routes}></q-tabstack>
                     </q-content>
                     <q-tabbar items={prueba} top topshadow index={this.props.num} onChange={(e:any) => this.onchangeTab(e)}></q-tabbar>
                 </q-scafold>;

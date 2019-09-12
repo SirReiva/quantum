@@ -9,5 +9,5 @@ export interface qElementConfig {
 
 export const dQuantumElement = (config: qElementConfig) => (cls:any) => {
     validateSelector(config.selector);
-    
+    //QuantumElement.prototype
 };

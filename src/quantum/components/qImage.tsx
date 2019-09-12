@@ -19,7 +19,8 @@ export default class qImage extends QuantumElement {
             display: block; 
             position: relative;
             background-color: gray;
-            min-heigt: 24px;
+            min-height: 24px;
+            overflow: hidden;
         }
         .base {
             display: flex;
@@ -27,6 +28,7 @@ export default class qImage extends QuantumElement {
             justify-content: center;
             min-width: 100%;
             min-height: 100%;
+            max-height: 100%;
         }
         .loadImg {
             position: absolute;
@@ -39,6 +41,7 @@ export default class qImage extends QuantumElement {
             opacity: 0;
             background-position: center;
             background-size: contain;
+            max-height: 100%;
         }
         .loaded .loadImg {
             display: none;
