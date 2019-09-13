@@ -7,7 +7,8 @@ export interface qElementConfig {
     useShadow?: boolean;
 }
 
-export const dQuantumElement = (config: qElementConfig) => (cls:any) => {
+export const dQuantumElement = (config: qElementConfig) => (cls) => {
     validateSelector(config.selector);
+    
     //QuantumElement.prototype
 };

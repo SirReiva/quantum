@@ -607,10 +607,10 @@ export function h(type: string, props: any, ...children: any[]): qVNode {
 }
 
 function jsonToHyperscript(jsObject: any) {
-    console.log(jsObject);
+    //console.log(jsObject);
     return h(jsObject.type, jsObject.attributes, ...jsObject.children.map((o: any) => {
         if(isString(o)) {
-            console.log(o);
+            //console.log(o);
         }
         if (isObject(o)) return jsonToHyperscript.call(this, o);
         return o;

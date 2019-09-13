@@ -154,14 +154,14 @@ export default class qStack extends QuantumElement {
         const frag = document.createDocumentFragment();
         let page: QuantumElement = (document.createElement(comp.tagName) as QuantumElement);
         frag.appendChild(page);
-        this.clearStack();
         page.style.willChange = 'opacity, transform, contents';
         this._setWillChanges(null, page);
         this._setZIndex(null, page, 1);
         page.isReady.then(() => {
-            this._stackElements.push(page);
             this.shadowRoot.appendChild(frag);
             setTimeout(() => {//mientras no hay animacion de root
+                this.clearStack();
+                this._stackElements.push(page);
                 this._setWillChanges(null, page, true);
             }, 10);
         });
