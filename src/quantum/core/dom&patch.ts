@@ -43,6 +43,17 @@ const SPECIAL_PROPS = ['value', 'checked', 'selected'];
 
 const PATCHSFPS = 40;
 
+declare var window: any;
+const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+    window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+window.requestAnimationFrame = requestAnimationFrame;
+
+document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'hidden') {
+        doPatchsHidden();
+    }
+});
+
 export function createElement(node: any, refs: any = {}) {
     if (typeof node === 'string' || typeof node === 'number') {
         return document.createTextNode(node.toString());
@@ -98,8 +109,8 @@ function setProp(target: any, name: string, value: any) {
             return target.setAttribute('class', value);
     }
     if (typeof value === 'boolean') {
-        if(target.objectAttrs)
-            target.objectAttrs[name] = value;
+        /*if(target.objectAttrs)
+            target.objectAttrs[name] = value;*/
         return setBooleanProp(target, name, value);
     }
     if (Array.isArray(value)) {
@@ -117,8 +128,8 @@ function setProp(target: any, name: string, value: any) {
             target.objectAttrs[name] = Object.assign({}, value);
         return target.setAttribute(name, 'q-json-obj://' + JSON.stringify(value));
     }
-    if(target.objectAttrs)
-        target.objectAttrs[name] = value;
+    /*if(target.objectAttrs)
+        target.objectAttrs[name] = value;*/
     //console.log(target, name, value);
     target.setAttribute(name, value);
     if (SPECIAL_PROPS.indexOf(name) !== -1) target[name] = value;

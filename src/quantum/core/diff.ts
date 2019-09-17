@@ -2,6 +2,7 @@ import qWorker from './qWorker';
 import { qVNode, qPatch, qPatchProps } from './interfaces';
 import { isEventProp } from './utils';
 import { REMOVE_EVENT, SET_EVENT, REPLACE_EVENT, REMOVE_PROP, SET_PROP, CREATE, REMOVE, REPLACE, UPDATE } from './vDomActions';
+
 export const DIFF_MODE_WOKER = true && (typeof(Worker) !== "undefined");
 
 let worker:qWorker = null;
