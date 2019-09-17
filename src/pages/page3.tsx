@@ -1,7 +1,7 @@
-import { h } from '../quantum/core/quantumCore';
 import { qPage, qDrawer } from '../quantum/components';
 import { TabRoute } from '../quantum/components/utils/routes';
 import { TabBarItem } from '../quantum/components/utils/routes/index';
+import { h } from '../quantum/core/h';
 
 const routes: TabRoute[] = [
     {

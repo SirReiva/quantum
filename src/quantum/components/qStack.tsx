@@ -1,7 +1,8 @@
 import QuantumElement from '../core/quantumElement';
-import { h, defineQuantumElement, isRegisteredQuantumElement } from '../core/quantumCore';
 import { AnimationTransition, animationPromise, AndroidAnimationTransition } from './utils/animation-routes/animations';
 import { Route } from './utils/routes/index';
+import { defineQuantumElement, isRegisteredQuantumElement } from '../core/elements';
+import { h } from '../core/h';
 
 interface arrStack {
     [key: string]: qStack;

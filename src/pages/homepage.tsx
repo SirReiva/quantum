@@ -1,5 +1,5 @@
-import { h } from '../quantum/core/quantumCore';
 import { qPage, qStack, qDrawer } from '../quantum/components';
+import { h } from '../quantum/core/h';
 //import { dummydata } from '../data/dummydata';
 
 export default class HomePage extends qPage {

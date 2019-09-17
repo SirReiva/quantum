@@ -1,5 +1,5 @@
 import QuantumElement from '../core/quantumElement';
-import { h } from '../core/quantumCore';
+import { h } from '../core/h';
 import { qContent } from '.';
 import { debounce } from 'lodash';
 

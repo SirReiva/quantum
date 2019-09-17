@@ -1,6 +1,8 @@
-import { createElement, diff, queuPatches, isFunction, DIFF_MODE_WOKER, asyncDiff, diffOnlyFunction, scrapListenersRemove } from './quantumCore';
 import 'hammerjs';
 import { qVNode } from './interfaces';
+import { scrapListenersRemove, createElement, queuPatches } from './dom&patch';
+import { isFunction } from './utils';
+import { DIFF_MODE_WOKER, asyncDiff, diffOnlyFunction, diff } from './diff';
 
 interface arrReferences {
     [key: string]: any;

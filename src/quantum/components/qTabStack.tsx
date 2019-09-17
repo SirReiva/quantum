@@ -1,7 +1,8 @@
 import QuantumElement from '../core/quantumElement';
-import { h, isRegisteredQuantumElement, defineQuantumElement } from '../core/quantumCore';
 import { TabRoute } from './utils/routes/index';
 import { debounce } from 'lodash';
+import { h } from '../core/h';
+import { isRegisteredQuantumElement, defineQuantumElement } from '../core/elements';
 
 /*TABSTACK*/
 export default class qTabStack extends QuantumElement {

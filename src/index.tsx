@@ -1,7 +1,8 @@
 import QuantumElement from './quantum/core/quantumElement';
-import { h, defineQuantumElement } from './quantum/core/quantumCore';
 import './app.scss';
 import './font-awesome.scss';
+import { defineQuantumElement } from './quantum/core/elements';
+import { h } from './quantum/core/h';
 import { Route } from './quantum/components/utils/routes/index';
 
 import { qStack, qScafold, qDrawer, qAppBar, qButton, qToolBarButton,
