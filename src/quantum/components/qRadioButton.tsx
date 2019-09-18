@@ -1,5 +1,5 @@
 import QuantumElement from '../core/quantumElement';
-import { h } from '../core/quantumCore';
+import { h } from '../core/h';
 
 /*RADIOBUTTON*/
 export default class qRadioButton extends QuantumElement {

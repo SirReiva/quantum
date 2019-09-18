@@ -1,6 +1,8 @@
-import { createElement, diff, queuPatches, isFunction, DIFF_MODE_WOKER, asyncDiff, diffOnlyFunction, scrapListenersRemove } from './quantumCore';
 import 'hammerjs';
 import { qVNode } from './interfaces';
+import { scrapListenersRemove, createElement, queuPatches } from './dom&patch';
+import { isFunction } from './utils';
+import { DIFF_MODE_WOKER, asyncDiff, diffOnlyFunction, diff } from './diff';
 
 interface arrReferences {
     [key: string]: any;
@@ -102,12 +104,12 @@ export default abstract class QuantumElement extends HTMLElement {
     private _getAttributesInObject() {
         let attrs: any = {};
         for (let i = 0; i < this.attributes.length; i++) {
-            /*if (this.attributes[i].value.startsWith('q-json-obj://') || this.attributes[i].value.startsWith('q-string-func://')) {
+            if (this.attributes[i].value.startsWith('q-json-obj://') || this.attributes[i].value.startsWith('q-string-func://')) {
                 attrs[this.attributes[i].name] = this.objectAttrs[this.attributes[i].name];//JSON.parse(this.attributes[i].value.substr(13));
             } else {
                 attrs[this.attributes[i].name] = this.attributes[i].value;
-            }*/
-            attrs[this.attributes[i].name] = this.objectAttrs[this.attributes[i].name];
+            }
+            //attrs[this.attributes[i].name] = this.objectAttrs[this.attributes[i].name];
         }
         return attrs;
     }

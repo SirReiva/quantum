@@ -1,4 +1,4 @@
-import { validateSelector } from './quantumCore';
+/*import { validateSelector } from './(deleted)quantumCore';
 import QuantumElement from './quantumElement';
 export interface qElementConfig {
     selector:string;
@@ -11,4 +11,4 @@ export const dQuantumElement = (config: qElementConfig) => (cls) => {
     validateSelector(config.selector);
     
     //QuantumElement.prototype
-};
+};*/

@@ -1,5 +1,5 @@
 import QuantumElement from '../core/quantumElement';
-import { h } from '../core/quantumCore';
+import { h } from '../core/h';
 
 /*BUTTON TOOLBAR*/
 export default class qToolBarButton extends QuantumElement {

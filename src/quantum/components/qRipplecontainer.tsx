@@ -1,5 +1,5 @@
 import QuantumElement from '../core/quantumElement';
-import { h } from '../core/quantumCore';
+import { h } from '../core/h';
 
 export default class qRippleContainer extends QuantumElement {
     public static tagName = 'q-ripplecontainer';

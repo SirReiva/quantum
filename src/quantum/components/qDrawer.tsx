@@ -1,5 +1,6 @@
 import QuantumElement from '../core/quantumElement';
-import { h, checkMobile } from '../core/quantumCore';
+import { h } from '../core/h';
+import { checkMobile } from '../core/utils';
 
 declare var window: any;
 interface arrDrawer {

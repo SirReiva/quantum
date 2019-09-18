@@ -1,5 +1,5 @@
 import QuantumElement from '../quantum/core/quantumElement';
-import { h, compileTemplateString } from '../quantum/core/quantumCore';
+import { compileTemplateString, h } from '../quantum/core/h';
 
 export default class appComp1 extends QuantumElement {
     public static tagName = 'app-comp1';

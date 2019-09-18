@@ -1,0 +1,9 @@
+export const CREATE = 'CREATE';
+export const REMOVE = 'REMOVE';
+export const REPLACE = 'REPLACE';
+export const UPDATE = 'UPDATE';
+export const SET_PROP = 'SET_PROP';
+export const REMOVE_PROP = 'REMOVE PROP';
+export const SET_EVENT = 'SET EVENT';
+export const REPLACE_EVENT = 'REPLACE EVENT';
+export const REMOVE_EVENT = 'REMOVE EVENT';
