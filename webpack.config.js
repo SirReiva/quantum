@@ -3,12 +3,16 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const isProd = process.env.NODE_ENV === 'production';
 
 const config = {
     mode: isProd ? 'production' : 'development',
-    entry: ['babel-polyfill', './src/index.tsx'],
+    optimization: {
+        usedExports: true,
+    },
+    entry: ['./src/index.tsx'],
     output: {
         path: resolve(__dirname, 'dist'),
         filename: '[name].js',
@@ -19,13 +23,14 @@ const config = {
     },
     module: {
         rules: [{
-                test: /\.tsx?$/,
+                test: /\.(ts|js)x?$/,
                 use: 'babel-loader',
                 exclude: /node_modules/,
 
             }, {
                 test: /\.scss$/,
                 use: [{ loader: MiniCssExtractPlugin.loader }, { loader: 'css-loader' }, { loader: 'sass-loader' }],
+                exclude: /node_modules/
             }, {
                 test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
                 use: [{
@@ -34,7 +39,8 @@ const config = {
                         name: '[name].[ext]',
                         outputPath: 'fonts/'
                     }
-                }]
+                }],
+                exclude: /node_modules/
             },
             {
                 test: /\.html$/,
@@ -67,12 +73,14 @@ if (isProd) {
     // for more information, see https://webpack.js.org/configuration/dev-server
     config.devServer = {
         port: 8080,
-        open: true,
-        hot: true,
         compress: true,
         stats: 'errors-only',
         overlay: true,
     };
+    config.plugins.push(new BundleAnalyzerPlugin({
+        analyzerMode: 'static',
+        openAnalyzer: true,
+    }));
 }
 
 module.exports = config;

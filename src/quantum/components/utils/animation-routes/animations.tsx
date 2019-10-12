@@ -1,4 +1,4 @@
-import { TweenLite, TimelineLite } from 'gsap';
+//import { TweenLite, TimelineLite } from 'gsap';
 //import lottie from 'lottie-web';
 
 export interface animationPromise {
@@ -232,7 +232,59 @@ export class SlideAnimationTransitionWebAPI extends AnimationTransition {
     }
 }
 
-export class ClipPathAnimationTransition2 extends AnimationTransition {
+export class AndroidAnimationTransition extends AnimationTransition {
+    
+    public enter(pageIn: HTMLElement, lastPage: HTMLElement, ghostLayer: HTMLElement): animationPromise {
+        let anim = pageIn.animate([
+            { transform: 'translate3d(0px, 40px, 0px)', opacity: 0.01 }, 
+            { transform: 'translate3d(0px, 0px, 0px)', opacity: 1 }
+        ], {
+            duration: 300,
+            easing: 'cubic-bezier(0.32,0.72,0,1)'
+        });
+        return {
+            promise: new Promise<any>((resolve, reject) => {
+                anim.onfinish = () => {
+                    resolve();
+                };                
+                anim.oncancel = () => {
+                    reject();
+                };
+            }),
+            cancel: () => {
+                anim.cancel();
+            },
+            enter: true
+        };
+    }
+
+    public out(removedPage: HTMLElement, currentPage: HTMLElement, ghostLayer: HTMLElement): animationPromise {
+        currentPage.style.display = 'block';
+        let anim = removedPage.animate([ 
+            { transform: 'translate3d(0px, 0px, 0px)', opacity: 1 },
+            { transform: 'translate3d(0px, 40px, 0px)', opacity: 0.01 } 
+        ], {
+            duration: 300,
+            easing: 'cubic-bezier(0.32,0.72,0,1)'
+        });
+        return {
+            promise: new Promise<any>((resolve, reject) => {
+                anim.onfinish = () => {
+                    resolve();
+                };
+                anim.oncancel = () => {
+                    reject();
+                };
+            }),
+            cancel: () => {
+                anim.cancel();
+            },
+            enter: true
+        };
+    }
+}
+
+/*export class ClipPathAnimationTransition2 extends AnimationTransition {
     public enter(pageIn: HTMLElement, lastPage: HTMLElement, ghostLayer: HTMLElement): animationPromise {
         pageIn.style.clipPath = "circle(1.0% at 50% 50%)";
         (pageIn.style as any).webkitClipPath = "circle(1.0% at 50% 50%)";
@@ -548,4 +600,4 @@ export class TLAnimationTransition extends AnimationTransition {
             enter: false
         };
     }
-}
+}*/
