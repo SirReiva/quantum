@@ -1,5 +1,6 @@
-import { qPage, qDrawer } from '../quantum/components';
 import { h } from '../quantum/core/h';
+import qPage from '../quantum/components/qPage';
+import qDrawer from '../quantum/components/qDrawer';
 
 export default class PageList extends qPage {
     public static tagName = 'q-pagelist';

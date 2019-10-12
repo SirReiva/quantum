@@ -1,5 +1,6 @@
-import { qPage, qStack } from '../quantum/components';
 import { h } from '../quantum/core/h';
+import qPage from '../quantum/components/qPage';
+import qStack from '../quantum/components/qStack';
 
 export default class DetailPage extends qPage {
     public static tagName = 'q-detailpage';

@@ -12,7 +12,7 @@ const config = {
     optimization: {
         usedExports: true,
     },
-    entry: ['./src/index.tsx'],
+    entry: './src/index.tsx',
     output: {
         path: resolve(__dirname, 'dist'),
         filename: '[name].js',

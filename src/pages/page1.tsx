@@ -1,5 +1,7 @@
-import { qPage, qStack, qDrawer } from '../quantum/components';
 import { h } from '../quantum/core/h';
+import qPage from '../quantum/components/qPage';
+import qDrawer from '../quantum/components/qDrawer';
+import qStack from '../quantum/components/qStack';
 
 export default class Page1 extends qPage {
     public static tagName = 'q-page1';

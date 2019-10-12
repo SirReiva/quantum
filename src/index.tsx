@@ -4,12 +4,39 @@ import './font-awesome.scss';
 import { defineQuantumElement } from './quantum/core/elements';
 import { h } from './quantum/core/h';
 import { Route } from './quantum/components/utils/routes/index';
+import qStack from './quantum/components/qStack';
+import qTabStack from './quantum/components/qTabStack';
+import qScafold from './quantum/components/qScafold';
+import qDrawer from './quantum/components/qDrawer';
+import qAppBar from './quantum/components/qAppBar';
+import qTabBar from './quantum/components/qTabBar';
+import qButton from './quantum/components/qButton';
+import qToolBarButton from './quantum/components/qToolBarButton';
+import qSwitch from './quantum/components/qSwitch';
+import qCheckBox from './quantum/components/qCheckBox';
+import qContent from './quantum/components/qContent';
+import qIcon from './quantum/components/qIcon';
+import qRadioButton from './quantum/components/qRadioButton';
+import qTextInput from './quantum/components/qTextInput';
+import qCard from './quantum/components/qCard';
+import qSlider from './quantum/components/qSlider';
+import qAvatar from './quantum/components/qAvatar';
+import qList from './quantum/components/qList';
+import qListItem from './quantum/components/qListItem';
+import qImage from './quantum/components/qImage';
+import qSpinner from './quantum/components/qSpinner';
+import qRippleContainer from './quantum/components/qRipplecontainer';
+import qRatingStar from './quantum/components/qRantingStar';
+import qColumn from './quantum/components/qColumn';
+import qRow from './quantum/components/qRow';
+import qVirtualList from './quantum/components/qVirtualList';
+import qSearchBar from './quantum/components/qSearchBar';
+import qInfiniteScroll from './quantum/components/qInfiniteScroll';
+import qRefresher from './quantum/components/qRefresher';
+import qBackdrop from './quantum/components/qBackdrop';
+import qFab from './quantum/components/qFab';
+import qApp from './quantum/components/qApp';
 
-import { qStack, qScafold, qDrawer, qAppBar, qButton, qToolBarButton,
-     qSwitch, qCheckBox, qContent, qIcon, qRadioButton, qTextInput, 
-     qCard, qSlider, qAvatar, qApp, qImage, qList, qListItem, qSpinner, 
-     qRatingStar, qRippleContainer, qColumn, qRow, qVirtualList,
-     qSearchBar, qInfiniteScroll, qRefresher, qBackdrop, qTabStack, qTabBar, qFab } from './quantum/components';
 
 defineQuantumElement(qStack);
 defineQuantumElement(qTabStack);
