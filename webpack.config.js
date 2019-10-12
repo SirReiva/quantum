@@ -69,6 +69,10 @@ if (isProd) {
             new TerserWebpackPlugin(),
         ],
     };
+    config.plugins.push(new BundleAnalyzerPlugin({
+        analyzerMode: 'static',
+        openAnalyzer: true,
+    }));
 } else {
     // for more information, see https://webpack.js.org/configuration/dev-server
     config.devServer = {
@@ -77,10 +81,6 @@ if (isProd) {
         stats: 'errors-only',
         overlay: true,
     };
-    config.plugins.push(new BundleAnalyzerPlugin({
-        analyzerMode: 'static',
-        openAnalyzer: true,
-    }));
 }
 
 module.exports = config;
