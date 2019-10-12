@@ -1,7 +1,7 @@
 import QuantumElement from '../core/quantumElement';
 import { h } from '../core/h';
-import { qContent } from '.';
 import { debounce } from 'lodash';
+import qContent from './qContent';
 
 /*VIRTUAL LIST*/
 export default class qVirtualList extends QuantumElement {

@@ -1,7 +1,7 @@
 import QuantumElement from '../core/quantumElement';
 import { h } from '../core/h';
-import { qContent } from '.';
 import { checkMobile } from '../core/utils';
+import qContent from './qContent';
 
 declare var window: any;
 

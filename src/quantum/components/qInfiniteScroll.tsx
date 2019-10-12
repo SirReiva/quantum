@@ -1,7 +1,7 @@
 import QuantumElement from '../core/quantumElement';
 import { h } from '../core/h';
 import { debounce } from 'lodash';
-import { qContent } from '.';
+import qContent from './qContent';
 
 /*INFINITESCROLL*/
 export default class qInfiniteScroll extends QuantumElement {
