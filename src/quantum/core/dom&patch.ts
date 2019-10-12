@@ -39,7 +39,7 @@ precachedElements['li'] = liElement;
 precachedElements['a'] = aElement;
 precachedElements['img'] = imgElement;
 
-const SPECIAL_PROPS = ['value', 'checked', 'selected'];
+const SPECIAL_PROPS = ['value', 'checked', 'selected', 'disabled'];
 
 const PATCHSFPS = 40;
 
