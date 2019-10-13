@@ -11,7 +11,7 @@ export default class qVirtualList extends QuantumElement {
                     {this.objectAttrs.items && this._arrIt &&
                         this._arrIt.filter(i => i != null)
                         .map((item: number, index:number) => 
-                            <div style={'transform: translate3d(0, ' + item * this._itemHeight + 'px, 0)'} className="vRow">
+                            <div style={'transform: translate3d(0, ' + item * this._itemHeight + 'px, 0); height: ' + this._itemHeight + 'px;'} className="vRow">
                                 {this.objectAttrs.renderitem(this.objectAttrs.items[item], item)}
                             </div>
                         )}
@@ -40,6 +40,8 @@ export default class qVirtualList extends QuantumElement {
             right: 0 !important;
             left: 0 !important;
             transition-duration: 0ms;
+            display: flex;
+            align-items: center;
         }
     `; }
 
