@@ -36,7 +36,7 @@ export default abstract class QuantumElement extends HTMLElement {
         set: this._set.bind(this),
         get: this._get.bind(this),
     };
-    private _vDom: qVNode | null = null;
+    public _vDom: qVNode | null = null;
     private _initialized = false;
     private _shadowRoot: any = null;
     private _styleEl: any = null;
@@ -52,7 +52,7 @@ export default abstract class QuantumElement extends HTMLElement {
     }
 
     connectedCallback() {
-        console.log(this, 'mount');
+        //console.log(this, 'mount');
         this.componentMounted && this.componentMounted();
     }
     disconnectedCallback() {
@@ -120,7 +120,7 @@ export default abstract class QuantumElement extends HTMLElement {
     }
 
     private _mount() {
-        console.log(this, 'init');
+        //console.log(this, 'init');
         this.componentBeforeLoaded && this.componentBeforeLoaded();
         const frag = document.createDocumentFragment();
         //this.style.visible = 'hidden';
@@ -136,7 +136,7 @@ export default abstract class QuantumElement extends HTMLElement {
         this._initialized = true;
         this.componentLoaded && this.componentLoaded();
         this._promiseReadyResolver();
-        console.log(this, 'initend');
+        //console.log(this, 'initend');
     }
 
     public getRoot() {

@@ -123,6 +123,7 @@ class exampleApp extends QuantumElement {
     }
 
     componentLoaded() {
+        console.log(this._vDom);
         try {
             Capacitor.Plugins.SplashScreen.hide();
             Capacitor.Plugins.App.addListener("backButton", () => {
