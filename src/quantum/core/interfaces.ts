@@ -1,10 +1,10 @@
-export interface vNode {
+export interface qNode {
     type: string;
     attrs: any;
-    children: qNode[]
+    children: ChildrenNode[]
 }
 
-export type qNode = string | vNode;
+export type ChildrenNode = string | qNode;
 
 export interface qPatchProps {
     type: string;
@@ -15,7 +15,7 @@ export interface qPatchProps {
 
 export interface qPatch {
     type: string;
-    newNode?: qNode,
+    newNode?: ChildrenNode,
     props?: any;
     children?: any;
 }
