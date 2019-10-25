@@ -2,12 +2,6 @@ import { qPatch, qNode, qPatchProps, ChildrenNode } from './interfaces';
 import { isEventProp } from "./createElement";
 import { REMOVE_EVENT, SET_EVENT, REPLACE_EVENT, REMOVE_PROP, SET_PROP, REMOVE, REPLACE, CREATE, UPDATE } from "./vDomActions";
 
-function changed(node1: any, node2: any): boolean {
-    return typeof node1 !== typeof node2 ||
-        typeof node1 === 'string' && node1 !== node2 ||
-        node1.type !== node2.type;
-}
-
 function diffChildren(oldNode: qNode, newNode: qNode): qPatch[] {
     const patches = [];
     const patchesLength = Math.max(
@@ -19,7 +13,7 @@ function diffChildren(oldNode: qNode, newNode: qNode): qPatch[] {
             oldNode.children[i],
             newNode.children[i],
         )
-        if (df) patches[i] = df;
+        patches[i] = df;
     }
     return patches;
 }
@@ -51,12 +45,12 @@ function diffProps(oldAttrs:any, newAttrs:any):qPatchProps[] {
     return patches;
   }
 
-export function diff(oldNode: ChildrenNode, newNode: ChildrenNode):qPatch {
+export function diff(oldNode: ChildrenNode, newNode: ChildrenNode): qPatch {
     if (typeof oldNode === 'string' || typeof newNode === 'string' || typeof oldNode === 'number' || typeof newNode === 'number') {
         if (oldNode !== newNode) {
             return { type: REPLACE, newNode };
         }
-        return;
+        return null;
     }
     if(!oldNode && newNode) {
         return { type: CREATE, newNode };
@@ -71,7 +65,7 @@ export function diff(oldNode: ChildrenNode, newNode: ChildrenNode):qPatch {
         return {
             type: UPDATE,
             props: diffProps((newNode as qNode).attrs, (oldNode as qNode).attrs),
-            children: diffChildren(newNode as qNode, oldNode as qNode),
+            children: diffChildren(oldNode as qNode, newNode as qNode),
         };
     }
     return null;

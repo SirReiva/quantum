@@ -57,7 +57,9 @@ export function extractEventName(name: string): string {
 function setProps(target: HTMLElement, props: any) {
     if (!props) return;
     Object.keys(props).forEach(name => {
-        setProp(target, name, props[name]);
+        if(!isEventProp(name)){
+            setProp(target, name, props[name]);
+        }
     });
 }
 
