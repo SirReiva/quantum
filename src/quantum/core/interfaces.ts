@@ -1,8 +1,11 @@
-export interface qVNode {
+export interface vNode {
     type: string;
-    props: any;
-    children: qVNode[] | undefined;
+    attrs: any;
+    children: qNode[]
 }
+
+export type qNode = string | vNode;
+
 export interface qPatchProps {
     type: string;
     name: string;
@@ -12,7 +15,7 @@ export interface qPatchProps {
 
 export interface qPatch {
     type: string;
-    newNode?: qVNode,
+    newNode?: qNode,
     props?: any;
     children?: any;
 }
