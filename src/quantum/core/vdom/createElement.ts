@@ -95,6 +95,11 @@ export function removeEvent(target: any, event: Function, eventName: string) {
     target.removeEventListener(eventName, event);
 }
 
+export function replaceEvent(target: any, preEvent: Function, event: Function, eventName: string) {
+    removeEvent(target, preEvent, name);
+    addEvent(target, event, name);
+}
+
 function addEventListeners(target: any, props: any) {
     if (!props) return;
     Object.keys(props).forEach(name => {

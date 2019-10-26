@@ -1,5 +1,5 @@
 import { SET_PROP, REMOVE_PROP, REMOVE_EVENT, SET_EVENT, REPLACE_EVENT, CREATE, REMOVE, REPLACE, UPDATE } from './vDomActions';
-import { setProp, removeProp, addEvent, extractEventName, removeEvent, createElementVNode } from './createElement';
+import { setProp, removeProp, addEvent, extractEventName, removeEvent, createElementVNode, replaceEvent } from './createElement';
 import { qPatch } from './interfaces';
 
 const PATCHSFPS = 40;
@@ -33,8 +33,7 @@ function patchProps(parent: any, patches: any) {
             });
         } else if (type === REPLACE_EVENT) {
             PATCHS_DOM.push(() => {
-                removeEvent(parent, prevVal, extractEventName(name));
-                addEvent(parent, value, extractEventName(name));
+                replaceEvent(parent, prevVal, value, extractEventName(name));
             });
         }
     }
@@ -87,7 +86,7 @@ function recursivePatch(el: HTMLElement, parent: HTMLElement, patch: qPatch, ref
 
 function doPatchs() {
     changesDo = 0;
-    while(changesDo < MAX_CHANGES && PATCHS_DOM.length > 0) {
+    while(changesDo < PATCHSFPS && PATCHS_DOM.length > 0) {
         changesDo++;
         let fn = PATCHS_DOM.shift();
         fn();

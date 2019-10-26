@@ -1,8 +1,8 @@
-import { h } from './quantum/core/h';
-import { createElementVNode } from './quantum/core/createElement';
-import { diff } from './quantum/core/diff';
-import { addPatch } from './quantum/core/patch';
-import { qNode } from './quantum/core/interfaces';
+import { h } from './quantum/core/vdom/h';
+import { createElementVNode } from './quantum/core/vdom/createElement';
+import { diff } from './quantum/core/vdom/diff';
+import { addPatch } from './quantum/core/vdom/patch';
+import { qNode } from './quantum/core/vdom/interfaces';
 
 /*const tmp = count => <div id="main">
                         <span>Timer:</span>
