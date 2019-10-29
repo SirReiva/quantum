@@ -4,7 +4,7 @@ import { diff } from './quantum/core/vdom/diff';
 import { addPatch } from './quantum/core/vdom/patch';
 import { qNode } from './quantum/core/vdom/interfaces';
 
-/*const tmp = count => <div id="main">
+const tmp = count => <div id="main">
                         <span>Timer:</span>
                         <h1 style="color:red;">{count} {(count > 1)?'segs':'seg'}</h1>
                     </div>;
@@ -22,7 +22,6 @@ setInterval(() => {
     addPatch(rootEl, p, {});
     vd = newvd;
 }, 1000);
-*/
 
 let todos = [];
 let rfs:any = {};
