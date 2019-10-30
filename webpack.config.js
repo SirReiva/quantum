@@ -33,6 +33,11 @@ const config = {
                 exclude:  /node_modules/,
                 include: [resolve(__dirname, 'src')]
             }, {
+                test: /\.(ts|js)x$/,
+                loader:  'style-url-webpack',
+                exclude: /node_modules/,
+                include: [resolve(__dirname, 'src')]
+            }, {
                 test: /\.scss$/,
                 use: [{ loader: MiniCssExtractPlugin.loader }, { loader: 'css-loader' }, { loader: 'sass-loader' }],
                 exclude: /node_modules/
