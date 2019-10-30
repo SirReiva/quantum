@@ -28,6 +28,11 @@ const config = {
                 exclude: /node_modules/,
 
             }, {
+                test: /\.(ts|js)x?$/,
+                loader:  'template-url-webpack',
+                exclude:  /node_modules/,
+                include: [resolve(__dirname, 'src')]
+            }, {
                 test: /\.scss$/,
                 use: [{ loader: MiniCssExtractPlugin.loader }, { loader: 'css-loader' }, { loader: 'sass-loader' }],
                 exclude: /node_modules/
