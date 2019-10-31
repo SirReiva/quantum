@@ -10,6 +10,12 @@ const requestAnimationFrame = window.requestAnimationFrame || window.mozRequestA
     window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
 window.requestAnimationFrame = requestAnimationFrame;
 
+document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'hidden') {
+        doPatchsHidden();
+    }
+});
+
 function patchProps(parent: any, patches: any) {
     if (!patches) return;
     for (let i = 0; i < patches.length; i++) {
@@ -39,7 +45,7 @@ function patchProps(parent: any, patches: any) {
     }
 }
 
-export function addPatch(el:HTMLElement, patch: qPatch, refs: any) {
+export function queuPatch(el:HTMLElement, patch: qPatch, refs: any) {
     recursivePatch(el, el.parentElement, patch, refs);
 }
 const MAX_CHANGES = 40;
@@ -93,5 +99,19 @@ function doPatchs() {
     }
     requestAnimationFrame(doPatchs);
 }
+
+function doPatchsHidden() {
+    changesDo = 0;
+    while(changesDo < PATCHSFPS && PATCHS_DOM.length > 0) {
+        changesDo++;
+        let fn = PATCHS_DOM.shift();
+        fn();
+    }
+    if (document.visibilityState === 'hidden') {
+        setTimeout(doPatchsHidden, 1000);
+    }
+
+}
+
 
 requestAnimationFrame(doPatchs);

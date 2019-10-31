@@ -1,7 +1,7 @@
 import { h } from './quantum/core/vdom/h';
 import { createElementVNode } from './quantum/core/vdom/createElement';
 import { diff } from './quantum/core/vdom/diff';
-import { addPatch } from './quantum/core/vdom/patch';
+import { queuPatch } from './quantum/core/vdom/patch';
 import { qNode } from './quantum/core/vdom/interfaces';
 
 const tmp = count => <div id="main">
@@ -19,7 +19,7 @@ setInterval(() => {
     acum++;
     let newvd = tmp(acum);
     let p = diff(vd, newvd);
-    addPatch(rootEl, p, {});
+    queuPatch(rootEl, p, {});
     vd = newvd;
 }, 1000);
 
@@ -55,7 +55,7 @@ function removeTodo(index: number) {
 function rerender() {
     let n = template();
     let p = diff(vdomTodo, n);
-    addPatch($rootEltodo, p, rfs);
+    queuPatch($rootEltodo, p, rfs);
     vdomTodo = n;
 }
 
