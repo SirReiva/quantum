@@ -1,13 +1,19 @@
-const { resolve } = require('path');
+const { resolve, join } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+//const WebpackNotifierPlugin = require('webpack-notifier');
+//const DashboardPlugin = require("webpack-dashboard/plugin");
 
 const isProd = process.env.NODE_ENV === 'production';
 
 const config = {
+    stats: {
+        errors: true
+    },
     mode: isProd ? 'production' : 'development',
     optimization: {
         usedExports: true,
@@ -60,6 +66,7 @@ const config = {
         ],
     },
     plugins: [
+        new ForkTsCheckerWebpackPlugin(),
         new HtmlWebpackPlugin({
             title: 'Quantum App',
             template: 'src/index.html',
@@ -84,12 +91,9 @@ if (isProd) {
         openAnalyzer: true,
     }));
 } else {
-    // for more information, see https://webpack.js.org/configuration/dev-server
     config.devServer = {
         port: 8080,
         compress: true,
-        stats: 'errors-only',
-        overlay: true,
     };
 }
 

@@ -1,7 +1,9 @@
+import { DIFF_TYPE } from "./vDomActions";
+
 export interface qNode {
     type: string;
     attrs: any;
-    children: ChildrenNode[]
+    children: ChildrenNode[];
 }
 
 export type ChildrenNode = string | qNode;
@@ -14,8 +16,12 @@ export interface qPatchProps {
 }
 
 export interface qPatch {
-    type: string;
+    type: DIFF_TYPE;
     newNode?: ChildrenNode,
     props?: any;
     children?: any;
+}
+
+export interface qPatchType {
+    
 }

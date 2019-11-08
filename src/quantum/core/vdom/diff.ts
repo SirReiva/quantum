@@ -1,6 +1,6 @@
 import { qPatch, qNode, qPatchProps, ChildrenNode } from './interfaces';
 import { isEventProp } from "./createElement";
-import { REMOVE_EVENT, SET_EVENT, REPLACE_EVENT, REMOVE_PROP, SET_PROP, REMOVE, REPLACE, CREATE, UPDATE } from "./vDomActions";
+import { DIFF_TYPE } from "./vDomActions";
 
 function diffChildren(oldNode: qNode, newNode: qNode): qPatch[] {
     const patches = [];
@@ -26,17 +26,17 @@ function diffProps(oldAttrs:any, newAttrs:any):qPatchProps[] {
         const oldVal = oldAttrs[name];
         if (isEventProp(name)) {
             if (!newVal) {
-                patches.push({ type: REMOVE_EVENT, name, value: oldVal });
+                patches.push({ type: DIFF_TYPE.REMOVE_EVENT, name, value: oldVal });
             } else if (!oldVal && newVal) {
-                patches.push({ type: SET_EVENT, name, value: newVal });
+                patches.push({ type: DIFF_TYPE.SET_EVENT, name, value: newVal });
             } else {
-                patches.push({ type: REPLACE_EVENT, name, value: newVal, prevVal: oldVal });
+                patches.push({ type: DIFF_TYPE.REPLACE_EVENT, name, value: newVal, prevVal: oldVal });
             }
         } else {
             if (newVal === null || newVal === false) {
-                patches.push({ type: REMOVE_PROP, name, value: oldVal });
+                patches.push({ type: DIFF_TYPE.REMOVE_PROP, name, value: oldVal });
             } else if (oldVal === undefined || JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
-                patches.push({ type: SET_PROP, name, value: newVal });
+                patches.push({ type: DIFF_TYPE.SET_PROP, name, value: newVal });
             }
         }
 
@@ -48,22 +48,22 @@ function diffProps(oldAttrs:any, newAttrs:any):qPatchProps[] {
 export function diff(oldNode: ChildrenNode, newNode: ChildrenNode): qPatch {
     if (typeof oldNode === 'string' || typeof newNode === 'string' || typeof oldNode === 'number' || typeof newNode === 'number') {
         if (oldNode !== newNode) {
-            return { type: REPLACE, newNode };
+            return { type: DIFF_TYPE.REPLACE, newNode };
         }
         return null;
     }
     if(!oldNode && newNode) {
-        return { type: CREATE, newNode };
+        return { type: DIFF_TYPE.CREATE, newNode };
     }
     if(oldNode && !newNode) {
-        return { type: REMOVE };
+        return { type: DIFF_TYPE.REMOVE };
     }
     if(oldNode.type !== newNode.type) {
-        return { type: REPLACE, newNode };
+        return { type: DIFF_TYPE.REPLACE, newNode };
     }
     if (newNode && !(newNode instanceof String)) {
         return {
-            type: UPDATE,
+            type: DIFF_TYPE.UPDATE,
             props: diffProps((newNode as qNode).attrs, (oldNode as qNode).attrs),
             children: diffChildren(oldNode as qNode, newNode as qNode),
         };

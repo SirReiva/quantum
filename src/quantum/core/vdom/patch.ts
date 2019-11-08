@@ -1,4 +1,4 @@
-import { SET_PROP, REMOVE_PROP, REMOVE_EVENT, SET_EVENT, REPLACE_EVENT, CREATE, REMOVE, REPLACE, UPDATE } from './vDomActions';
+import { DIFF_TYPE } from './vDomActions';
 import { setProp, removeProp, addEvent, extractEventName, removeEvent, createElementVNode, replaceEvent } from './createElement';
 import { qPatch } from './interfaces';
 
@@ -21,23 +21,23 @@ function patchProps(parent: any, patches: any) {
     for (let i = 0; i < patches.length; i++) {
         const propPatch = patches[i];
         const { type, name, value, prevVal } = propPatch;
-        if (type === SET_PROP) {
+        if (type === DIFF_TYPE.SET_PROP) {
             PATCHS_DOM.push(() => {
                 setProp(parent, name, value);
             });
-        } else if (type === REMOVE_PROP) {
+        } else if (type === DIFF_TYPE.REMOVE_PROP) {
             PATCHS_DOM.push(() => {
                 removeProp(parent, name/*, value*/);
             });
-        } else if (type === REMOVE_EVENT) {
+        } else if (type === DIFF_TYPE.REMOVE_EVENT) {
             PATCHS_DOM.push(() => {
                 removeEvent(parent, value, extractEventName(name));
             });
-        } else if (type === SET_EVENT) {
+        } else if (type === DIFF_TYPE.SET_EVENT) {
             PATCHS_DOM.push(() => {
                 addEvent(parent, value, extractEventName(name));
             });
-        } else if (type === REPLACE_EVENT) {
+        } else if (type === DIFF_TYPE.REPLACE_EVENT) {
             PATCHS_DOM.push(() => {
                 replaceEvent(parent, prevVal, value, extractEventName(name));
             });
@@ -45,22 +45,22 @@ function patchProps(parent: any, patches: any) {
     }
 }
 
-export function queuPatch(el:HTMLElement, patch: qPatch, refs: any) {
+export function queuPatch(el: HTMLElement, patch: qPatch, refs: any) {
     recursivePatch(el, el.parentElement, patch, refs);
 }
-const MAX_CHANGES = 40;
+
 let changesDo = 0;
 
 function recursivePatch(el: HTMLElement, parent: HTMLElement, patch: qPatch, refs: any) {
     switch (patch.type) {
-        case CREATE:
+        case DIFF_TYPE.CREATE:
             {
                 PATCHS_DOM.push(() => {
                     parent.appendChild(createElementVNode(patch.newNode, refs));
                 });
                 return;
             }
-        case REMOVE:
+        case DIFF_TYPE.REMOVE:
             {
                 PATCHS_DOM.push(() => {
                     if (el.hasAttribute && el.hasAttribute('ref')) {
@@ -70,14 +70,14 @@ function recursivePatch(el: HTMLElement, parent: HTMLElement, patch: qPatch, ref
                 });
                 return;
             }
-        case REPLACE:
+        case DIFF_TYPE.REPLACE:
             {
                 PATCHS_DOM.push(() => {
                     el.replaceWith(createElementVNode(patch.newNode, refs));
                 });
                 return;
             }
-        case UPDATE:
+        case DIFF_TYPE.UPDATE:
             {
                 const { props } = patch;
                 patchProps(el, props);

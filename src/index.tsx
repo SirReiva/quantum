@@ -5,12 +5,11 @@ import { queuPatch } from './quantum/core/vdom/patch';
 import { qNode } from './quantum/core/vdom/interfaces';
 
 const tmp = count => <div id="main">
-                        <span>Timer:</span>
+                        <span>Timer: </span>
                         <h1 style="color:red;">{count} {(count > 1)?'segs':'seg'}</h1>
                     </div>;
 let rootEl = null;
 let acum = 0;
-
 let vd = tmp(acum);
 
 document.getElementById("timer").appendChild(rootEl = createElementVNode(vd, {}));
