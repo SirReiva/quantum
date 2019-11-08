@@ -23,5 +23,9 @@ export interface qPatch {
 }
 
 export interface qPatchType {
-    
+    type: DIFF_TYPE;
+    parent: HTMLElement | Text;
+    target: HTMLElement | Text;
+    name: any;
+    value: any;
 }
