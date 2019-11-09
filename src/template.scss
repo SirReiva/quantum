@@ -1,0 +1,10 @@
+p {
+    color: red;
+    &:hover {
+        color: black;
+    }
+}
+
+:host {
+    display: inline;
+}

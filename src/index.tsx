@@ -3,10 +3,9 @@ import { QuantumElement } from "./quantum/webcomponent/QuantumElement";
 import { h } from "./quantum/core/vdom/h";
 
 @QElement({
-    selector: 'app-test'
+    selector: 'app-test',
+    templateUrl: './template.html',
+    styleUrl: './template.scss'
 })
-class test extends QuantumElement {
-    template() {
-        return <h1>Test</h1>;
-    }
+export class test extends QuantumElement {
 }

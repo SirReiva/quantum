@@ -40,10 +40,10 @@ export abstract class QuantumElement extends HTMLElement {
     private _load() {
         this.componentLoad && this.componentLoad();
         const frag = document.createDocumentFragment();
-        this._vDom = this.template();
+        if (this.template) this._vDom = this.template();
         this._styleEl = document.createElement('style');
         if (this.styles) this._styleEl.innerHTML = this.styles();
-        if(this._vDom) frag.appendChild(createElementVNode(this._vDom, this.refs));
+        if (this._vDom) frag.appendChild(createElementVNode(this._vDom, this.refs));
         frag.appendChild(this._styleEl);
         this._shadowRoot.appendChild(frag);
         this._initialized = true;
