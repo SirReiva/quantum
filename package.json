@@ -1,9 +1,9 @@
 {
     "private": true,
-    "name": "babel-typescript-react-boilerplate",
+    "name": "quantum",
     "version": "1.0.0",
-    "repository": "git@github.com:saltyshiomix/babel-typescript-react-boilerplate.git",
-    "author": "Yoshihide Shiono <shiono.yoshihide@gmail.com>",
+    "repository": "",
+    "author": "",
     "license": "MIT",
     "scripts": {
         "check-types": "tsc",
@@ -15,15 +15,9 @@
         "lodash": "^4.17.15"
     },
     "devDependencies": {
-        "@babel/core": "^7.6.3",
-        "@babel/plugin-proposal-class-properties": "^7.5.5",
-        "@babel/plugin-syntax-dynamic-import": "^7.2.0",
-        "@babel/preset-typescript": "^7.6.0",
         "@types/node": "^12.7.12",
-        "babel-loader": "^8.0.6",
-        "babel-plugin-minify-dead-code-elimination": "^0.5.1",
-        "babel-plugin-transform-react-jsx": "^6.24.1",
         "copy-webpack-plugin": "^5.0.4",
+        "ts-loader": "^6.0.4",
         "cross-env": "^6.0.3",
         "css-loader": "^3.2.0",
         "file-loader": "^4.2.0",

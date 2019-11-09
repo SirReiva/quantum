@@ -5,9 +5,11 @@ export interface QDecoratorOptions {
     styles?: string;
     styleUrl?: string;
     useShadow?: boolean;
+    automaticDetction?: boolean;
 }
 
 export const DEFAULT_DECORATOR_OPTIONS: QDecoratorOptions = {
     selector: '',
-    useShadow: true
+    useShadow: true,
+    automaticDetction: true
 };
