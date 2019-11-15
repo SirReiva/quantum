@@ -20,7 +20,7 @@ export default class HomePage extends qPage {
                         </q-refresher>
                         {this.props.error && <div>Datos no disponibles...</div>}
                         <q-spinner style={((this.props.loaded || this.props.error)?'display: none;':'')}></q-spinner>
-                        <q-virtuallist itemheight="370" items={this.props.posts} renderitem={this.rendItem.bind(this)}></q-virtuallist>
+                        <q-virtuallist itemheight="382" items={this.props.posts} renderitem={this.rendItem.bind(this)}></q-virtuallist>
                         <q-infinitescrol ref="iScrol" onLoadmore={() => this.loadMore()}>
                             <q-spinner></q-spinner>
                         </q-infinitescrol>

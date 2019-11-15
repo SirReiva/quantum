@@ -28,7 +28,7 @@ export default class qDrawer extends QuantumElement {
     styles() { return `
         .base {
             display: none;
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;

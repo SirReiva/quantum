@@ -3,6 +3,11 @@ export function validateSelector(selector: string) {
         throw new Error('You need at least 1 dash in the custom element name!');
     }
 };
+
+export function isString(s:any) {
+    return (typeof s === 'string');
+}
+
 export function isInViewport(elem: HTMLElement):Boolean {
     var bounding = elem.getBoundingClientRect();
     return (
