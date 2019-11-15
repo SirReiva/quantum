@@ -1,5 +1,4 @@
-import { copyObject, purgeProps, flatten, isObject, xmlToJson, stringToXml } from './utils';
-import { isString } from 'util';
+import { copyObject, purgeProps, flatten, isObject, xmlToJson, stringToXml, isString } from './utils';
 import { qVNode } from './interfaces';
 
 declare global {

@@ -48,7 +48,7 @@ export default abstract class QuantumElement extends HTMLElement {
         else
             this._shadowRoot = this;
         if (prps !== false) this.props = new Proxy(prps, this._validator);
-        setTimeout(() => this._mount());
+        Promise.resolve().then(() => this._mount());
     }
 
     connectedCallback() {
