@@ -42,9 +42,11 @@ export abstract class QuantumElement extends HTMLElement {
         const frag = document.createDocumentFragment();
         if (this.template) this._vDom = this.template();
         this._styleEl = document.createElement('style');
-        if (this.styles) this._styleEl.innerHTML = this.styles();
         if (this._vDom) frag.appendChild(createElementVNode(this._vDom, this.refs));
-        frag.appendChild(this._styleEl);
+        if (this.styles) {
+            this._styleEl.innerHTML = this.styles();
+            frag.appendChild(this._styleEl);
+        }
         this._shadowRoot.appendChild(frag);
         this._initialized = true;
         this.componentLoaded && this.componentLoaded();
@@ -74,13 +76,17 @@ export abstract class QuantumElement extends HTMLElement {
         }
     }
 
-    constructor() {
-        super();
+    private _init() {
         if ((this.constructor as typeof QuantumElement).encapsulation)
             this._shadowRoot = this.attachShadow({ mode: 'open' }); //, delegatesFocus: true??
         else
             this._shadowRoot = this;
-        setTimeout(() => this._load());
+        window.queueMicrotask(() => this._load());
+    }
+
+    constructor() {
+        super();
+        this._init();
     }
 
     private _render() {

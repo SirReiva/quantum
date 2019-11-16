@@ -8,6 +8,14 @@ declare global {
     }
 }
 
+if (typeof window.queueMicrotask !== "function") {
+    window.queueMicrotask = function (callback) {
+      Promise.resolve()
+        .then(callback)
+        .catch(e => setTimeout(() => { throw e; }));
+    };
+  }
+
 function flatten(arr: any[]): any[] {
     return [].concat.apply([], arr);
 }

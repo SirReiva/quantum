@@ -1,6 +1,9 @@
-import { QElement } from "./quantum/webcomponent/decorators";
+import { QElement, Ref } from "./quantum/webcomponent/decorators";
 import { QuantumElement } from "./quantum/webcomponent/QuantumElement";
-import { h } from "./quantum/core/vdom/h";
+
+import('./index2').then(mod => {
+    console.log(mod)
+})
 
 @QElement({
     selector: 'app-test',
@@ -8,4 +11,6 @@ import { h } from "./quantum/core/vdom/h";
     styleUrl: './template.scss'
 })
 export class test extends QuantumElement {
+    @Ref('p')
+    prueba;
 }
