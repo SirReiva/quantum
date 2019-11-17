@@ -3,8 +3,13 @@ import { queuPatch } from "../core/vdom/patch";
 import { diff } from "../core/vdom/diff";
 import { qNode } from "../core/vdom/interfaces";
 
-interface qReferences {
+export interface qReferences {
     [key: string]: any;
+}
+
+export interface InitListerners {
+    eventName: string;
+    function: EventListenerOrEventListenerObject;
 }
 
 export abstract class QuantumElement extends HTMLElement {
@@ -16,14 +21,15 @@ export abstract class QuantumElement extends HTMLElement {
     protected componentBeforeUpdate?(): void;
     protected componentAfterUpdate?(): void;
 
-    protected observableAttributes: string[] = []; 
+    protected observableAttributes: string[]; 
 
     protected template?(): qNode;
     protected styles?(): string;
 
-    public static selector;
+    public static selector:string;
     protected automaticDetection: boolean = true;
     public static encapsulation: boolean = true;
+    protected static initListeners: InitListerners[] = []; 
 
     private _shadowRoot: HTMLElement | ShadowRoot;
     public getRoot() {
@@ -81,6 +87,10 @@ export abstract class QuantumElement extends HTMLElement {
             this._shadowRoot = this.attachShadow({ mode: 'open' }); //, delegatesFocus: true??
         else
             this._shadowRoot = this;
+        const inits = this.constructor.prototype.initListeners;
+        for(let i = 0; i < inits.length; i++) {
+            this.addEventListener(inits[i].eventName, inits[i].function.bind(this));            
+        }
         window.queueMicrotask(() => this._load());
     }
 
