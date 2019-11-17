@@ -1,23 +1,23 @@
-import { QElement, Ref, Listen, State } from "./quantum/webcomponent/decorators";
+import { QElement, Ref, Listen, Watch } from "./quantum/webcomponent/decorators";
 import { QuantumElement } from "./quantum/webcomponent/QuantumElement";
-
-import('./index2').then(mod => {
-    console.log(mod)
-})
+import { h } from './quantum/core/vdom/h';
 
 @QElement({
     selector: 'app-test',
-    templateUrl: './template.html',
     styleUrl: './template.scss'
 })
 export class test extends QuantumElement {
-    @Listen('click')
-    clc() {
-        this.info.a++;
+    template() {
+        return <div>Número: {this.info}</div>;
     }
 
-    @State()
-    info = { a: 2 };
+    @Listen('click')
+    clc() {
+        this.info++;
+    }
+
+    @Watch()
+    info = 0;
 
     qw = 5;
 

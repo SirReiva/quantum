@@ -33,17 +33,23 @@ export const Ref = (refName: string = null) => (target: any, key: string) => {
     });
 }
 
-export const State = () => function(target: any, key: string) {
+export const Watch = () => (target: any, key: string) => {
 
-    console.log('init')
-    
+    let fisrt = false;
+    let val = null;
 
     var setter = function (newVal) {
-        console.log('zas')
+        val = newVal;
+        this._render();
+    };
+
+    var getter = function () {
+       return val;
     };
 
     Object.defineProperty(target, key, {
-        set: setter
+        set: setter,
+        get: getter
     });
 }
 

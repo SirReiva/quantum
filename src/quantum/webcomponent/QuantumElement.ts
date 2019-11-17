@@ -43,12 +43,13 @@ export abstract class QuantumElement extends HTMLElement {
     public isReady = new Promise((resolve) => {
         this._promiseReadyResolver = resolve;
     });
+    private _vDomRoot = null;
     private _load() {
         this.componentLoad && this.componentLoad();
         const frag = document.createDocumentFragment();
         if (this.template) this._vDom = this.template();
         this._styleEl = document.createElement('style');
-        if (this._vDom) frag.appendChild(createElementVNode(this._vDom, this.refs));
+        if (this._vDom) frag.appendChild(this._vDomRoot = createElementVNode(this._vDom, this.refs));
         if (this.styles) {
             this._styleEl.innerHTML = this.styles();
             frag.appendChild(this._styleEl);
@@ -105,7 +106,7 @@ export abstract class QuantumElement extends HTMLElement {
         const oldVDom = this._vDom;
         const newVDom = this.template();
         this._vDom = newVDom;
-        queuPatch(this._shadowRoot as HTMLElement, diff(oldVDom, newVDom), this.refs);
+        queuPatch(this._vDomRoot, diff(oldVDom, newVDom), this.refs);
         this.componentAfterUpdate && this.componentAfterUpdate();
     }
 }
