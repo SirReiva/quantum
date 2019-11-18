@@ -120,29 +120,3 @@ export const QWarpper = (config: QDecoratorOptions) => (clss: any) => {
     customElements.define(config.selector, tmp);
     return clss;
 }
-
-/*export const QElementAll = (config: QDecoratorOptions) => (base: Function):any => {   
-    validateSelector(config.selector);
-    config = Object.assign(DEFAULT_DECORATOR_OPTIONS, config);
-    
-    let tmp:any = class extends QuantumElement {
-        constructor() {
-            super();
-        }
-    }
-
-    tmp.prototype.selector = config.selector;
-
-    if (config.templateUrl) {
-        tmp.prototype.template = function() {
-            return compileTemplateString(config.templateUrl, this);
-        };
-    }
-    if (config.styleUrl) {
-        tmp.prototype.styles = function() {
-            return config.styleUrl;
-        };
-    }
-    customElements.define(config.selector, tmp);
-    return tmp;
-}*/
