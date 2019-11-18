@@ -46,10 +46,18 @@ function jsonToHyperscript(jsObject: any) {
         
     return h(jsObject.type, jsObject.attributes, ...(jsObject.children.map((o: any) => {
         if(typeof o === 'string')
-            return o.trim();
+            return ReplaceData(o.trim(), this);
         return jsonToHyperscript.call(this, o);
     }).filter(i => (i !== null) && (i !== ''))));
 
+}
+
+function ReplaceData(tpl: string, data: any): string {
+    var re = /{{([^%>]+)?}}/g, match;
+    while(match = re.exec(tpl)) {
+        tpl = tpl.replace(match[0], data[match[1]])
+    }
+    return tpl;
 }
 
 export function compileTemplateString(temlpate: string, context: any): qNode {
