@@ -37,17 +37,24 @@ export function stringToXml(value: string) {
 }
 
 function jsonToHyperscript(jsObject: any) {
-    return h(jsObject.type, jsObject.attributes, ...jsObject.children.map((o: any) => {
+    if(jsObject.attributes && jsObject.attributes['q-if']) {
+        const res = eval(jsObject.attributes['q-if']);
+        delete jsObject.attributes['q-if'];
+        if([null, false, undefined].includes(res))
+            return null;
+    }
+        
+    return h(jsObject.type, jsObject.attributes, ...(jsObject.children.map((o: any) => {
         if(typeof o === 'string')
-            return o;
+            return o.trim();
         return jsonToHyperscript.call(this, o);
-    }));
+    }).filter(i => (i !== null) && (i !== ''))));
 
 }
 
 export function compileTemplateString(temlpate: string, context: any): qNode {
     try {
-        return jsonToHyperscript.call(context ,xmlToJson(stringToXml(temlpate)));
+        return jsonToHyperscript.call(context ,xmlToJson(stringToXml(temlpate.replace(/\n/g,''))));
     } catch (exp) {
         console.error(exp);
         return null;

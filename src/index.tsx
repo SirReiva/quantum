@@ -1,4 +1,4 @@
-import { QElement, Ref, Listen, Watch, QWarpper } from "./quantum/webcomponent/decorators";
+import { QElement, Ref, Listen, Watch, QWarpper, Host } from "./quantum/webcomponent/decorators";
 import { QuantumElement } from "./quantum/webcomponent/QuantumElement";
 import { h } from './quantum/core/vdom/h';
 
@@ -33,9 +33,14 @@ export class test extends QuantumElement {
 export class test3 {
     @Listen('click')
     clc() {
-        console.log(this);
-        console.log('clck');
+        this.info++;
     }
+
+    @Watch()
+    info = 0;
+
+    @Host()
+    el;
 
     aaa = 5;
 }

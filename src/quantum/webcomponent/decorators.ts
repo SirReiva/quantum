@@ -38,7 +38,10 @@ export const Watch = () => (target: any, key: string) => {
 
     var setter = function (newVal) {
         val = newVal;
-        this._render();
+        if(this instanceof QuantumElement)
+            this._render();
+        else if(this[warpperElementProp])
+            this[warpperElementProp]._render();
     };
 
     var getter = function () {
@@ -51,7 +54,7 @@ export const Watch = () => (target: any, key: string) => {
     });
 }
 
-export const HostElement = () => (target: any, key: string) => {
+export const Host = () => (target: any, key: string) => {
 
     var getter = function () {
         if(this instanceof QuantumElement)
@@ -97,15 +100,18 @@ export const QWarpper = (config: QDecoratorOptions) => (clss: any) => {
     validateSelector(config.selector);
     config = Object.assign({} ,DEFAULT_DECORATOR_OPTIONS, config);
 
-    
-    
     class tmp extends QuantumElement {
         static selector = config.selector;
         static encapsulation = config.useShadow;
         automaticDetection = config.automaticDetection;
 
         template() {
-            return compileTemplateString(config.templateUrl, this);
+            if(config.templateUrl)
+                return compileTemplateString(config.templateUrl, this[warpperElementProp]);
+            else if (config.template)
+                return compileTemplateString(config.template, this[warpperElementProp]);
+            else 
+                return null;
         }
 
         constructor() {
@@ -115,6 +121,7 @@ export const QWarpper = (config: QDecoratorOptions) => (clss: any) => {
             this[warpperElementProp] = c;
         }
     }
+
     (tmp as any).initListeners = clss.prototype.initListeners;
 
     customElements.define(config.selector, tmp);
