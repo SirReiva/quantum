@@ -37,6 +37,7 @@ export function stringToXml(value: string) {
 }
 
 function jsonToHyperscript(jsObject: any) {
+    //q-if
     if(jsObject.attributes && jsObject.attributes['q-if']) {
         const res = eval(jsObject.attributes['q-if']);
         delete jsObject.attributes['q-if'];

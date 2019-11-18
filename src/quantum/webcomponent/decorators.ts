@@ -1,6 +1,6 @@
 import { QDecoratorOptions, DEFAULT_DECORATOR_OPTIONS } from "./interfaces";
 import { compileTemplateString } from './utils';
-import { QuantumElement, InitListerners } from './QuantumElement';
+import { QuantumElement } from './QuantumElement';
 
 export const warpperElementProp = Symbol('QWARPPER');
 
