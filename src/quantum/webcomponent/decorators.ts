@@ -1,8 +1,8 @@
 import { QDecoratorOptions, DEFAULT_DECORATOR_OPTIONS } from "./interfaces";
 import { compileTemplateString } from './utils';
-import { QuantumElement } from "./QuantumElement";
+import { QuantumElement, InitListerners } from './QuantumElement';
 
-const warpperElementProp = Symbol('QWARPPER');
+export const warpperElementProp = Symbol('QWARPPER');
 
 const validateSelector = (selector: string) => {
     if (selector.indexOf('-') <= 0) {
@@ -11,14 +11,12 @@ const validateSelector = (selector: string) => {
 };
 
 export const Listen = (eventName: string) => (target: any, key: string, descriptor: PropertyDescriptor) => {
-   if (target instanceof QuantumElement) {
-       if((target as any).initListeners === undefined)
-            (target as any).initListeners = [];
-       (target as any).initListeners.push({
-           eventName,
-           function: target[key]
-       });
-   }
+    if(!(target as any).initListeners)
+        (target as any).initListeners = [];
+    (target as any).initListeners.push({
+        eventName,
+        function: target[key]
+    });
 };
 
 export const Ref = (refName: string = null) => (target: any, key: string) => {
@@ -70,7 +68,7 @@ export const HostElement = () => (target: any, key: string) => {
 
 export const QElement = (config: QDecoratorOptions) => (cls: Function) => {
     validateSelector(config.selector);
-    config = Object.assign(DEFAULT_DECORATOR_OPTIONS, config);
+    config = Object.assign({} ,DEFAULT_DECORATOR_OPTIONS, config);
     (cls as any).selector = config.selector;
     (cls as any).automaticDetection = config.automaticDetection;
     (cls as any).encapsulation = config.useShadow;
@@ -97,20 +95,30 @@ function applyMixins(derivedCtor: any, baseCtors: any[]) {
 
 export const QWarpper = (config: QDecoratorOptions) => (clss: any) => {
     validateSelector(config.selector);
-    config = Object.assign(DEFAULT_DECORATOR_OPTIONS, config);
+    config = Object.assign({} ,DEFAULT_DECORATOR_OPTIONS, config);
+
+    
+    
     class tmp extends QuantumElement {
         static selector = config.selector;
         static encapsulation = config.useShadow;
         automaticDetection = config.automaticDetection;
 
+        template() {
+            return compileTemplateString(config.templateUrl, this);
+        }
+
         constructor() {
             super();
             const c = new clss();
             c[warpperElementProp] = this;
+            this[warpperElementProp] = c;
         }
     }
+    (tmp as any).initListeners = clss.prototype.initListeners;
+
     customElements.define(config.selector, tmp);
-    return tmp;
+    return clss;
 }
 
 /*export const QElementAll = (config: QDecoratorOptions) => (base: Function):any => {   

@@ -1,8 +1,8 @@
-import { QElement, Ref, Listen, Watch } from "./quantum/webcomponent/decorators";
+import { QElement, Ref, Listen, Watch, QWarpper } from "./quantum/webcomponent/decorators";
 import { QuantumElement } from "./quantum/webcomponent/QuantumElement";
 import { h } from './quantum/core/vdom/h';
 
-@QElement({
+/*@QElement({
     selector: 'app-test',
     styleUrl: './template.scss'
 })
@@ -23,4 +23,19 @@ export class test extends QuantumElement {
 
     @Ref('p')
     prueba;
+}*/
+
+
+@QWarpper({
+    selector: 'app-test3',
+    templateUrl: './template.html',
+})
+export class test3 {
+    @Listen('click')
+    clc() {
+        console.log(this);
+        console.log('clck');
+    }
+
+    aaa = 5;
 }
