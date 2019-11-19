@@ -12,7 +12,8 @@
         "start": "serve dist"
     },
     "dependencies": {
-        "lodash": "^4.17.15"
+        "lodash": "^4.17.15",
+        "rxjs": "^6.5.3"
     },
     "devDependencies": {
         "@types/node": "^12.7.12",
