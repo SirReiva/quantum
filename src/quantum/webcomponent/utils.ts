@@ -36,13 +36,19 @@ export function stringToXml(value: string) {
     return new (window as any).DOMParser().parseFromString(value, "text/xml");
 }
 
-function jsonToHyperscript(jsObject: any) {
+function jsonToHyperscript(jsObject: any, item = null, index = null) {
     //q-if
-    if(jsObject.attributes && jsObject.attributes['q-if']) {
+    if (jsObject.attributes && jsObject.attributes['q-if']) {
         const res = eval(jsObject.attributes['q-if']);
         delete jsObject.attributes['q-if'];
         if([null, false, undefined].includes(res))
             return null;
+    }
+
+    if (jsObject.attributes && jsObject.attributes['q-for']) {
+        
+        
+
     }
         
     return h(jsObject.type, jsObject.attributes, ...(jsObject.children.map((o: any) => {
