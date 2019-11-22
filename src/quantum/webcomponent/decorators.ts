@@ -127,3 +127,31 @@ export const QWarpper = (config: QDecoratorOptions) => (clss: any) => {
     customElements.define(config.selector, tmp);
     return clss;
 }
+
+function QSingleton(Target:any){
+
+    Target.getInstance = function(...args:any[]){
+  
+      var original = Target;
+  
+      function construct(constructor) {
+        var c : any = function () {
+          return constructor.apply(this, args);
+        }
+        c.prototype = constructor.prototype;
+        return new c();
+      }
+  
+      var f : any = function () {
+        return construct(original);
+      }
+  
+      if (!original.instance) {
+          f.prototype = original.prototype;
+          original.instance = new f();
+      }
+  
+      return original.instance;
+    }
+  
+  }

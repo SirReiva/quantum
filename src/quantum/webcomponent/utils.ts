@@ -13,14 +13,18 @@ export function xmlToJson(xml: any) {
             }
         }
     } else if (xml.nodeType == 3) {
-        obj.children.push(xml.nodeValue);
+        const val = xml.nodeValue.trim();
+        if(val !== '')
+            obj.children.push(val);
     }
 
     if (xml.hasChildNodes()) {
         for (var i = 0; i < xml.childNodes.length; i++) {
             var item = xml.childNodes.item(i);
             if (item.nodeType == 3) {
-                obj.children.push(item.nodeValue);
+                const val = item.nodeValue.trim();
+                if (val !== '')
+                    obj.children.push(val);
             } else if (item.nodeType == 1) {
                 obj.children.push(xmlToJson(item));
             }
@@ -36,10 +40,11 @@ export function stringToXml(value: string) {
     return new (window as any).DOMParser().parseFromString(value, "text/xml");
 }
 
-function jsonToHyperscript(jsObject: any, item = null, index = null) {
+function jsonToHyperscript(jsObject: any) {
     //q-if
     if (jsObject.attributes && jsObject.attributes['q-if']) {
-        const res = eval(jsObject.attributes['q-if']);
+        const f = new Function('return ' + jsObject.attributes['q-if']);
+        const res = f.call(this);
         delete jsObject.attributes['q-if'];
         if([null, false, undefined].includes(res))
             return null;
@@ -47,22 +52,21 @@ function jsonToHyperscript(jsObject: any, item = null, index = null) {
 
     if (jsObject.attributes && jsObject.attributes['q-for']) {
         
-        
-
     }
         
     return h(jsObject.type, jsObject.attributes, ...(jsObject.children.map((o: any) => {
         if(typeof o === 'string')
             return ReplaceData(o.trim(), this);
         return jsonToHyperscript.call(this, o);
-    }).filter(i => (i !== null) && (i !== ''))));
+    })));
 
 }
 
 function ReplaceData(tpl: string, data: any): string {
-    var re = /{{([^%>]+)?}}/g, match;
+    var re = /{{([^%>]+)?}}/g, match: RegExpExecArray;
     while(match = re.exec(tpl)) {
-        tpl = tpl.replace(match[0], data[match[1]])
+        const fn = new Function('return ' + match[0].substr(2, match[0].length - 4));
+        tpl = tpl.replace(match[0], fn.call(data));
     }
     return tpl;
 }

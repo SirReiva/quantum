@@ -75,8 +75,18 @@ export abstract class QuantumElement extends HTMLElement {
     }
 
     disconnectedCallback() {
+        const inits = this.constructor.prototype.initListeners || (this.constructor as any).initListeners;
+        if(inits) {
+            for(let i = 0; i < inits.length; i++) {
+                if(this[warpperElementProp])
+                    this.removeEventListener(inits[i].eventName, inits[i].function.bind(this[warpperElementProp]));    
+                else
+                    this.removeEventListener(inits[i].eventName, inits[i].function.bind(this));
+            }
+        }
         this.componentUnmounted && this.componentUnmounted();
         this._shadowRoot.innerHTML = '';
+        delete this._vDomRoot;
         delete this._vDom;
         delete this.refs;
         delete this._shadowRoot;
