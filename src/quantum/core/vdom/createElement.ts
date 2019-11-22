@@ -116,7 +116,7 @@ export function createElementVNode(node: ChildrenNode, refs: any): HTMLElement|T
     }
     const el = (precachedElements[node.type])?precachedElements[node.type].cloneNode():document.createElement(node.type);
     if(el instanceof HTMLUnknownElement) {
-        throw new Error("Unkown element tag " + node.type);
+        console.error("Unkown element tag " + node.type);
     }
     if (node.attrs && node.attrs.ref) {
         refs[node.attrs.ref] = el;

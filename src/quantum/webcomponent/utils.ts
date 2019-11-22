@@ -1,6 +1,9 @@
 import { qNode } from '../core/vdom/interfaces';
 import { h } from '../core/vdom/h';
-export function xmlToJson(xml: any) {
+export function xmlToJson(xml: any,  check = true) {
+
+    if (check && xml.querySelectorAll('parsererror').length > 0)
+        throw new Error('Multiple root elements no allowed');
 
     var obj: any = { type: xml.tagName, children: [], attributes: null };
 
@@ -17,16 +20,24 @@ export function xmlToJson(xml: any) {
         if(val !== '')
             obj.children.push(val);
     }
-
+    
+    let lastString = false;
     if (xml.hasChildNodes()) {
         for (var i = 0; i < xml.childNodes.length; i++) {
             var item = xml.childNodes.item(i);
             if (item.nodeType == 3) {
                 const val = item.nodeValue.trim();
-                if (val !== '')
-                    obj.children.push(val);
+                if (val !== '') {
+                    if (lastString) {
+                        obj.children[obj.children.length - 1] += val;
+                    } else {
+                        obj.children.push(val);
+                    }
+                }
+                lastString = true;
             } else if (item.nodeType == 1) {
-                obj.children.push(xmlToJson(item));
+                lastString = false;
+                obj.children.push(xmlToJson(item, false));
             }
         }
     }
@@ -41,6 +52,7 @@ export function stringToXml(value: string) {
 }
 
 function jsonToHyperscript(jsObject: any) {
+
     //q-if
     if (jsObject.attributes && jsObject.attributes['q-if']) {
         const f = new Function('return ' + jsObject.attributes['q-if']);
@@ -73,7 +85,7 @@ function ReplaceData(tpl: string, data: any): string {
 
 export function compileTemplateString(temlpate: string, context: any): qNode {
     try {
-        return jsonToHyperscript.call(context ,xmlToJson(stringToXml(temlpate.replace(/\n/g,''))));
+        return  jsonToHyperscript.call(context ,xmlToJson(stringToXml(temlpate.replace(/\n/g,''))));
     } catch (exp) {
         console.error(exp);
         return null;

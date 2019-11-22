@@ -123,12 +123,13 @@ export const QWarpper = (config: QDecoratorOptions) => (clss: any) => {
     }
 
     (tmp as any).initListeners = clss.prototype.initListeners;
+    delete clss.prototype.initListeners;
 
     customElements.define(config.selector, tmp);
     return clss;
 }
 
-function QSingleton(Target:any){
+export function QSingleton(Target:any) {
 
     Target.getInstance = function(...args:any[]){
   
