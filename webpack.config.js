@@ -39,18 +39,21 @@ const config = {
                 include: [resolve(__dirname, 'src')]
             }, {
                 test: /\.(ts|js)x$/,
-                loader:  'style-url-webpack-as-string',
+                loader: 'style-url-webpack-as-string',
                 exclude: /node_modules/,
                 include: [resolve(__dirname, 'src')]
             }, {
                 test: /\.s?css$/,
-                use: [/*{
-                    loader: MiniCssExtractPlugin.loader
-                },*/ {
-                    loader: 'css-loader'
-                }, {
-                    loader: 'sass-loader'
-                }],
+                use: [
+                    /*{
+                                        loader: MiniCssExtractPlugin.loader
+                                    },*/
+                    {
+                        loader: 'css-loader'
+                    }, {
+                        loader: 'sass-loader'
+                    }
+                ],
                 exclude: /node_modules/
             }, {
                 test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,

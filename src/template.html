@@ -1,5 +1,7 @@
 <div>
     <button>test: {{this.info}}</button>
     <h2>{{this.aaa}}</h2>
-    <p q-if="this.info > 0" ref="p">hello worlds {{this.info}}</p>
+    <p q-if="this.info > 0" ref="p">
+        hello world{{(this.info>1)?'s':''}} {{this.info}}
+    </p>
 </div>

@@ -75,10 +75,11 @@ function jsonToHyperscript(jsObject: any) {
 }
 
 function ReplaceData(tpl: string, data: any): string {
-    var re = /{{([^%>]+)?}}/g, match: RegExpExecArray;
+    var re = /{{([^{}]+)?}}/gm, match: RegExpExecArray;
     while(match = re.exec(tpl)) {
-        const fn = new Function('return ' + match[0].substr(2, match[0].length - 4));
+        const fn = new Function('return ' + match[1]);
         tpl = tpl.replace(match[0], fn.call(data));
+        re.lastIndex = 0;
     }
     return tpl;
 }
