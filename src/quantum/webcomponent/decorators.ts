@@ -3,6 +3,9 @@ import { compileTemplateString } from './utils';
 import { QuantumElement } from './QuantumElement';
 
 export const warpperElementProp = Symbol('QWARPPER');
+export const listenersWarpper = Symbol('QWARPPER_LISTENERS');
+export const observerAttrs = Symbol('QOBS_ATTRS');
+export const initAttrs = Symbol('QOBS_ATTRS');
 
 const validateSelector = (selector: string) => {
     if (selector.indexOf('-') <= 0) {
@@ -11,12 +14,57 @@ const validateSelector = (selector: string) => {
 };
 
 export const Listen = (eventName: string) => (target: any, key: string, descriptor: PropertyDescriptor) => {
-    if(!(target as any).initListeners)
-        (target as any).initListeners = [];
-    (target as any).initListeners.push({
-        eventName,
-        function: target[key]
-    });
+    if (target instanceof QuantumElement) {
+        if(!(target as any).initListeners)
+            (target as any).initListeners = [];
+        (target as any).initListeners.push({
+            eventName,
+            function: target[key]
+        });
+    } else {
+        if(!(target as any)[listenersWarpper])
+            (target as any)[listenersWarpper] = [];
+        (target as any)[listenersWarpper].push({
+            eventName,
+            function: target[key]
+        });
+    }
+};
+
+export const Attribute = (refName: string = null) => (target: any, key: string) => {
+    if(!(target as any)[observerAttrs])
+        (target as any)[observerAttrs] = [];
+    target[observerAttrs].push(key);
+    if (target instanceof QuantumElement) {
+        (target as any).observedAttributes = function() { return target[observerAttrs]; };
+        Object.defineProperty(target, key, {
+            get: function() {
+                this.getAttribute(key)
+            },
+            set: function(val) {
+                this.setAttribute(key, val);
+            },
+            configurable: false
+        });
+
+    } else {
+        let val = null;
+        Object.defineProperty(target, key, {
+            get: function() {
+                if(this[warpperElementProp])
+                    return this[warpperElementProp].getAttribute(key);
+                else
+                    return val;
+            },
+            set: function(value) {
+                if (this[warpperElementProp])
+                    this[warpperElementProp].setAttribute(key, val);
+                else
+                    val = value;
+            },
+            configurable: false
+        });
+    }
 };
 
 export const Ref = (refName: string = null) => (target: any, key: string) => {
@@ -33,7 +81,6 @@ export const Ref = (refName: string = null) => (target: any, key: string) => {
 
 export const Watch = () => (target: any, key: string) => {
 
-    let fisrt = false;
     let val = null;
 
     var setter = function (newVal) {
@@ -60,7 +107,7 @@ export const Host = () => (target: any, key: string) => {
         if(this instanceof QuantumElement)
             return this;
         else
-        return this[warpperElementProp];
+            return this[warpperElementProp];
     };
 
     Object.defineProperty(target, key, {
@@ -85,25 +132,32 @@ export const QElement = (config: QDecoratorOptions) => (cls: Function) => {
             return config.styleUrl;
         };
     }
+    delete cls[observerAttrs];
     customElements.define(config.selector, cls);
 }
 
-function applyMixins(derivedCtor: any, baseCtors: any[]) {
+/*function applyMixins(derivedCtor: any, baseCtors: any[]) {
     baseCtors.forEach(baseCtor => {
         Object.getOwnPropertyNames(baseCtor.prototype).forEach(name => {
             Object.defineProperty(derivedCtor.prototype, name, Object.getOwnPropertyDescriptor(baseCtor.prototype, name));
         });
     });
-}
+}*/
 
 export const QWarpper = (config: QDecoratorOptions) => (clss: any) => {
     validateSelector(config.selector);
     config = Object.assign({} ,DEFAULT_DECORATOR_OPTIONS, config);
+    const tmpObs = clss.prototype[observerAttrs];
+    delete clss.prototype[observerAttrs];
 
     class tmp extends QuantumElement {
         static selector = config.selector;
         static encapsulation = config.useShadow;
         automaticDetection = config.automaticDetection;
+
+        static get observedAttributes() {
+            return [...tmpObs];
+        }
 
         template() {
             if(config.templateUrl)
@@ -119,11 +173,16 @@ export const QWarpper = (config: QDecoratorOptions) => (clss: any) => {
             const c = new clss();
             c[warpperElementProp] = this;
             this[warpperElementProp] = c;
+            c[initAttrs]();
         }
     }
 
-    (tmp as any).initListeners = clss.prototype.initListeners;
-    delete clss.prototype.initListeners;
+    (tmp as any).initListeners = clss.prototype[listenersWarpper];
+    delete clss.prototype[listenersWarpper];
+    clss.prototype[initAttrs] = function() {
+        for(let i = 0; i < tmpObs.length; i++)
+        this[warpperElementProp].setAttribute(tmpObs[i], this[tmpObs[i]]);
+    };
 
     customElements.define(config.selector, tmp);
     return clss;
@@ -131,7 +190,7 @@ export const QWarpper = (config: QDecoratorOptions) => (clss: any) => {
 
 export function QSingleton(Target:any) {
 
-    Target.getInstance = function(...args:any[]){
+    Target.getInstance = function(...args:any[]) {
   
       var original = Target;
   
@@ -155,4 +214,4 @@ export function QSingleton(Target:any) {
       return original.instance;
     }
   
-  }
+}

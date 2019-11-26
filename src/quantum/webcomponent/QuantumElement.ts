@@ -22,8 +22,6 @@ export abstract class QuantumElement extends HTMLElement {
     protected componentBeforeUpdate?(): void;
     protected componentAfterUpdate?(): void;
 
-    protected observableAttributes: string[]; 
-
     protected template?(): qNode;
     protected styles?(): string;
 
