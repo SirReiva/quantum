@@ -10,7 +10,7 @@ export default class DetailPage extends qPage {
                         <span>{ this.props.title }</span>
                     </q-appbar>
                     <q-content>
-                        <q-image srcimg={ (this.props.backdrop_path)?'http://image.tmdb.org/t/p/w500' + this.props.backdrop_path:'https://via.placeholder.com/500x281' }><q-icon icon="spinner" spin></q-icon></q-image>
+                        <q-image ref="mainImg" srcimg={ (this.props.backdrop_path)?'http://image.tmdb.org/t/p/w500' + this.props.backdrop_path:'https://via.placeholder.com/500x281' }><q-icon icon="spinner" spin></q-icon></q-image>
                         <q-row style="justify-content: space-around;">
                             <q-image className="poster" srcimg={'http://image.tmdb.org/t/p/w500' +  this.props.poster_path }><q-icon icon="spinner" spin></q-icon></q-image>
                             <div></div>
@@ -24,6 +24,16 @@ export default class DetailPage extends qPage {
                         </div>
                     </q-content>
                 </q-scafold>;
+    }
+
+    componentLoaded() {
+        this.refs['mainImg'].animate([
+            { transform: 'translate3d(0px, ' + this.props.startPos + 'px, 0px) scale(.9)'}, 
+            { transform: 'translate3d(0px, 0px, 0px) scale(1)'}
+        ], { 
+            duration: 350,
+            easing: 'ease-in-out'
+        });
     }
 
     styles() { return super.styles() + `
@@ -46,6 +56,9 @@ export default class DetailPage extends qPage {
                 margin-top: 20px;
                 padding: 20px;
             }
+            q-image {
+                transform-origin: 50% 50%;
+            }
         `; 
     }
 
@@ -55,8 +68,8 @@ export default class DetailPage extends qPage {
     }
 
     constructor() {
-        let { id, title, backdrop_path, overview, vote_average, poster_path } = qStack.instances['main'].getParams();
-        super({ id, title, backdrop_path, overview, vote_average, poster_path });
+        let { id, title, backdrop_path, overview, vote_average, poster_path, startPos } = qStack.instances['main'].getParams();
+        super({ id, title, backdrop_path, overview, vote_average, poster_path, startPos });
     }
 }
 

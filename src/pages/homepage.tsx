@@ -41,7 +41,7 @@ export default class HomePage extends qPage {
                         <q-icon style="color: rgb(var(--q-material-primary-rgb));" icon="spinner" spin></q-icon>
                     </q-image>
                     <div slot="leftFooter">
-                        <q-button onClick={() => this.goPost(post)} mode="outline">Leer más</q-button>
+                        <q-button onClick={(ev) => this.goPost(post, ev)} mode="outline">Leer más</q-button>
                     </div>
                 </q-card>;
     }
@@ -105,8 +105,8 @@ export default class HomePage extends qPage {
         }, 1000);
     }
 
-    goPost(post :any) {
-        qStack.instances['main'].pushName('detail', post);
+    goPost(post :any, ev: MouseEvent) {
+        qStack.instances['main'].pushName('detail', { ...post, startPos: ev.clientY - 230 });
     }
 
 
