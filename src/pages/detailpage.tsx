@@ -28,11 +28,11 @@ export default class DetailPage extends qPage {
 
     componentLoaded() {
         this.refs['mainImg'].animate([
-            { transform: 'translate3d(0px, ' + this.props.startPos + 'px, 0px) scale(.9)'}, 
-            { transform: 'translate3d(0px, 0px, 0px) scale(1)'}
+            { transform: 'translate3d(0px, ' + this.props.startPos + 'px, 0px) scale(.9)' }, 
+            { transform: 'translate3d(0px, 0px, 0px) scale(1)' }
         ], { 
-            duration: 350,
-            easing: 'ease-in-out'
+            duration: 500,
+            easing: 'cubic-bezier(0.36,0.66,0.04,1)'
         });
     }
 
