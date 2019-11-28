@@ -28,10 +28,10 @@ export default class DetailPage extends qPage {
 
     componentLoaded() {
         this.refs['mainImg'].animate([
-            { transform: 'translate3d(0px, ' + this.props.startPos + 'px, 0px) scale(.9)' }, 
-            { transform: 'translate3d(0px, 0px, 0px) scale(1)' }
+            { transform: 'translate3d(0px, ' + this.props.startPos + 'px, 0px) scale(.9)', zIndex: '1' }, 
+            { transform: 'translate3d(0px, 0px, 0px) scale(1)', zIndex: '1' }
         ], { 
-            duration: 500,
+            duration: 1000,
             easing: 'cubic-bezier(0.36,0.66,0.04,1)'
         });
     }
@@ -39,6 +39,7 @@ export default class DetailPage extends qPage {
     styles() { return super.styles() + `
             q-appbar {
                 --app-bar-opacity: 0.56;
+                z-index: 2;
             }
             .poster {
                 width: 85.33px;
@@ -51,6 +52,7 @@ export default class DetailPage extends qPage {
                 -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
                 -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
                 box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+                z-index: 2;
             }
             .content {
                 margin-top: 20px;
