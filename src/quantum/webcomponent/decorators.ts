@@ -3,9 +3,9 @@ import { compileTemplateString } from './utils';
 import { QuantumElement } from './QuantumElement';
 
 export const warpperElementProp = Symbol('QWARPPER');
+export const staticWarpperElementProp = Symbol('STATIC_QWARPPER');
 export const listenersWarpper = Symbol('QWARPPER_LISTENERS');
 export const observerAttrs = Symbol('QOBS_ATTRS');
-export const initAttrs = Symbol('QOBS_ATTRS');
 
 const validateSelector = (selector: string) => {
     if (selector.indexOf('-') <= 0) {
@@ -173,16 +173,15 @@ export const QWarpper = (config: QDecoratorOptions) => (clss: any) => {
             const c = new clss();
             c[warpperElementProp] = this;
             this[warpperElementProp] = c;
-            c[initAttrs]();
         }
     }
 
     (tmp as any).initListeners = clss.prototype[listenersWarpper];
     delete clss.prototype[listenersWarpper];
-    clss.prototype[initAttrs] = function() {
-        for(let i = 0; i < tmpObs.length; i++)
-        this[warpperElementProp].setAttribute(tmpObs[i], this[tmpObs[i]]);
-    };
+
+    class tmpClss extends clss {
+        public static [warpperElementProp] = null;
+    }
 
     customElements.define(config.selector, tmp);
     return clss;

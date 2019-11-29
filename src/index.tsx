@@ -32,6 +32,10 @@ export class test extends QuantumElement {
 })
 export class test3 {
 
+    constructor() {
+        console.log('yeah');
+    }
+
     @Listen('click')
     clc() {
         this.info++;
