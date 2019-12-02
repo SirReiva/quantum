@@ -33,7 +33,7 @@ export class test extends QuantumElement {
 export class test3 {
 
     constructor() {
-        console.log('yeah');
+        console.log(this);
     }
 
     @Listen('click')

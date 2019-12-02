@@ -149,6 +149,26 @@ export const QWarpper = (config: QDecoratorOptions) => (clss: any) => {
     config = Object.assign({} ,DEFAULT_DECORATOR_OPTIONS, config);
     const tmpObs = clss.prototype[observerAttrs];
     delete clss.prototype[observerAttrs];
+    const initListeners = clss.prototype[listenersWarpper];
+    delete clss.prototype[listenersWarpper];
+    const BuiltElement = clss;
+    const warpper = {
+        'clss': function() {
+            return Reflect.construct(BuiltElement, [], this.constructor);
+        }
+    };
+    clss = warpper['clss'];
+    clss.prototype = BuiltElement.prototype;
+    clss.prototype.constructor = clss;
+    Object.setPrototypeOf(clss, BuiltElement);
+
+    function tmpClss(cmp) {
+        var _this = {};
+        this[warpperElementProp] = cmp;
+        clss.call(_this);
+        return _this;
+    }
+
 
     class tmp extends QuantumElement {
         static selector = config.selector;
@@ -158,6 +178,7 @@ export const QWarpper = (config: QDecoratorOptions) => (clss: any) => {
         static get observedAttributes() {
             return [...tmpObs];
         }
+
 
         template() {
             if(config.templateUrl)
@@ -170,18 +191,13 @@ export const QWarpper = (config: QDecoratorOptions) => (clss: any) => {
 
         constructor() {
             super();
-            const c = new clss();
-            c[warpperElementProp] = this;
+            const c = new tmpClss(this);
+            console.log(c);
             this[warpperElementProp] = c;
         }
     }
-
-    (tmp as any).initListeners = clss.prototype[listenersWarpper];
-    delete clss.prototype[listenersWarpper];
-
-    class tmpClss extends clss {
-        public static [warpperElementProp] = null;
-    }
+    
+    (tmp as any).initListeners = initListeners;
 
     customElements.define(config.selector, tmp);
     return clss;
