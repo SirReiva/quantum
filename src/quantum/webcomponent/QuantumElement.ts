@@ -3,6 +3,7 @@ import { queuPatch } from "../core/vdom/patch";
 import { diff } from "../core/vdom/diff";
 import { qNode } from "../core/vdom/interfaces";
 import { warpperElementProp } from "./decorators";
+import './polyfills/native-shim';
 
 export interface qReferences {
     [key: string]: any;

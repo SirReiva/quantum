@@ -51,16 +51,12 @@ export const Attribute = (refName: string = null) => (target: any, key: string) 
         let val = null;
         Object.defineProperty(target, key, {
             get: function() {
-                if(this[warpperElementProp])
-                    return this[warpperElementProp].getAttribute(key);
-                else
-                    return val;
+                return val;
             },
             set: function(value) {
-                if (this[warpperElementProp])
-                    this[warpperElementProp].setAttribute(key, val);
-                else
-                    val = value;
+                if (this[warpperElementProp]) //cjeck value type
+                    this[warpperElementProp].setAttribute(key, value);
+                val = value;
             },
             configurable: false
         });
@@ -144,31 +140,19 @@ export const QElement = (config: QDecoratorOptions) => (cls: Function) => {
     });
 }*/
 
-export const QWarpper = (config: QDecoratorOptions) => (clss: any) => {
+export const QWarpper = (config: QDecoratorOptions) => (clss: any): any => {
     validateSelector(config.selector);
     config = Object.assign({} ,DEFAULT_DECORATOR_OPTIONS, config);
     const tmpObs = clss.prototype[observerAttrs];
     delete clss.prototype[observerAttrs];
     const initListeners = clss.prototype[listenersWarpper];
     delete clss.prototype[listenersWarpper];
-    const BuiltElement = clss;
-    const warpper = {
-        'clss': function() {
-            return Reflect.construct(BuiltElement, [], this.constructor);
-        }
-    };
-    clss = warpper['clss'];
-    clss.prototype = BuiltElement.prototype;
-    clss.prototype.constructor = clss;
-    Object.setPrototypeOf(clss, BuiltElement);
-
+    
     function tmpClss(cmp) {
-        var _this = {};
         this[warpperElementProp] = cmp;
-        clss.call(_this);
-        return _this;
+        clss.call(this);
     }
-
+    Object.setPrototypeOf(tmpClss.prototype, clss.prototype);
 
     class tmp extends QuantumElement {
         static selector = config.selector;
@@ -192,7 +176,6 @@ export const QWarpper = (config: QDecoratorOptions) => (clss: any) => {
         constructor() {
             super();
             const c = new tmpClss(this);
-            console.log(c);
             this[warpperElementProp] = c;
         }
     }
@@ -200,7 +183,7 @@ export const QWarpper = (config: QDecoratorOptions) => (clss: any) => {
     (tmp as any).initListeners = initListeners;
 
     customElements.define(config.selector, tmp);
-    return clss;
+    return tmpClss;
 }
 
 export function QSingleton(Target:any) {

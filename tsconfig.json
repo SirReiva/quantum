@@ -3,7 +3,7 @@
     "outDir": "./www/",
     "noImplicitAny": false,
     "module": "esnext",
-    "target": "es6",
+    "target": "ES5",
     "jsx": "react",
     "jsxFactory": "h",
     "allowJs": true,
