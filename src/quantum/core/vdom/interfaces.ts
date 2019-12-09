@@ -1,4 +1,4 @@
-import { DIFF_TYPE } from "./vDomActions";
+import { DIFF_TYPE, PROP_DIFF_TYPE } from './vDomActions';
 
 export interface qNode {
     type: string;
@@ -9,7 +9,7 @@ export interface qNode {
 export type ChildrenNode = string | qNode;
 
 export interface qPatchProps {
-    type: string;
+    type: PROP_DIFF_TYPE;
     name: string;
     value: any;
     prevVal?: any;

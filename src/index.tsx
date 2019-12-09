@@ -37,7 +37,8 @@ export class test3 {
 
     @Listen('click')
     clc() {
-        this.info++;
+        //this.info++;
+        this.aaa++;
     }
 
     @Watch()

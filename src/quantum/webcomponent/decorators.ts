@@ -54,9 +54,9 @@ export const Attribute = (refName: string = null) => (target: any, key: string) 
                 return val;
             },
             set: function(value) {
+                val = value;
                 if (this[warpperElementProp]) //cjeck value type
                     this[warpperElementProp].setAttribute(key, value);
-                val = value;
             },
             configurable: false
         });
