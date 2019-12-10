@@ -186,30 +186,13 @@ export const QWarpper = (config: QDecoratorOptions) => (clss: any): any => {
     return tmpClss;
 }
 
-export function QSingleton(Target:any) {
+export const QSingleton = () => (Target: any): any => {
 
-    Target.getInstance = function(...args:any[]) {
-  
-      var original = Target;
-  
-      function construct(constructor) {
-        var c : any = function () {
-          return constructor.apply(this, args);
-        }
-        c.prototype = constructor.prototype;
-        return new c();
-      }
-  
-      var f : any = function () {
-        return construct(original);
-      }
-  
-      if (!original.instance) {
-          f.prototype = original.prototype;
-          original.instance = new f();
-      }
-  
-      return original.instance;
+    let original = null;
+
+    return function(...args) {
+        if(!original) original = new Target(...args);
+        return original;
     }
   
 }

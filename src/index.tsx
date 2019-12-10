@@ -1,4 +1,4 @@
-import { QElement, Ref, Listen, Watch, QWarpper, Host, Attribute, warpperElementProp } from './quantum/webcomponent/decorators';
+import { QElement, Ref, Listen, Watch, QWarpper, Host, Attribute, warpperElementProp, QSingleton } from './quantum/webcomponent/decorators';
 import { QuantumElement } from "./quantum/webcomponent/QuantumElement";
 import { h } from './quantum/core/vdom/h';
 
@@ -49,4 +49,12 @@ export class test3 {
 
     @Attribute()
     aaa = 5;
+}
+
+@QSingleton()
+class ServiceEx {
+    a:number;
+    constructor(ap) {
+        this.a = ap;
+    }
 }
