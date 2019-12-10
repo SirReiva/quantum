@@ -56,7 +56,8 @@ export default class qRefresher extends QuantumElement {
             this.style.height = Math.min(Math.max(0, currY - this._startY), 128) + "px";
         }
         /*if (this._evParent.getScrollElement().scrollTop !== 0)
-            e.preventDefault();*/
+            */
+        e.preventDefault();
         return true;
     }
 
@@ -73,7 +74,7 @@ export default class qRefresher extends QuantumElement {
             //document.body.addEventListener('click', this._listenerBody);
             this._listDown = () => {
                 if (this._evParent.getScrollElement().scrollTop === 0 && this._evParent.getScrollElement().offsetParent)
-                this._evParent.addEventListener(this._typeMove, this._listener, { passive: true });
+                this._evParent.addEventListener(this._typeMove, this._listener, { passive: false });
                 return true;
             };
             this._listUp = () => {
