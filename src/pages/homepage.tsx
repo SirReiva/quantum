@@ -37,7 +37,7 @@ export default class HomePage extends qPage {
                             <b>{ post.title }</b>
                         </div>
                     </div>
-                    <q-image style="height: 215px;" className="mainimage" slot="img" srcimg={ (post.backdrop_path)?'http://image.tmdb.org/t/p/w500' + post.backdrop_path:'https://via.placeholder.com/500x281' }>
+                    <q-image style="height: 215px;" className="mainimage" slot="img" srcimg={ (post.backdrop_path)?'https://image.tmdb.org/t/p/w500' + post.backdrop_path:'https://via.placeholder.com/500x281' }>
                         <q-icon style="color: rgb(var(--q-material-primary-rgb));" icon="spinner" spin></q-icon>
                     </q-image>
                     <div slot="leftFooter">

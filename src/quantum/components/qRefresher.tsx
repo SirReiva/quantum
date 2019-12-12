@@ -57,7 +57,7 @@ export default class qRefresher extends QuantumElement {
         }
         /*if (this._evParent.getScrollElement().scrollTop !== 0)
             */
-        e.preventDefault();
+        if (e.cancelable) e.preventDefault();
         return true;
     }
 
