@@ -14,19 +14,29 @@ export default class qRefresher extends QuantumElement {
 
     styles() { return `
         :host {
+            visibility: hidden;
             display: flex;
             height: 0px;
             width: 100%;
             overflow: hidden;
             justify-content: center;
             align-items: center;
-        }
-        :host([showing]) {
             -moz-transition: 0.3s;
             -ms-transition: 0.3s;
             -o-transition: 0.3s;
             -webkit-transition: 0.3s;
             transition: 0.3s;
+        }
+        :host:host([swiping]) {
+            visibility: visible;
+            -moz-transition: none;
+            -ms-transition: none;
+            -o-transition: none;
+            -webkit-transition: none;
+            transition: none;
+        }
+        :host([showing]) {
+            visibility: visible;
             height: 96px;
         }
     `; }
@@ -75,10 +85,12 @@ export default class qRefresher extends QuantumElement {
             this._listDown = () => {
                 if (this._evParent.getScrollElement().scrollTop === 0 && this._evParent.getScrollElement().offsetParent)
                 this._evParent.addEventListener(this._typeMove, this._listener, { passive: false });
+                this.setAttribute('swiping', '');
                 return true;
             };
             this._listUp = () => {
                 this._startY = null;
+                this.removeAttribute('swiping');
                 this._evParent.removeEventListener(this._typeMove, this._listener);
                 const mh = parseInt(this.style.height);
                     this.style.height = '';
