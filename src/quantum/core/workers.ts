@@ -1,5 +1,4 @@
 export const workerDiffCode = `
-console.log('Woker init');
 const CREATE = 'CREATE';
 const REMOVE = 'REMOVE';
 const REPLACE = 'REPLACE';
@@ -26,7 +25,16 @@ function diffProps(newNode, oldNode) {
     Object.keys(props).forEach(name => {
         const newVal = newNode.props[name];
         const oldVal = oldNode.props[name];
-        if (isEventProp(name)) {} else {
+        if (isEventProp(name)) {
+            if (!newVal) {
+                patches.push({ type: REMOVE_EVENT, name, value: oldVal });
+            } else if (!oldVal && newVal/*.toString() !== oldVal.toString()*/) {
+                patches.push({ type: SET_EVENT, name, value: newVal });
+            } else /*if (oldVal && newVal.toString() !== oldVal.toString())*/ {
+                //console.log(name, newNode.type);
+                patches.push({ type: REPLACE_EVENT, name, value: newVal, prevVal: oldVal });
+            }
+        } else {
             if (newVal === null || newVal === false) {
                 patches.push({ type: REMOVE_PROP, name, value: oldVal });
             } else if (!oldVal || JSON.stringify(newVal) !== JSON.stringify(oldVal)) { //comparar valor??
@@ -74,12 +82,10 @@ function diff(newNode, oldNode) {
     return null;
 }
 self.addEventListener('message', function(e) {
-    //console.time("diff" + e.data.id);
     const { id, payload } = e.data;
     const msg = {
         id,
         payload: diff(payload.newNode, payload.oldNode)
     }
     self.postMessage(msg);
-    //console.timeEnd("diff" + e.data.id);
 }, false);`;

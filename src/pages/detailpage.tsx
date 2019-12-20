@@ -10,9 +10,9 @@ export default class DetailPage extends qPage {
                         <span>{ this.props.title }</span>
                     </q-appbar>
                     <q-content>
-                        <q-image ref="mainImg" srcimg={ (this.props.backdrop_path)?'http://image.tmdb.org/t/p/w500' + this.props.backdrop_path:'https://via.placeholder.com/500x281' }><q-icon icon="spinner" spin></q-icon></q-image>
+                        <q-image ref="mainImg" srcimg={ (this.props.backdrop_path)?'https://image.tmdb.org/t/p/w500' + this.props.backdrop_path:'https://via.placeholder.com/500x281' }><q-icon icon="spinner" spin></q-icon></q-image>
                         <q-row style="justify-content: space-around;">
-                            <q-image className="poster" srcimg={'http://image.tmdb.org/t/p/w500' +  this.props.poster_path }><q-icon icon="spinner" spin></q-icon></q-image>
+                            <q-image className="poster" srcimg={'https://image.tmdb.org/t/p/w500' +  this.props.poster_path }><q-icon icon="spinner" spin></q-icon></q-image>
                             <div></div>
                             <b>{ this.props.vote_average }</b>
                             <q-ratingstar rating={this.props.vote_average / 2}></q-ratingstar>
