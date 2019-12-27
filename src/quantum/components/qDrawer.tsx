@@ -69,7 +69,6 @@ export default class qDrawer extends QuantumElement {
     private _startswiping = false;
     private _isAnmimating = false;
     private _swiping = false;
-    private _listener: any;
     private _swipeDirection = 0;
     private _startX = 0;
     private _lastPercentage = 0;
@@ -97,61 +96,69 @@ export default class qDrawer extends QuantumElement {
         //return true;
     }
 
+    _moveStart(e: any) {
+        if(this._isAnmimating) return true;
+        let evX = isMobile ? e.touches[0].clientX : e.clientX;
+        if ((!this._isOpen && evX < 24)) {
+            this._swipeDirection = 1;
+            this._startX = evX;
+            this._startswiping = true;
+            e.preventDefault();
+            e.stopPropagation();
+            document.body.addEventListener(typeMove, this._move);
+        } else if(this._isOpen) {
+            this._swipeDirection = -1;
+            this._startX = evX - this.refs.content.offsetWidth;
+            this._startswiping = true;
+            document.body.addEventListener(typeMove, this._move);
+        }
+        //return true;
+    }
+
+    _moveEnd(e: any) {
+        if(this._isAnmimating) return true;
+        if (this._swiping) {
+            if (this._swipeDirection == 1) {
+                if(this._lastPercentage > -65) {
+                    this._openAnimation();
+                } else {
+                    this._closeAnimation();
+                }
+            } else if (this._swipeDirection == -1) {
+                if (this._lastPercentage < -35) {
+                    this._closeAnimation();
+                } else {
+                    this._openAnimation();
+                }
+            }
+            this._swiping = false;
+            this._swipeDirection = 0;
+        } else {
+            this._swiping = false;
+        }
+        this._startswiping = false;
+        document.body.removeEventListener(typeMove, this._move);
+        //return true;
+    }
+
     componentLoaded() {
         if (this.attrs.menuid) qDrawer.instances[this.attrs.menuid] = this;
         this._init();
     }
 
     private _init() {
-        this._listener = this._move.bind(this);
-        document.addEventListener(typeStart, (e: any) => {
-            if(this._isAnmimating) return true;
-            let evX = isMobile ? e.touches[0].clientX : e.clientX;
-            if ((!this._isOpen && evX < 24)) {
-                this._swipeDirection = 1;
-                this._startX = evX;
-                this._startswiping = true;
-                e.preventDefault();
-                e.stopPropagation();
-                document.body.addEventListener(typeMove, this._listener);
-            } else if(this._isOpen) {
-                this._swipeDirection = -1;
-                this._startX = evX - this.refs.content.offsetWidth;
-                this._startswiping = true;
-                document.body.addEventListener(typeMove, this._listener);
-            }
-            //return true;
-        }, true);
-        document.addEventListener(typeEnd, (e: any) => {
-            if(this._isAnmimating) return true;
-            if (this._swiping) {
-                if (this._swipeDirection == 1) {
-                    if(this._lastPercentage > -65) {
-                        this._openAnimation();
-                    } else {
-                        this._closeAnimation();
-                    }
-                } else if (this._swipeDirection == -1) {
-                    if (this._lastPercentage < -35) {
-                        this._closeAnimation();
-                    } else {
-                        this._openAnimation();
-                    }
-                }
-                this._swiping = false;
-                this._swipeDirection = 0;
-            } else {
-                this._swiping = false;
-            }
-            this._startswiping = false;
-            document.body.removeEventListener(typeMove, this._listener);
-            //return true;
-        });
+        this._move = this._move.bind(this);
+        this._moveStart = this._moveStart.bind(this);
+        this._moveEnd = this._moveEnd.bind(this);
+        document.addEventListener(typeStart, this._moveStart, true);
+        document.addEventListener(typeEnd, this._moveEnd);
     }
 
     public static instances: arrDrawer = {};
 
     componentUnmounted() {
+        document.removeEventListener(typeStart, this._moveStart, true);
+        document.removeEventListener(typeEnd, this._moveEnd);
         let keys = Object.keys(qDrawer.instances);
         const pos = Object.values(qDrawer.instances).indexOf(this);
         if(pos > -1) {
