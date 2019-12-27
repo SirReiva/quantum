@@ -48,15 +48,15 @@ export const Attribute = (refName: string = null) => (target: any, key: string) 
         });
 
     } else {
-        let val = null;
+        const kSym = Symbol(key);
         Object.defineProperty(target, key, {
             get: function() {
-                return val;
+                return this[kSym];
             },
             set: function(value) {
-                val = value;
+                this[kSym] = value;
                 if (this[warpperElementProp]) //cjeck value type
-                    this[warpperElementProp].setAttribute(key, value);
+                    this[warpperElementProp].setAttribute(key, JSON.stringify(value));
             },
             configurable: false
         });
@@ -77,10 +77,11 @@ export const Ref = (refName: string = null) => (target: any, key: string) => {
 
 export const Watch = () => (target: any, key: string) => {
 
-    let val = null;
+    let val = Symbol(key);
+
 
     var setter = function (newVal) {
-        val = newVal;
+        this[val] = newVal;
         if(this instanceof QuantumElement)
             this._render();
         else if(this[warpperElementProp])
@@ -88,7 +89,7 @@ export const Watch = () => (target: any, key: string) => {
     };
 
     var getter = function () {
-       return val;
+       return this[val];
     };
 
     Object.defineProperty(target, key, {
@@ -185,6 +186,11 @@ export const QWarpper = (config: QDecoratorOptions) => (clss: any): any => {
     customElements.define(config.selector, tmp);
     return tmpClss;
 }
+
+export const QFuntionalComponent = () => (target: any, key: string, descriptor: PropertyDescriptor) => {
+    console.log(target, key, descriptor);
+}
+
 
 export const QSingleton = () => (Target: any): any => {
 

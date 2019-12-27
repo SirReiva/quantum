@@ -14,7 +14,7 @@ if (typeof window.queueMicrotask !== "function") {
         .then(callback)
         .catch(e => setTimeout(() => { throw e; }));
     };
-  }
+}
 
 function flatten(arr: any[]): any[] {
     return [].concat.apply([], arr);

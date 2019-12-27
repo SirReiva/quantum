@@ -1,4 +1,4 @@
-import { QElement, Ref, Listen, Watch, QWarpper, Host, Attribute, warpperElementProp, QSingleton } from './quantum/webcomponent/decorators';
+import { QElement, Ref, Listen, Watch, QWarpper, Host, Attribute, warpperElementProp, QSingleton, QFuntionalComponent } from './quantum/webcomponent/decorators';
 import { QuantumElement } from "./quantum/webcomponent/QuantumElement";
 import { h } from './quantum/core/vdom/h';
 
@@ -37,7 +37,7 @@ export class test3 {
 
     @Listen('click')
     clc() {
-        //this.info++;
+        this.info++;
         this.aaa++;
     }
 
@@ -45,16 +45,8 @@ export class test3 {
     info = 0;
 
     @Host()
-    el;
+    el: HTMLElement;
 
     @Attribute()
     aaa = 5;
-}
-
-@QSingleton()
-class ServiceEx {
-    a:number;
-    constructor(ap) {
-        this.a = ap;
-    }
 }
