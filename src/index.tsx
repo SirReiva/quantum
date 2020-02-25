@@ -32,12 +32,12 @@ export class test extends QuantumElement {
 })
 export class test3 {
 
-    constructor() {
-    }
+    constructor() { }
 
     @Listen('click')
     clc() {
-        this.info++;
+        let k = Math.random() * 2;
+        this.info = k;
         this.aaa++;
     }
 

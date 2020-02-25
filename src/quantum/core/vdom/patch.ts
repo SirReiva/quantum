@@ -95,7 +95,7 @@ function doPatchs() {
     while(changesDo < PATCHSFPS && PATCHS_DOM.length > 0) {
         changesDo++;
         let fn = PATCHS_DOM.shift();
-        Promise.resolve().then(() => fn())
+        Promise.resolve().then(() => fn());
         //fn();
     }
     requestAnimationFrame(doPatchs);

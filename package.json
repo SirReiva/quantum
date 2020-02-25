@@ -8,8 +8,8 @@
     "scripts": {
         "check-types": "tsc",
         "dev": "cross-env NODE_ENV=development npx webpack-dev-server --color --progress",
-        "build": "cross-env NODE_ENV=production npx webpack -p --color --progress",
-        "start": "serve dist"
+        "build": "cross-env NODE_ENV=production npx webpack --color --progress",
+        "start": "http-server ./dist"
     },
     "dependencies": {
         "lodash": "^4.17.15",

@@ -43,7 +43,7 @@ function diffProps(oldAttrs:any, newAttrs:any):qPatchProps[] {
     });
     if(patches.length === 0) patches = null;
     return patches;
-  }
+}
 
 export function diff(oldNode: ChildrenNode, newNode: ChildrenNode): qPatch {
     if (typeof oldNode === 'string' || typeof newNode === 'string' || typeof oldNode === 'number' || typeof newNode === 'number') {

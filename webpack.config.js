@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+//const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const figlet = require('figlet');
 const EventHooksPlugin = require('event-hooks-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -90,14 +90,15 @@ const config = {
 
 if (isProd) {
     config.optimization = {
+        minimize: true,
         minimizer: [
             new TerserWebpackPlugin(),
         ],
     };
-    config.plugins.push(new BundleAnalyzerPlugin({
+    /*config.plugins.push(new BundleAnalyzerPlugin({
         analyzerMode: 'static',
         openAnalyzer: true,
-    }));
+    }));*/
     figlet('Quantum\n Project', function(err, data) {
         console.clear();
         if (data) console.log(data);

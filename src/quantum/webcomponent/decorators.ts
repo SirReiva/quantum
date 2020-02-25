@@ -200,5 +200,5 @@ export const QSingleton = () => (Target: any): any => {
         if(!original) original = new Target(...args);
         return original;
     }
-  
+
 }
