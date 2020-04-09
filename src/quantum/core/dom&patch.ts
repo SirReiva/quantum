@@ -225,6 +225,7 @@ export function queuPatches(parent: any, patches: any, refs: any, index = 0) {
 }
 
 function doPatchs() {
+    window.stats.begin();
     let ptch = null;
     if (domUpdates.length === 0) {} else {
         let i = 0;
@@ -235,6 +236,7 @@ function doPatchs() {
             if (i > PATCHSFPS) break;
         }
     }
+    window.stats.end();
     requestAnimationFrame(doPatchs);
 }
 

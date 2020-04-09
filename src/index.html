@@ -2,6 +2,7 @@
 <html lang="es">
 
 <head>
+    <base href="/"/>
     <meta charset="UTF-8">
     <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -12,6 +13,13 @@
 
 <body>
     <example-app></example-app>
+    <div id="stats"></div>
+    <script src="./static/stats.min.js"></script>
+    <script>
+        window.stats = new Stats();
+        stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+        document.querySelector('#stats').append(stats.dom);
+    </script>
 </body>
 
 </html>
