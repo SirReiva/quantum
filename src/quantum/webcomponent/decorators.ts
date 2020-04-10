@@ -66,7 +66,10 @@ export const Attribute = (refName: string = null) => (target: any, key: string) 
 export const Ref = (refName: string = null) => (target: any, key: string) => {
 
     var getter = function () {
-        return (refName)?this.refs[refName]:this.refs[key];
+        if (this instanceof QuantumElement)
+            return (refName)?this.refs[refName]:this.refs[key];
+        else
+            return (refName)?this[warpperElementProp].refs[refName]:this[warpperElementProp].refs[key];
     };
 
     Object.defineProperty(target, key, {
@@ -82,14 +85,17 @@ export const Watch = () => (target: any, key: string) => {
 
     var setter = function (newVal) {
         this[val] = newVal;
-        if(this instanceof QuantumElement)
-            this._render();
-        else if(this[warpperElementProp])
-            this[warpperElementProp]._render();
+        if (this instanceof QuantumElement) {
+            if (Object.getPrototypeOf(this).automaticDetection)
+                this._render();
+        } else if(this[warpperElementProp]) {
+            if (this[warpperElementProp].constructor.automaticDetection)
+                this[warpperElementProp]._render();
+        }
     };
 
     var getter = function () {
-       return this[val];
+        return this[val];
     };
 
     Object.defineProperty(target, key, {
@@ -113,12 +119,12 @@ export const Host = () => (target: any, key: string) => {
     });
 }
 
-export const QElement = (config: QDecoratorOptions) => (cls: Function) => {
+export const QElement = (config: QDecoratorOptions) => (cls: any) => {
     validateSelector(config.selector);
     config = Object.assign({} ,DEFAULT_DECORATOR_OPTIONS, config);
-    (cls as any).selector = config.selector;
-    (cls as any).automaticDetection = config.automaticDetection;
-    (cls as any).encapsulation = config.useShadow;
+    cls.selector = config.selector;
+    cls.automaticDetection = config.automaticDetection;
+    cls.encapsulation = config.useShadow;
     if (config.templateUrl) {
         cls.prototype.template = function() {
             return compileTemplateString(config.templateUrl, this);
@@ -141,7 +147,7 @@ export const QElement = (config: QDecoratorOptions) => (cls: Function) => {
     });
 }*/
 
-export const QWarpper = (config: QDecoratorOptions) => (clss: any): any => {
+export const QComponent = (config: QDecoratorOptions) => (clss: any): any => {
     validateSelector(config.selector);
     config = Object.assign({} ,DEFAULT_DECORATOR_OPTIONS, config);
     const tmpObs = clss.prototype[observerAttrs];
@@ -158,7 +164,6 @@ export const QWarpper = (config: QDecoratorOptions) => (clss: any): any => {
     class tmp extends QuantumElement {
         static selector = config.selector;
         static encapsulation = config.useShadow;
-        automaticDetection = config.automaticDetection;
 
         static get observedAttributes() {
             return [...tmpObs];
@@ -182,6 +187,7 @@ export const QWarpper = (config: QDecoratorOptions) => (clss: any): any => {
     }
     
     (tmp as any).initListeners = initListeners;
+    (tmp as any).automaticDetection = config.automaticDetection;
 
     customElements.define(config.selector, tmp);
     return tmpClss;
@@ -190,7 +196,6 @@ export const QWarpper = (config: QDecoratorOptions) => (clss: any): any => {
 export const QFuntionalComponent = () => (target: any, key: string, descriptor: PropertyDescriptor) => {
     console.log(target, key, descriptor);
 }
-
 
 export const QSingleton = () => (Target: any): any => {
 

@@ -1,4 +1,4 @@
-import { QElement, Ref, Listen, Watch, QWarpper, Host, Attribute, warpperElementProp, QSingleton, QFuntionalComponent } from './quantum/webcomponent/decorators';
+import { QElement, Ref, Listen, Watch, QComponent, Host, Attribute } from './quantum/webcomponent/decorators';
 import { QuantumElement } from "./quantum/webcomponent/QuantumElement";
 import { h } from './quantum/core/vdom/h';
 
@@ -26,9 +26,9 @@ export class test extends QuantumElement {
 }*/
 
 
-@QWarpper({
+@QComponent({
     selector: 'app-test3',
-    templateUrl: './template.html',
+    templateUrl: './template.html'
 })
 export class test3 {
 
@@ -36,17 +36,20 @@ export class test3 {
 
     @Listen('click')
     clc() {
-        let k = Math.random() * 2;
-        this.info = k;
+        this.info = Math.random() * 2;
         this.aaa++;
+        console.log(this.prueba);
     }
 
     @Watch()
     info = 0;
 
     @Host()
-    el: HTMLElement;
+    el: QuantumElement;
 
     @Attribute()
     aaa = 5;
+
+    @Ref('p')
+    prueba: HTMLParagraphElement;
 }

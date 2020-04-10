@@ -27,7 +27,7 @@ export abstract class QuantumElement extends HTMLElement {
     protected styles?(): string;
 
     public static selector:string;
-    protected automaticDetection: boolean = true;
+    public static automaticDetection: boolean = true;
     public static encapsulation: boolean = true;
     protected static initListeners: InitListerners[]; 
 
@@ -97,7 +97,7 @@ export abstract class QuantumElement extends HTMLElement {
     attributeChangedCallback(_attrName: string, oldVal: any, newVal: any) {
         if ((oldVal !== newVal) && this._initialized) {
             this.attributeChange && this.attributeChange(_attrName, oldVal, newVal);
-            if(this.automaticDetection)
+            if ((this.constructor as any).automaticDetection)
                 this._render();
         }
     }
@@ -123,5 +123,9 @@ export abstract class QuantumElement extends HTMLElement {
         this._vDom = newVDom;
         queuPatch(this._vDomRoot, diff(oldVDom, newVDom), this.refs);
         this.componentAfterUpdate && this.componentAfterUpdate();
+    }
+
+    public checkForUpdate() {
+        this._render();
     }
 }

@@ -1,4 +1,4 @@
-const { resolve, join } = require('path');
+const { resolve } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserWebpackPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -46,8 +46,8 @@ const config = {
                 test: /\.s?css$/,
                 use: [
                     /*{
-                                        loader: MiniCssExtractPlugin.loader
-                                    },*/
+                        loader: MiniCssExtractPlugin.loader
+                    },*/
                     {
                         loader: 'css-loader'
                     }, {
@@ -112,6 +112,7 @@ if (isProd) {
             });
         }
     }));
+    config.devtool = 'source-map'
     config.devServer = {
         port: 8080,
         compress: true,
