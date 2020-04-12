@@ -47,7 +47,7 @@ class MyComponent extends QuantumElement {
 
     componentPropChange?(name: string, oldVal: any, newVal: any) {}
 
-    template(): any { return `
+    styles(): string { return `
         :host {
             display: block;
         }
@@ -55,7 +55,7 @@ class MyComponent extends QuantumElement {
             color: #111;
         }
     `; }
-    styles(): string {
+    template(): any {
         return <div>{this.props.count}</div>
     }
 
