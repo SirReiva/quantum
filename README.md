@@ -11,9 +11,11 @@ NPM
 ```bash
 npm install
 ```
+Dev Server
 ```bash
 npm start
 ```
+Generate Prod build
 ```bash
 npm run build
 ```
