@@ -48,11 +48,10 @@ export default abstract class QuantumElement extends HTMLElement {
         else
             this._shadowRoot = this;
         if (prps !== false) this.props = new Proxy(prps, this._validator);
-        Promise.resolve().then(() => this._mount());
+        Promise.resolve().then(() => this._load());
     }
 
     connectedCallback() {
-        //console.log(this, 'mount');
         this.componentMounted && this.componentMounted();
     }
     disconnectedCallback() {
@@ -119,8 +118,7 @@ export default abstract class QuantumElement extends HTMLElement {
         return this._getAttributesInObject();
     }
 
-    private _mount() {
-        //console.log(this, 'init');
+    private _load() {
         this.componentBeforeLoaded && this.componentBeforeLoaded();
         const frag = document.createDocumentFragment();
         //this.style.visible = 'hidden';
@@ -136,7 +134,6 @@ export default abstract class QuantumElement extends HTMLElement {
         this._initialized = true;
         this.componentLoaded && this.componentLoaded();
         this._promiseReadyResolver();
-        //console.log(this, 'initend');
     }
 
     public getRoot() {
