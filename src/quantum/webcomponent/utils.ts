@@ -86,7 +86,7 @@ function ReplaceData(tpl: string, data: any): string {
 
 export function compileTemplateString(temlpate: string, context: any): qNode {
     try {
-        return  jsonToHyperscript.call(context ,xmlToJson(stringToXml(temlpate.replace(/\n/g,''))));
+        return jsonToHyperscript.call(context ,xmlToJson(stringToXml(temlpate.replace(/\n/g,''))));
     } catch (exp) {
         console.error(exp);
         return null;
