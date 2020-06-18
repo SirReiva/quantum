@@ -5,50 +5,74 @@ import { h } from '../quantum/core/h';
 
 const routes: TabRoute[] = [
     {
-        resolve: () => import('../components/comp1').then(m => m.default),
+        resolve: () => import('../components/comp1').then((m) => m.default),
     },
     {
-        resolve: () => import('../components/comp2').then(m => m.default),
+        resolve: () => import('../components/comp2').then((m) => m.default),
     },
     {
-        resolve: () => import('../components/comp1').then(m => m.default),
-    }
+        resolve: () => import('../components/comp1').then((m) => m.default),
+    },
 ];
 
 const prueba: TabBarItem[] = [
     {
         icon: 'adjust',
-        text: 'Settings'
+        text: 'Settings',
     },
     {
         icon: 'bar-chart',
-        text: 'Stats'
+        text: 'Stats',
     },
     {
         icon: 'book',
-        text: 'History'
-    }
+        text: 'History',
+    },
 ];
 
 export default class Page3 extends qPage {
     public static tagName = 'q-page3';
     template() {
-        return  <q-scafold>
-                    <q-appbar shadow>
-                        <q-toolbarbutton onClick={() =>{ qDrawer.instances['main'].open() }} slot="start"><q-icon icon="bars"></q-icon></q-toolbarbutton>
-                        <span>{'TABS ' + this.props.num}</span>
-                    </q-appbar>
-                    <q-content>
-                        <q-tabstack animated hidebars ref="tabs" index={this.props.num} onChange={(e:any) => this.onchangeTab(e)} routes={routes}></q-tabstack>
-                    </q-content>
-                    <q-tabbar items={prueba} top topshadow index={this.props.num} onChange={(e:any) => this.onchangeTab(e)}></q-tabbar>
-                </q-scafold>;
+        return (
+            <q-scafold>
+                <q-appbar shadow>
+                    <q-toolbarbutton
+                        onClick={() => {
+                            qDrawer.instances['main'].open();
+                        }}
+                        slot="start"
+                    >
+                        <q-icon icon="bars"></q-icon>
+                    </q-toolbarbutton>
+                    <span>{'TABS ' + this.props.num}</span>
+                </q-appbar>
+                <q-content>
+                    <q-tabstack
+                        animated
+                        hidebars
+                        ref="tabs"
+                        index={this.props.num}
+                        onChange={(e: any) => this.onchangeTab(e)}
+                        routes={routes}
+                    ></q-tabstack>
+                </q-content>
+                <q-tabbar
+                    items={prueba}
+                    top
+                    topshadow
+                    index={this.props.num}
+                    onChange={(e: any) => this.onchangeTab(e)}
+                ></q-tabbar>
+            </q-scafold>
+        );
     }
 
-    styles() { return super.styles() + ``; }
+    styles() {
+        return super.styles() + ``;
+    }
 
-    onchangeTab(e:any) {
-        this.props.num = e.detail;
+    onchangeTab(e: any) {
+        if (e.detail !== this.props.num) this.props.num = e.detail;
     }
 
     /*changeTab(i: number) {
@@ -56,7 +80,6 @@ export default class Page3 extends qPage {
     }*/
 
     constructor() {
-        super({num: 0});
+        super({ num: 0 });
     }
 }
-

@@ -1,16 +1,15 @@
 {
     "compilerOptions": {
-      "outDir": "./www/",
-      "noImplicitAny": false,
-      "module": "esnext",
-      "target": "es6",
-      "jsx": "react",
-      "jsxFactory": "h",
-      "allowJs": true,
-      "experimentalDecorators": true,
-      "moduleResolution": "node"
+        "outDir": "./www/",
+        "sourceMap": true,
+        "noImplicitAny": false,
+        "module": "esnext",
+        "target": "es6",
+        "jsx": "react",
+        "jsxFactory": "h",
+        "allowJs": true,
+        "experimentalDecorators": true,
+        "moduleResolution": "node"
     },
-    "exclude": [
-      "node_modules"
-    ]
+    "exclude": ["node_modules"]
 }

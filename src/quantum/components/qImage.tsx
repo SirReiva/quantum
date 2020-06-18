@@ -6,14 +6,23 @@ import { h } from '../core/h';
 export default class qImage extends QuantumElement {
     public static tagName = 'q-image';
     template() {
-        return  <div className={'base ' + this.props.loaded}>
-                    <div className="loadImg">
-                        <slot></slot>
-                    </div>
-                    <img onLoad={() => this.imageloaded()} className="mainImg" ref="mainImg"/>
-                </div>;
+        return (
+            <div className={'base ' + this.props.loaded}>
+                <div className="loadImg">
+                    <slot></slot>
+                </div>
+                <img
+                    loading="lazy"
+                    onLoad={() => this.imageloaded()}
+                    className="mainImg"
+                    ref="mainImg"
+                    src={this.attrs.srcimg}
+                />
+            </div>
+        );
     }
-    styles() { return `
+    styles() {
+        return `
         :host {
             max-width: 100%;
             display: block; 
@@ -50,15 +59,7 @@ export default class qImage extends QuantumElement {
             visibility: visible;
             opacity: 1;
         }
-    `; }
-
-    public static observer: any;
-    public static obsevableCount = 0;
-    public static createObsever() {
-        const config = {
-            threshold: 0.01
-        };
-        qImage.observer = new IntersectionObserver(qImage.onIntersection, config);
+    `;
     }
 
     static get observedAttributes() {
@@ -66,46 +67,15 @@ export default class qImage extends QuantumElement {
     }
 
     componentAttributeChange() {
-        //console.log(this.attrs.srcimg, this.refs.mainImg.src);
-        this.refs.mainImg.setAttribute('src', this.attrs.srcimg);
-    }
-    componentLoaded() {
-        if(!qImage.observer) {
-            qImage.createObsever();
-        }
-        qImage.observer.observe(this);
-        qImage.obsevableCount++;
-    }
-
-    public static onIntersection(entries: any[]) {
-        entries.forEach(entry => {
-            if (entry.intersectionRatio > 0) {
-                (entry.target as qImage).viewIntersect();
-                qImage.observer.unobserve(entry.target);
-                qImage.obsevableCount--;
-                if(qImage.obsevableCount <= 0) {
-                    qImage.observer.disconnect();
-                    qImage.observer = null;
-                }
-            }
-        });
-    }
-
-    public viewIntersect() {
+        if (this.attrs.srcimg !== this.refs.mainImg.src) this.props.loaded = '';
         this.refs.mainImg.setAttribute('src', this.attrs.srcimg);
     }
 
     imageloaded() {
-        if  (this.props)
-            this.props.loaded = 'loaded';
-    }
-
-    componentUnmounted() {
-        qImage.observer && qImage.observer.unobserve(this);
+        this.props.loaded = 'loaded';
     }
 
     constructor() {
         super({ loaded: '' });
     }
 }
-
