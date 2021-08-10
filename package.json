@@ -15,7 +15,7 @@
         "@types/hammerjs": "^2.0.36",
         "@types/lodash": "^4.14.159",
         "babel-minify-webpack-plugin": "^0.3.1",
-        "copy-webpack-plugin": "^6.0.3",
+        "copy-webpack-plugin": "6.4.1",
         "css-loader": "^4.2.1",
         "file-loader": "^6.0.0",
         "html-loader": "^1.2.1",
