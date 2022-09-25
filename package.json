@@ -37,7 +37,7 @@
         "gsap": "^3.6.0",
         "hammerjs": "^2.0.8",
         "lodash": "^4.17.21",
-        "lottie-web": "^5.7.1",
+        "lottie-web": "5.9.6",
         "redux": "^4.0.5",
         "redux-devtools": "^3.6.1",
         "web-animations-js": "^2.3.2"
